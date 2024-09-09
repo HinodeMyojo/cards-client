@@ -1,48 +1,69 @@
 <template>
     <div class="app">
-        <form>
-            <h4>Создание поста</h4>
-            <input 
-                v-bind:value="title" 
-                @input="title = $event.target.value"
-                class="input" 
-                type="text" 
-                placeholder="Название"
-            >
-            <input 
-                v-bind:value="body" 
-                @input="body = $event.target.value"
-                class="input" 
-                type="text" 
-                placeholder="Описание"
-            >
-            <button class="btn" @click="createPost">Создать</button>
-        </form>
-        <div class="post" v-for="post in posts">
-            <div><strong>Нвзвание: </strong>{{ post.title }}</div>
-            <div><strong>Описание: </strong>{{ post.body }}</div>
+        <h1>Страница с постами</h1>
+        <div class="app__btns">
+            <my-button @click="showDialog">Создать пост</my-button>
+            <my-select />
         </div>
+        <my-dialog v-model:show="dialogVisible">
+            <post-form
+        @create="createPost"
+        />
+        </my-dialog>
+        
+        <post-list 
+        :posts="posts"
+        @remove="removePost"
+        v-if="!isPostLoading"
+        />
+        <div if-else>Идет загрузка..</div>
     </div>
 </template>
 
 <script>
+import PostForm from "@/components/PostForm.vue";
+import PostList from "@/components/PostList.vue";
+import axios from "axios";
 export default{
+    components: {
+        PostList, PostForm
+    },
     data(){
         return{
-            posts: [
-                {id: 1, title: 'Title 1', body: 'Body 1'},
-                {id: 2, title: 'Title 2', body: 'Body 2'},
-                {id: 3, title: 'Title 3', body: 'Body 3'},
-            ],
-            title: '',
-            body: ''
+            posts: [],
+            dialogVisible: false,
+            isPostLoading: false,
         }
     },
     methods: {
-        createPost()
+        createPost(post)
         {
-            
+            this.posts.push(post);
+        },
+        removePost(post)
+        {
+            this.posts = this.posts.filter(x => x.id !== post.id)
+        },
+        showDialog(){
+            this.dialogVisible = true;
+        },
+        async fetchPosts(){
+            try{
+                this.isPostLoading = true;
+                const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
+                this.posts = response.data;
+                console.log(response)
+            }
+            catch (e){
+                alert("Пиздарики")
+            } finally{
+                this.isPostLoading = false;
+            }
         }
+    },
+    mounted()
+    {
+        this.fetchPosts();
     }
 }
 </script>
@@ -57,30 +78,11 @@ export default{
 .app{
     padding: 20px;
 }
-.post{
-    padding: 15px;
-    border: 2px solid teal;
-    margin-top: 15px;
-}
 
-form{
+.app__btns{
     display: flex;
-    flex-direction: column
+    justify-content: space-between;
 }
 
-.btn{
-    margin-top: 15px;
-    align-self: flex-end;
-    padding: 10px 15px;
-    background: none;
-    color: teal;
-    border: 1px solid teal;
-}
 
-.input{
-    width: 100% ;
-    border: 1px solid teal;
-    padding: 10px 15px;
-    margin-top: 15px;
-}
 </style>
