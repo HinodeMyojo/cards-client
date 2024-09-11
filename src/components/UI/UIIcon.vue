@@ -26,11 +26,13 @@ export default {
         iconPath: function () {
             return require(`@/assets/icons/${this.path}`);
         },
+        // Переделать
         iconWidth() {
-      return this.width;
+            return this.width;
         },
+        // Переделать
         iconHeight() {
-        return this.height;
+            return this.height;
         }
     }
 }

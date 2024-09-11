@@ -5,38 +5,11 @@
         <div class="login-form-container">
             <h3>Регистрация</h3>
             <form class="login-form" @submit.prevent="submitForm">
-                <label for="Email">Email</label>
-                <input 
-                    v-bind:value="email"
-                    @input="email = $event.target.value"
-                    type="Email" 
-                    id="Email" 
-                    placeholder="AlphaCentauri@mail.ru" 
-                    required
-                >
-                <label for="Username">Username</label>
-                <input 
-                    v-bind:value="username"
-                    @input="username = $event.target.value"
-                    type="Username" 
-                    id="Username" 
-                    placeholder="AlphaCentauri" 
-                    required
-                >
-                <label for="Password">Password</label>
-                <input 
-                    v-bind:value="password"
-                    @input="password = $event.target.value"
-                    type="Password" 
-                    id="Password" 
-                    placeholder="•••••••••••••••••" 
-                    required
-                >
                 <div class="buttons">
                     <button class="fill" @click="registerUser" type="register">Зарегистрироваться</button>
                     <button class="transparent" type="login">Уже есть учетная запись? Войти</button>
                     <a type="button" class="social">
-                        <UIIcon path="google.svg"/>
+                        <UIIcon path="google.svg" />
                         <span>Войти с помощью Google</span>
                     </a>
                     <a type="button" class="social">
@@ -58,8 +31,9 @@
 
 <script>
 import axios from 'axios';
-// import InlineSvg from 'vue-inline-svg';
 import UIIcon from '@/components/UI/UIIcon.vue';
+import RegistrationForm from '@/components/Auth/Registration.vue';
+import LoginForm from '@/components/Auth/Login.vue';
 
 export default {
     data() {
@@ -69,8 +43,7 @@ export default {
             password: ''
         }
     },
-    components: {UIIcon},
-    // components:{ InlineSvg },
+    components: {UIIcon, RegistrationForm, LoginForm},
     methods: {
 
         async RegisterUser()
