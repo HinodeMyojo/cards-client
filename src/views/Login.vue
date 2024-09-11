@@ -36,8 +36,16 @@
                     <button class="fill" @click="registerUser" type="register">Зарегистрироваться</button>
                     <button class="transparent" type="login">Уже есть учетная запись? Войти</button>
                     <a type="button" class="social">
-                        <inline-svg src="@/svg/google.svg"></inline-svg>
+                        <UIIcon path="google.svg"/>
                         <span>Войти с помощью Google</span>
+                    </a>
+                    <a type="button" class="social">
+                        <UIIcon path="apple.svg"/>
+                        <span>Войти с помощью Apple</span>
+                    </a>
+                    <a type="button" class="social">
+                        <UIIcon path="telegram.svg"/>
+                        <span>Войти с помощью Telegram</span>
                     </a>
                 </div>
             </form>
@@ -50,7 +58,8 @@
 
 <script>
 import axios from 'axios';
-import InlineSvg from 'vue-inline-svg';
+// import InlineSvg from 'vue-inline-svg';
+import UIIcon from '@/components/UI/UIIcon.vue';
 
 export default {
     data() {
@@ -60,7 +69,8 @@ export default {
             password: ''
         }
     },
-    components:{ InlineSvg },
+    components: {UIIcon},
+    // components:{ InlineSvg },
     methods: {
 
         async RegisterUser()
@@ -105,6 +115,7 @@ export default {
 }
 .login-right{
     background-color: #242429;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5); /* Небольшая тень для визуального отделения */
 }
 
 .login-form-container{
@@ -149,7 +160,7 @@ h3{
     background-color: transparent;
 }
 
-.login-form button{
+.login-form button, .social{
     font-size: 20px;
     width: 100%;
     height: 55px;
@@ -171,10 +182,27 @@ h3{
     border: 1px solid #DF82FF;
 }
 
-.social {
+.transparent:hover{
+    background-color: transparent;
+    border: 1px solid #f2ccff;
+}
+
+.social, span, a{
     display: flex;
     flex-direction: row;
-    /* background-color: #616161; */
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #616161;
     border: none;
 }
+
+/* .social:hover{
+    background-color: #757575;
+}
+
+span:hover{
+    background-color: transparent;
+} */
+
 </style>
