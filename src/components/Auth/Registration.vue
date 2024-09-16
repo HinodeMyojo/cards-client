@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <form class="login-form" @submit.prevent="submitForm">
       <label for="Email">Email</label>
       <input 
@@ -50,4 +50,63 @@
     }
   }
   </script>
+  -->
+<template>
+    <h3>Регистрация</h3>
+    <form class="login-form" @submit.prevent="submitForm">
+      <label for="Email">Email</label>
+      <input 
+        v-model="email"
+        type="email" 
+        id="Email" 
+        placeholder="AlphaCentauri@mail.ru" 
+        required
+      >
+      <label for="Username">Username</label>
+      <input 
+        v-model="username"
+        type="text" 
+        id="Username" 
+        placeholder="AlphaCentauri" 
+        required
+      >
+      <label for="Password">Password</label>
+      <input 
+        v-model="password"
+        type="password" 
+        id="Password" 
+        placeholder="•••••••••••••••••" 
+        required
+      >
+      <div class="buttons">
+        <button class="fill" type="submit">Зарегистрироваться</button>
+        <button class="transparent" type="login" @click="loginUser">Уже есть учетная запись? Войти</button>
+        <SocialButtons/>
+      </div>
+    </form>
+</template>
   
+<script>
+import SocialButtons from '@/components/Auth/SocialButtons.vue';
+  export default {
+    data() {
+      return {
+        email: '',
+        username: '',
+        password: ''
+      };
+    },
+    components: {
+      SocialButtons
+    },
+    methods: {
+      submitForm() {
+        // Передача данных в родительский компонент через событие
+        this.$emit('submit-registration', { email: this.email, username: this.username, password: this.password });
+      },
+      async loginUser() {
+        this.$router.push('/login');
+      }
+    }
+  };
+</script>

@@ -4,12 +4,14 @@ import Auth from "@/views/Auth.vue";
 
 const routes = [
     {
-        path: '/Login',
-        component: Auth
+        path: '/login',
+        component: Auth,
+        props: { 'register': false }
     },
     {
-        path: '/Register',
-        component: Auth
+        path: '/register',
+        component: Auth,
+        props: { 'register': true }
     }
 ]
 

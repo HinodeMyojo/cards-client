@@ -1,73 +1,54 @@
 <template>
-<div class="login-container">
-    <div class="login-left"></div>
-    <div class="login-right">
-        <div class="login-form-container">
-            <h3>Регистрация</h3>
-            <form class="login-form" @submit.prevent="submitForm">
-                <div class="buttons">
-                    <button class="fill" @click="registerUser" type="register">Зарегистрироваться</button>
-                    <button class="transparent" type="login">Уже есть учетная запись? Войти</button>
-                    <a type="button" class="social">
-                        <UIIcon path="google.svg" />
-                        <span>Войти с помощью Google</span>
-                    </a>
-                    <a type="button" class="social">
-                        <UIIcon path="apple.svg"/>
-                        <span>Войти с помощью Apple</span>
-                    </a>
-                    <a type="button" class="social">
-                        <UIIcon path="telegram.svg"/>
-                        <span>Войти с помощью Telegram</span>
-                    </a>
-                </div>
-            </form>
+    <div class="login-container">
+        <div class="login-left"></div>
+        <div class="login-right">
+            <div class="login-form-container" v-if="register === true">
+            <!-- Отображение формы регистрации или входа в зависимости от маршрута -->
+                <RegistrationForm @submit-registration="registerUser" />
+            </div>
+            <div class="login-form-container" v-else>
+                <LoginForm @submit-login="loginUser" />
+            </div>
+            
+            </div>
         </div>
-    </div>
-</div>
-
-
 </template>
 
 <script>
 import axios from 'axios';
-import UIIcon from '@/components/UI/UIIcon.vue';
 import RegistrationForm from '@/components/Auth/Registration.vue';
 import LoginForm from '@/components/Auth/Login.vue';
 
 export default {
-    data() {
-        return {
-            email: '',
-            username: '',
-            password: ''
-        }
+    components: {
+        RegistrationForm,
+        LoginForm
     },
-    components: {UIIcon, RegistrationForm, LoginForm},
+    props: {
+        register: Boolean
+    },
     methods: {
-
-        async RegisterUser()
-        {
+        async registerUser(data) {
             try{
-                const newUser = {
-                    email: this.email,
-                    username: this.username,
-                    password: this.password
-                };
-                const backendUrl = process.env.BACKEND_URL;
-
-                const response = await axios.post(backendUrl, newUser);
-                console.log(response);
-            }
-            catch(error){
-                console.log(error);
+                const backendUrl = process.env.VUE_APP_BACKEND_URL;
+                const response = await axios.post(`${backendUrl}/auth/register`, data);
+                console.log(response.data);
+            } catch (error) {
+                console.error(error);
             }
         },
-        submitForm() {
-            console.log('submit');
+
+        async loginUser(data) {
+            try{
+                const backendUrl = process.env.VUE_APP_BACKEND_URL;
+                const response = await axios.post(`${backendUrl}/auth/login`, data);
+                console.log(response.data);
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
-}
+};
 </script>
 
 <style scoped>
@@ -100,7 +81,7 @@ export default {
     max-width: 680px;
 }
 
-h3{
+:deep(h3){
     background-color: transparent;
     font-size: 45px;
     font-weight: 500;
@@ -109,14 +90,14 @@ h3{
     margin-bottom: 30px;
 }
 
-.login-form, .buttons{
+:deep(.login-form, .buttons){
     background-color: transparent;
     display: flex;
     gap: 15px;
     flex-direction: column;
 }
 
-.login-form input{
+:deep(.login-form input){
     width: 100%;
     font-size: 17px;
     height: 57px;
@@ -126,14 +107,14 @@ h3{
     padding-left: 10px;
 }
 
-.login-form label{
+:deep(.login-form label){
     font-size: 17px;
     width: 100%;
     /* height: 300px; */
     background-color: transparent;
 }
 
-.login-form button, .social{
+:deep(.login-form button, .social){
     font-size: 20px;
     width: 100%;
     height: 55px;
@@ -142,40 +123,32 @@ h3{
     border-radius: 15px;
 }
 
-.buttons{
+:deep(.buttons){
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
     margin-top: 25px;
+    gap: 15px;
 }
-.fill{
+:deep(.fill){
     border: none;
     background-color: #811BA5;
+    transition: background-color 0.3s ease;
+}
+:deep(.fill:hover){
+    border: none;
+    background-color: #60147c;
 }
 
-.transparent {
+:deep(.transparent) {
     background-color: transparent;
     border: 1px solid #DF82FF;
+    transition: background-color 0.3s ease;
 }
 
-.transparent:hover{
+:deep(.transparent:hover){
     background-color: transparent;
     border: 1px solid #f2ccff;
 }
-
-.social, span, a{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: #616161;
-    border: none;
-}
-
-/* .social:hover{
-    background-color: #757575;
-}
-
-span:hover{
-    background-color: transparent;
-} */
 
 </style>
