@@ -14,41 +14,41 @@
         </div>
 </template>
 
-<script>
+<script setup>
+import {ref} from 'vue'
 import axios from 'axios';
 import RegistrationForm from '@/components/Auth/Registration.vue';
 import LoginForm from '@/components/Auth/Login.vue';
+import {useRouter} from 'vue-router';
 
-export default {
-    components: {
-        RegistrationForm,
-        LoginForm
-    },
-    props: {
-        register: Boolean
-    },
-    methods: {
-        async registerUser(data) {
-            try{
-                const backendUrl = process.env.VUE_APP_BACKEND_URL;
-                const response = await axios.post(`${backendUrl}/auth/register`, data);
-                console.log(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        },
+//Props: 
+const props = defineProps({
+    register: Boolean
+})
 
-        async loginUser(data) {
-            try{
-                const backendUrl = process.env.VUE_APP_BACKEND_URL;
-                const response = await axios.post(`${backendUrl}/auth/login`, data);
-                console.log(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    }
+// Фунции регистрации
+const registerUser = async (data) => {
+  try {
+    const backendUrl = process.env.VUE_APP_BACKEND_URL;
+    const response = await axios.post(`${backendUrl}/register`, data);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
 };
+
+// Функция логина
+const loginUser = async (data) => {
+  try {
+    const backendUrl = process.env.VUE_APP_BACKEND_URL;
+    const response = await axios.post(`${backendUrl}/login`, data);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 </script>
 
 <style scoped>

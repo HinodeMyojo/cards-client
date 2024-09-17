@@ -1,26 +1,3 @@
-<!-- <template>
-  <form class="login-form" @submit.prevent="submitForm">
-      <label for="Username">Username</label>
-      <input 
-        v-bind:value="username"
-        @input="username = $event.target.value"
-        type="Username" 
-        id="Username" 
-        placeholder="AlphaCentauri" 
-        required
-      >
-      <label for="Password">Password</label>
-      <input 
-        v-bind:value="password"
-        @input="password = $event.target.value"
-        type="Password" 
-        id="Password" 
-        placeholder="•••••••••••••••••" 
-        required
-      >
-      <button class="fill" @click="registerUser" type="submit">Войти</button>
-    </form>
-</template> -->
 <template>
   <h3>Вход</h3>
   <form class="login-form" @submit.prevent="submitForm">
@@ -48,38 +25,26 @@
   </form>
 </template>
 
-<!-- <script>
-export default {
-  data() {
-    return {
-      username: '',
-      password: ''
-    };
-  }
-};
-</script> -->
-
-<script>
+<script setup>
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
 import SocialButtons from '@/components/Auth/SocialButtons.vue';
 
-export default {
-  data() {
-    return {
-      username: '',
-      password: ''
-    };
-  },
-  components: {
-    SocialButtons
-  },
-  methods: {
-    submitForm() {
-      // Передача данных в родительский компонент через событие
-      this.$emit('submit-login', { username: this.username, password: this.password });
-    },
-    registerUser() {
-      this.$router.push('/register');
-    },
-  }
+// Управление состоянием формы
+const username = ref('');
+const password = ref('');
+
+// Используем Vue Router для навигации
+const router = useRouter();
+
+// Функция отправки формы
+const submitForm = () => {
+  // Передача данных в родительский компонент через событие
+  emit('submit-login', { username: username.value, password: password.value });
+};
+
+// Переход на страницу регистрации
+const registerUser = () => {
+  router.push('/register');
 };
 </script>
