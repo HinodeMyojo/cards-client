@@ -17,6 +17,7 @@
       placeholder="•••••••••••••••••" 
       required
     >
+    <a class="lostPassword" @click="passwordRecovery">Забыли пароль?</a>
     <div class="buttons">
       <button class="fill" type="submit">Войти</button>
       <button class="transparent" type="login" @click="registerUser">Отсутствует учетная запись? Зарегистрироваться</button>
@@ -43,8 +44,25 @@ const submitForm = () => {
   emit('submit-login', { username: username.value, password: password.value });
 };
 
+// Переход на страницу восстановления пароля
+const passwordRecovery = () => {
+    router.push('/recovery-password');
+}
+
 // Переход на страницу регистрации
 const registerUser = () => {
   router.push('/register');
 };
 </script>
+
+<style scoped>
+.lostPassword {
+  background-color: transparent; 
+  text-decoration: none; 
+  cursor: pointer;
+}
+
+.lostPassword:hover {
+  text-decoration: underline;
+}
+</style>

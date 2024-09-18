@@ -8,6 +8,3 @@ var app = createApp(App)
 app
     .use(router)
     .mount('#app')
-    .component(
-        'UUIcon.vue', UIIcon
-    )

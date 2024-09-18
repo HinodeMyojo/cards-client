@@ -2,12 +2,18 @@
     <div class="login-container">
         <div class="login-left"></div>
         <div class="login-right">
-            <div class="login-form-container" v-if="register === true">
+            <div class="login-form-container" v-if="register">
             <!-- Отображение формы регистрации или входа в зависимости от маршрута -->
                 <RegistrationForm @submit-registration="registerUser" />
             </div>
-            <div class="login-form-container" v-else>
+            <div class="login-form-container" v-else-if="login === true">
                 <LoginForm @submit-login="loginUser" />
+            </div>
+            <div class="login-form-container" v-else-if="recovery === true">
+                <PasswordRecovery @submit-recovery="recoveryUser" />
+            </div>
+            <div class="login-form-container" v-else>
+                <h3>Билибоба</h3>
             </div>
             
             </div>
@@ -15,15 +21,16 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
 import axios from 'axios';
 import RegistrationForm from '@/components/Auth/Registration.vue';
 import LoginForm from '@/components/Auth/Login.vue';
-import {useRouter} from 'vue-router';
+import PasswordRecovery from '@/components/Auth/PasswordRecovery.vue';
 
 //Props: 
 const props = defineProps({
-    register: Boolean
+    register: Boolean,
+    login: Boolean,
+    recovery : Boolean,
 })
 
 // Фунции регистрации

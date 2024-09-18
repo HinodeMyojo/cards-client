@@ -48,7 +48,7 @@ export default {
     text-align: center;
     background-color: #616161;
     color: white;
-    border-radius: 8px; /* Закругляем углы */
+    border-radius: 15px; /* Закругляем углы */
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease; /* Анимация смены фона */
