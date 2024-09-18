@@ -10,7 +10,22 @@
                 <LoginForm @submit-login="loginUser" />
             </div>
             <div class="login-form-container" v-else-if="recovery === true">
-                <PasswordRecovery @submit-recovery="recoveryUser" />
+                <!-- Шаг 1: Ввод email -->
+                <div class="login-form-container" v-if="recoveryStep === 1">
+                    <PasswordRecoverySendEmail @send-recovery-email="handleEmailSubmission" />
+                </div>
+                <!-- Шаг 2: Ввод кода -->
+                <div class="login-form-container" v-else-if="recoveryStep === 2">
+                    <div v-if="responseOkMessage" class="successfulMessage"><span>{{ responseOkMessage }}</span></div>
+                    <div v-else-if="responseErrorMessage" class="unsuccessfulMessage"><span>{{ responseErrorMessage }}</span></div>
+                    <div v-else class="unsuccessfulMessage" style="visibility: hidden;">{{ responseErrorMessage }}</div>
+                    <PasswordRecoveryCheckCode @submit-code="handleCodeSubmission" />
+                </div>
+                <!-- Шаг 3: Ввод нового пароля -->
+                <div class="login-form-container" v-else-if="recoveryStep === 3">
+                    <div v-if="responseOkMessage" class="successfulMessage"><span>{{ responseOkMessage }}</span></div>
+                    <PasswordResetForm @submit-new-password="handlePasswordReset" />
+                </div>
             </div>
             <div class="login-form-container" v-else>
                 <h3>Билибоба</h3>
@@ -24,7 +39,9 @@
 import axios from 'axios';
 import RegistrationForm from '@/components/Auth/Registration.vue';
 import LoginForm from '@/components/Auth/Login.vue';
-import PasswordRecovery from '@/components/Auth/PasswordRecovery.vue';
+import PasswordRecoverySendEmail from '@/components/Auth/PasswordRecoverySendEmail.vue';
+import PasswordRecoveryCheckCode from '@/components/Auth/PasswordRecoveryCheckCode.vue';
+import {ref} from 'vue';
 
 //Props: 
 const props = defineProps({
@@ -33,28 +50,48 @@ const props = defineProps({
     recovery : Boolean,
 })
 
+const recoveryStep = ref(1);
+
+const responseOkMessage = ref(null);
+const responseErrorMessage = ref(null);
+
 // Фунции регистрации
 const registerUser = async (data) => {
-  try {
-    const backendUrl = process.env.VUE_APP_BACKEND_URL;
-    const response = await axios.post(`${backendUrl}/register`, data);
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+        const backendUrl = process.env.VUE_APP_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/register`, data);
+        console.log(response.data);
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 // Функция логина
 const loginUser = async (data) => {
-  try {
-    const backendUrl = process.env.VUE_APP_BACKEND_URL;
-    const response = await axios.post(`${backendUrl}/login`, data);
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+        const backendUrl = process.env.VUE_APP_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/login`, data);
+        console.log(response.data);
+    } catch (error) {
+        console.error(error);
+    }
 };
 
+const handleEmailSubmission = async (data) => {
+    try {
+        const backendUrl = process.env.VUE_APP_BACKEND_URL;
+        const response= await axios.post(`${backendUrl}/email-send`, data);
+        if (response.status === 200) {
+            responseOkMessage.value = response.data;
+        } else {
+            responseErrorMessage.value = response.data;
+        }
+        console.log(response.data);
+        recoveryStep.value = 2;
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 </script>
 
@@ -157,5 +194,40 @@ const loginUser = async (data) => {
     background-color: transparent;
     border: 1px solid #f2ccff;
 }
+
+.successfulMessage, .unsuccessfulMessage{
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    border: 1px solid;
+    border-radius: 15px;
+    align-items: center;
+    min-height: 50px;
+    
+    box-sizing: border-box;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* margin-bottom: 100px; */
+    position: relative;
+    bottom: 90px;
+    z-index: 1;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.successfulMessage span, .unsuccessfulMessage span {
+    max-width: 80%; /* Дает тексту возможность расширяться */
+    background-color: transparent;
+    text-align: center
+}
+
+.successfulMessage{
+    border-color: #04DE00;
+}
+
+.unsuccessfulMessage{
+    border-color: #DF0000;
+}
+
 
 </style>

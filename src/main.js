@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/router';
-import UIIcon from './components/UI/UIIcon.vue';
+// import UIIcon from './components/UI/UIIcon.vue';
 
 var app = createApp(App)
 

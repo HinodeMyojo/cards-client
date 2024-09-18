@@ -1,7 +1,7 @@
 import vue from "vue";
 import Router, { createRouter, createWebHistory } from "vue-router";
 import Auth from "@/views/Auth.vue";
-import PasswordRecovery from "@/components/Auth/PasswordRecovery.vue";
+import PasswordRecovery from "@/components/Auth/PasswordRecoverySendEmail.vue";
 
 const routes = [
     {
@@ -16,7 +16,7 @@ const routes = [
     },
     {
         path: '/recovery-password',
-        component: PasswordRecovery,
+        component: Auth,
         props: { 'recovery': true }
     }
 ]
