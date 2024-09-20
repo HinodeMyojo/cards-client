@@ -2,6 +2,11 @@
     <div class="login-container">
         <div class="login-left"></div>
         <div class="login-right">
+            <div class="close-menu">
+                <div class="close-menu-icon">
+                    <UIIcon  style="cursor: pointer;" path="close.svg" width="20px" height="20px" @click="closeMenu" />
+                </div>
+            </div>
             <div class="login-form-container" v-if="register">
             <!-- Отображение формы регистрации или входа в зависимости от маршрута -->
                 <RegistrationForm @submit-registration="registerUser" />
@@ -41,6 +46,8 @@ import RegistrationForm from '@/components/Auth/Registration.vue';
 import LoginForm from '@/components/Auth/Login.vue';
 import PasswordRecoverySendEmail from '@/components/Auth/PasswordRecoverySendEmail.vue';
 import PasswordRecoveryCheckCode from '@/components/Auth/PasswordRecoveryCheckCode.vue';
+import UIIcon from '@/components/UI/UIIcon.vue';
+import router from '@/router/router';
 import {ref} from 'vue';
 
 //Props: 
@@ -56,6 +63,10 @@ const responseOkMessage = ref(null);
 const responseErrorMessage = ref(null);
 
 // Фунции регистрации
+const closeMenu = () => {
+    router.push('/');
+}
+
 const registerUser = async (data) => {
     try {
         const backendUrl = process.env.VUE_APP_BACKEND_URL;
@@ -89,7 +100,7 @@ const handleEmailSubmission = async (data) => {
         console.log(response.data);
         recoveryStep.value = 2;
     } catch (error) {
-        console.error(error);
+        console.error(error); 
     }
 };
 
@@ -114,7 +125,23 @@ const handleEmailSubmission = async (data) => {
 .login-right{
     background-color: #242429;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5); /* Небольшая тень для визуального отделения */
+    flex-direction: column;
 }
+
+.close-menu{
+    background-color: transparent;
+    padding: 20px;
+    width: 90%;
+    max-width: 680px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.close-menu-icon{
+    background-color: transparent;
+    display: flex;
+    justify-content: flex-end;
+}
+
 
 .login-form-container{
     background-color: transparent;

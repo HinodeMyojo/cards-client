@@ -1,46 +1,63 @@
 <template>
-<img :src="iconPath" :style="{width: iconWidth, height: iconHeight}" class="item"/>
+    <template v-if="isSvg">
+        <InlineSvg :src="iconPath" class="item" :style="{ width: iconWidth, height: iconHeight }" />
+    </template>
+    <template v-else>
+        <img :src="iconPath" class="item" :style="{ width: iconWidth, height: iconHeight }" />
+    </template>
 </template>
 
 <script>
 import InlineSvg from 'vue-inline-svg';
+
 export default {
     components: {
         InlineSvg,
     },
-    props:{
+    props: {
         path: {
-            type: String,
-            required: true
+        type: String,
+        required: true,
         },
-        width:{
-            type: String,
-            default: '40px'
+        width: {
+        type: String,
+        default: '40px',
         },
-        height:{
-            type: String,
-            default: '40px'
-        }
+        height: {
+        type: String,
+        default: '40px',
+        },
+        fill: {
+        type: String,
+        default: '#D9D9D9',
+        },
     },
     computed: {
-        iconPath: function () {
-            return require(`@/assets/icons/${this.path}`);
+        iconPath() {
+        return require(`@/assets/icons/${this.path}`);
         },
-        // Переделать
         iconWidth() {
-            return this.width;
+        return this.width;
         },
-        // Переделать
         iconHeight() {
-            return this.height;
+        return this.height;
+        },
+        isSvg() {
+        return this.path.endsWith('.svg'); // Проверка, является ли файл SVG
         }
-    }
+    },
 }
+
 
 </script>
 
-<style scoped>
-.item{
+<style scoped>s
+.item {
     background-color: transparent;
+}
+
+svg {
+    background-color: transparent;
+    fill: #D9D9D9; /* Значение по умолчанию для SVG */
 }
 </style>
