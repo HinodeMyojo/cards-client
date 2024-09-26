@@ -29,6 +29,10 @@ const data = ref({
 
 const emit = defineEmits(['send-recovery-email']);
 
+const sendCode = () => {
+  emit('send-check-code', data);
+}
+
 const sendEmail = () => {
   emit('send-recovery-email', data);
 }

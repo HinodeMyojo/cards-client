@@ -16,18 +16,18 @@
             </div>
             <div class="login-form-container" v-else-if="recovery === true">
                 <!-- Шаг 1: Ввод email -->
-                <div class="login-form-container" v-if="recoveryStep === 1">
+                <div class="login-inner-container" v-if="recoveryStep === 1">
                     <PasswordRecoverySendEmail @send-recovery-email="handleEmailSubmission" />
                 </div>
                 <!-- Шаг 2: Ввод кода -->
-                <div class="login-form-container" v-else-if="recoveryStep === 2">
+                <div class="login-inner-container" v-else-if="recoveryStep === 2">
                     <div v-if="responseOkMessage" class="successfulMessage"><span>{{ responseOkMessage }}</span></div>
                     <div v-else-if="responseErrorMessage" class="unsuccessfulMessage"><span>{{ responseErrorMessage }}</span></div>
                     <div v-else class="unsuccessfulMessage" style="visibility: hidden;">{{ responseErrorMessage }}</div>
-                    <PasswordRecoveryCheckCode @submit-code="handleCodeSubmission" />
+                    <PasswordRecoveryCheckCode @send-check-code="handleCodeSubmission" />
                 </div>
                 <!-- Шаг 3: Ввод нового пароля -->
-                <div class="login-form-container" v-else-if="recoveryStep === 3">
+                <div class="login-inner-container" v-else-if="recoveryStep === 3">
                     <div v-if="responseOkMessage" class="successfulMessage"><span>{{ responseOkMessage }}</span></div>
                     <PasswordResetForm @submit-new-password="handlePasswordReset" />
                 </div>
@@ -59,8 +59,8 @@ const props = defineProps({
 
 const recoveryStep = ref(1);
 
-const responseOkMessage = ref(null);
-const responseErrorMessage = ref(null);
+let responseOkMessage = ref(null);
+let responseErrorMessage = ref(null);
 
 // Фунции регистрации
 const closeMenu = () => {
@@ -89,9 +89,11 @@ const loginUser = async (data) => {
 };
 
 const handleEmailSubmission = async (data) => {
+    window.localStorage.setItem('recoveryEmail', JSON.stringify(data.value.email));
+
     try {
         const backendUrl = process.env.VUE_APP_BACKEND_URL;
-        const response= await axios.post(`${backendUrl}/email-send`, data);
+        const response= await axios.get(`${backendUrl}/send-recovery-code`, { params: {to: data.value.email }});
         if (response.status === 200) {
             responseOkMessage.value = response.data;
         } else {
@@ -103,6 +105,37 @@ const handleEmailSubmission = async (data) => {
         console.error(error); 
     }
 };
+
+const handleCodeSubmission = async (data) => {
+    let recoveryEmail = ref([])
+    if (window.localStorage.getItem('recoveryEmail') !== null) {
+        recoveryEmail.value = JSON.parse(window.localStorage.getItem('recoveryEmail'));
+    }
+    if (recoveryEmail.value.length === 0) {
+        alert("Что-то пошло не так. Попробуйте ещё раз.");
+        recoveryStep.value = 1;
+        return;
+    }
+    
+    try {
+        const backendUrl = process.env.VUE_APP_BACKEND_URL;
+        const response = await axios.get(`${backendUrl}/check-recovery-code`, { params: {code: data.value.code, email: recoveryEmail.value }});
+        if (response.status === 200) {
+            responseOkMessage.value = response.data;
+            recoveryStep.value = 3;
+        } else {
+            responseErrorMessage.value = response.data;
+        }
+        
+    } catch (error) {
+        if (error.response) {
+        responseOkMessage.value = null;
+        responseErrorMessage.value = error.response.data;
+        } else {
+            responseErrorMessage.value = "Произошла ошибка при отправке запроса"; 
+        }
+    }
+}
 
 </script>
 
@@ -135,6 +168,7 @@ const handleEmailSubmission = async (data) => {
     max-width: 680px;
     padding-left: 20px;
     padding-right: 20px;
+    margin-bottom: 10px;
 }
 .close-menu-icon{
     background-color: transparent;
@@ -150,6 +184,9 @@ const handleEmailSubmission = async (data) => {
     padding: 20px;
     width: 90%;
     max-width: 680px;
+}
+.login-inner-container{
+    background-color: transparent
 }
 
 :deep(h3){
@@ -236,7 +273,7 @@ const handleEmailSubmission = async (data) => {
     padding-right: 10px;
     /* margin-bottom: 100px; */
     position: relative;
-    bottom: 90px;
+    bottom: 35px;
     z-index: 1;
     white-space: normal;
     word-wrap: break-word;
