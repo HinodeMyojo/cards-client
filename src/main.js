@@ -4,15 +4,14 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from '@/router/router.js'
 
-import Vuetify from 'vuetify/lib';
-
-const vuetify = new Vuetify({})
+import vuetify from './plugins/vuetify';
 
 const app = createApp(App)
 
 app.use(createPinia())
 
+app.use(vuetify)
+
 app
     .use(router)
-    .use(vuetify)
     .mount('#app')
