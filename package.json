@@ -13,10 +13,12 @@
   "dependencies": {
     "axios": "^1.7.7",
     "pinia": "^2.1.7",
+    "vite-plugin-vuetify": "^2.0.4",
     "vite-svg-loader": "^5.1.0",
     "vue": "^3.4.29",
     "vue-inline-svg": "^3.1.4",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.3.3",
+    "vuetify": "^3.7.3"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
