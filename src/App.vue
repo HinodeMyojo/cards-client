@@ -24,13 +24,13 @@ const isAuthRoute = computed(() => {
   return authRoutes.some((e) => normalizedPath === e.path)
 })
 
-const isUserLogin = null;
+// const isUserLogin = null;
 
-const GetToken = () => {
-    if (localStorage.getItem('token')) {
-      isUserLogin = true;
-    }
-}
+// const GetToken = () => {
+//     if (localStorage.getItem('token')) {
+//       isUserLogin = true;
+//     }
+// }
 
 
 </script>

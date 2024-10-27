@@ -86,6 +86,7 @@ const loginUser = async (data) => {
         const response = await axios.post(`${backendUrl}/auth/login`, data);
 
         if (response.status === 200) {
+            // Переделать. Нужно принимать access и refresh токены
             token = response.data;
             localStorage.setItem('token', 'Bearer ' + token); 
             router.push('/');

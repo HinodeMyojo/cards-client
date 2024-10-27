@@ -1,107 +1,127 @@
 <template>
-    <div class="main-header">
-        <div class="wrapper">
-            <div class="container">
-                <div class="logotype">
-                    <a class="logo" @click="Home">
-                        <UIIcon path="logo.svg" width="35px" height="35px" />
-                        <span class="logo-text">pleiades</span>
-                    </a>
-                </div>
-                <div class="content">
-                    <div class="content-body">
-                        <div class="main">
-                            <a href="">Главная</a>
-                            <a href="">Модули</a>
-                        </div>                        
-                        <div class="right">
-                            <div class="language">
-                                <a class="switch-lang">
-                                    <UIIcon path="language.svg" />
-                                    <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
-                                </a>
-
-                            </div>
-                            <div v-if="isUserLogin" class="v-main-header">
-                                <v-menu class="v-menu-header">
-                                <template v-slot:activator="{ props }">
-                                    <!-- <v-btn color="primary" v-bind="props">Activator slot</v-btn> -->
-                                    <div v-bind="props">
-                                        <img v-if="avatar" :src="avatar" alt="BaseAvatar">
-                                        <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
-                                    </div>
-                                </template>
-                                
-                                <v-list class="v-list-header" 
-                                        style="border-radius: 10px; background: transparent; min-width: 200px">
-                                    
-                                    <v-list-item 
-                                        v-for="(item, index) in items" 
-                                        :key="index" 
-                                        :value="index" 
-                                        class="v-item-header" 
-                                        :class="{ 'border-style': index === 3 }" 
-                                        style="overflow: hidden;">
-                                        
-                                        <v-list-item-title 
-                                            :class="{ 'highlight-title': index === 3 }" 
-                                            style="background-color: #272A2F; text-wrap: wrap;">
-                                            {{ item.title }}
-                                        </v-list-item-title>
-                                    </v-list-item>
-                                    
-                                </v-list>
-                            </v-menu>
-                            </div>
-                            <div v-else class="auth-header">
-                                <a @click="loginUser" href="">Вход</a>
-                                <button @click="registerUser" class="register">Регистрация</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="main-header">
+    <div class="wrapper">
+      <div class="container">
+        <div class="logotype">
+          <a class="logo" @click="Home">
+              <UIIcon path="logo.svg" width="35px" height="35px" />
+              <span class="logo-text">pleiades</span>
+          </a>
         </div>
+        <div class="content">
+          <div class="content-body">
+            <div class="main">
+              <a href="">Главная</a>
+              <a href="">Модули</a>
+            </div>                        
+              <div class="right">
+                <div class="language">
+                  <a class="switch-lang">
+                      <UIIcon path="language.svg" />
+                      <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
+                  </a>
+                </div>
+                <div v-if="isUserLogin" class="v-main-header">
+                  <v-menu class="v-menu-header">
+                  <template v-slot:activator="{ props }">
+                      <!-- <v-btn color="primary" v-bind="props">Activator slot</v-btn> -->
+                      <div v-bind="props">
+                          <!-- <img v-if="avatar" :src="avatar" alt="BaseAvatar"> -->
+													<div id="userAvatar"></div>
+                          <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
+                      </div>
+                  </template>
+                  <v-list class="v-list-header" 
+                          style="border-radius: 10px; background: transparent; min-width: 200px">
+                      
+                      <v-list-item 
+                          v-for="(item, index) in items" 
+                          :key="index" 
+                          :value="index" 
+                          class="v-item-header" 
+                          :class="{ 'border-style': index === 3 }" 
+                          style="overflow: hidden;">
+                          
+                          <v-list-item-title 
+                              :class="{ 'highlight-title': index === 3 }" 
+                              style="background-color: #272A2F; text-wrap: wrap;">
+                              {{ item.title }}
+                          </v-list-item-title>
+                      </v-list-item>
+                  </v-list>
+                  </v-menu>
+                </div>
+                <div v-else class="auth-header">
+                  <a @click="loginUser" href="">Вход</a>
+                  <button @click="registerUser" class="register">Регистрация</button>
+                  <h2>{{ authStore.token }}</h2>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
 import UIIcon from './UI/UIIcon.vue';
 import router from '@/router/router';
+import { useAuthStore } from '@/stores/authStore';
+import { onMounted } from 'vue';
+import api from '@/plugins/axios';
 
-const avatar = null;
-// mounted() {
-//     this.LoadAvatar();
-// }
+const authStore = useAuthStore();
 
-const isUserLogin  = false;
+const isUserLogin = authStore.isUserLogin;
+
+// const avatar = null;
+
+onMounted(() => {
+		LoadAvatar();
+});
 
 const LoadAvatar = () => {
-    const storedAvatar = localStorage.getItem('userAvatar');
-    if (storedAvatar) {
-        this.avatar = storedAvatar;
-    }else{
-        this.GetAvatar();
-    }
+  const storedAvatar = localStorage.getItem('userAvatar');
+  if (storedAvatar) {
+			SetAvatarToPage(storedAvatar);
+  }else{
+      GetAvatar();
+  }
 }
 
 const GetAvatar = async () => {
-     try{
-
-     }
-     catch(error){
-        console.error(error);
-     }
+	try{
+		const response = await api.get(`/user/whoami`);
+		const base64Avatar = `data:image/png;base64,${response.data.avatar}`;
+    SetAvatarToPage(base64Avatar);
+    localStorage.setItem('userAvatar', base64Avatar);
+	}
+	catch(error){
+		console.error(error);
+	}
 }
+
+const SetAvatarToPage = (base64Avatar) => {
+    const avatarImage = document.createElement('img');
+    avatarImage.src = base64Avatar;
+    const avatarContainer = document.getElementById('userAvatar');
+
+    if (avatarContainer) {
+        avatarContainer.appendChild(avatarImage);
+    } else {
+        console.error("Element with id 'userAvatar' not found.");
+    }
+};
 
 
 
 const items = [
-    { title: 'Профиль' },
-    { title: 'Достижения' },
-    { title: 'Настройки' },
-    { title: 'Выйти из аккаунта' },
-    { title: 'Политика конфиденциальности' },
+  { title: 'Профиль' },
+  { title: 'Достижения' },
+  { title: 'Настройки' },
+  { title: 'Выйти из аккаунта' },
+  { title: 'Политика конфиденциальности' },
 ];
 
 const Home = () => {
