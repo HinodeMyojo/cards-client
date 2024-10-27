@@ -48,6 +48,7 @@ import PasswordRecoverySendEmail from '@/components/Auth/PasswordRecoverySendEma
 import PasswordRecoveryCheckCode from '@/components/Auth/PasswordRecoveryCheckCode.vue';
 import UIIcon from '@/components/UI/UIIcon.vue';
 import router from '@/router/router.js';
+import { useAuthStore } from '@/stores/authStore';
 import {ref} from 'vue';
 
 //Props: 
@@ -57,9 +58,12 @@ const props = defineProps({
     recovery : Boolean,
 })
 
+const authStore = useAuthStore();
+
 let token = null;
 
 const recoveryStep = ref(1);
+
 
 let responseOkMessage = ref(null);
 let responseErrorMessage = ref(null);
@@ -86,8 +90,12 @@ const loginUser = async (data) => {
         const response = await axios.post(`${backendUrl}/auth/login`, data);
 
         if (response.status === 200) {
-            token = response.data;
-            localStorage.setItem('token', 'Bearer ' + token); 
+            // Переделать. Нужно принимать access и refresh токены
+            console.log(response.data);
+            authStore.setTokens({
+                access: response.data.accessToken,
+                refresh: response.data.refreshToken
+            });
             router.push('/');
             console.log(token);
         }
