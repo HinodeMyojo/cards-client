@@ -76,7 +76,7 @@ const closeMenu = () => {
 const registerUser = async (data) => {
     try {
         const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/register`, data);
+        const response = await axios.post(`${backendUrl}/auth/register`, data);
         console.log(response.data);
     } catch (error) {
         console.error(error);
@@ -111,7 +111,7 @@ const handleEmailSubmission = async (data) => {
 
     try {
         const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
-        const response= await axios.get(`${backendUrl}/send-recovery-code`, { params: {to: data.value.email }});
+        const response= await axios.get(`${backendUrl}/auth/send-recovery-code`, { params: {to: data.value.email }});
         if (response.status === 200) {
             responseOkMessage.value = response.data;
         } else {
@@ -137,7 +137,7 @@ const handleCodeSubmission = async (data) => {
     
     try {
         const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
-        const response = await axios.get(`${backendUrl}/check-recovery-code`, { params: {code: data.value.code, email: recoveryEmail.value }});
+        const response = await axios.get(`${backendUrl}/auth/check-recovery-code`, { params: {code: data.value.code, email: recoveryEmail.value }});
         if (response.status === 200) {
             responseOkMessage.value = response.data;
             recoveryStep.value = 3;
