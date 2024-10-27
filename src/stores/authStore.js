@@ -10,28 +10,35 @@ export const useAuthStore = defineStore({
   state: () => ({
       accessToken: localStorage.getItem("accessToken"),
       refreshToken: localStorage.getItem("refreshToken"),
-      isUserLogin: !localStorage.getItem("accessToken"),
+      isUserLogin: !!localStorage.getItem("accessToken"),
   }),
   actions:{
+      checkUserLogin() {
+        this.isUserLogin = !!localStorage.getItem("accessToken");
+      },
       setTokens({ access, refresh })
       {
           this.accessToken = access;
           this.refreshToken = refresh;
           localStorage.setItem("accessToken", access);
           localStorage.setItem("refreshToken", refresh);
+          this.checkUserLogin();
       },
       cleanTokens() {
           this.accessToken = null;
           this.refreshToken = null;
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
+          this.checkUserLogin();
       },
       async refreshAccessToken(){
         try
         {
           const response = await api.post('/auth/refresh', 
             {
-              refresh: this.refreshToken,
+              accessToken: this.accessToken,
+              refreshToken: this.refreshToken,
+
             });
 
           this.setTokens(
@@ -43,7 +50,9 @@ export const useAuthStore = defineStore({
         }
         catch (error)
         {
-          this.clearTokens();
+          this.cleanTokens();
+          console.log(this.isUserLogin);
+          this.isUserLogin = false;
           throw error;
         }
       }

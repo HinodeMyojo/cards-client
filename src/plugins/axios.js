@@ -24,7 +24,7 @@ api.interceptors.response.use((response) =>
         console.log(originalRequest);
 
 
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (error.response.status === 401 && !originalRequest._retry && authStore.isUserLogin) {
             originalRequest._retry = true;
             try{
                 const newAccessToken = await authStore.refreshAccessToken();
@@ -33,7 +33,7 @@ api.interceptors.response.use((response) =>
             }
             catch(error){
                 console.error(error);
-                authStore.clearTokens();
+                authStore.cleanTokens();
             }
         }
 
