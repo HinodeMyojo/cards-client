@@ -23,6 +23,16 @@ const isAuthRoute = computed(() => {
   console.log(normalizedPath)
   return authRoutes.some((e) => normalizedPath === e.path)
 })
+
+const isUserLogin = null;
+
+const GetToken = () => {
+    if (localStorage.getItem('token')) {
+      isUserLogin = true;
+    }
+}
+
+
 </script>
 
 <style>
@@ -30,7 +40,7 @@ const isAuthRoute = computed(() => {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #1b1b1f;
+  background-color: #1B1B1F;
   box-sizing: border-box;
   color: #d9d9d9;
 }

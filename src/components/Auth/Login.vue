@@ -20,7 +20,7 @@
     <a class="lostPassword" @click="passwordRecovery">Забыли пароль?</a>
     <div class="buttons">
       <button class="fill" type="submit">Войти</button>
-      <button class="transparent" type="login" @click="registerUser">Отсутствует учетная запись? Зарегистрироваться</button>
+      <button class="transparent" type="button" @click="registerUser">Отсутствует учетная запись? Зарегистрироваться</button>
       <SocialButtons/>
     </div>
   </form>
@@ -37,6 +37,8 @@ const password = ref('');
 
 // Используем Vue Router для навигации
 const router = useRouter();
+
+const emit = defineEmits(['submit-login']);
 
 // Функция отправки формы
 const submitForm = () => {

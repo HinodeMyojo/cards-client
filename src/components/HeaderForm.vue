@@ -22,7 +22,38 @@
                                 </a>
 
                             </div>
-                            <div class="auth-header">
+                            <div v-if="isUserLogin" class="v-main-header">
+                                <v-menu class="v-menu-header">
+                                <template v-slot:activator="{ props }">
+                                    <!-- <v-btn color="primary" v-bind="props">Activator slot</v-btn> -->
+                                    <div v-bind="props">
+                                        <img v-if="avatar" :src="avatar" alt="BaseAvatar">
+                                        <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
+                                    </div>
+                                </template>
+                                
+                                <v-list class="v-list-header" 
+                                        style="border-radius: 10px; background: transparent; min-width: 200px">
+                                    
+                                    <v-list-item 
+                                        v-for="(item, index) in items" 
+                                        :key="index" 
+                                        :value="index" 
+                                        class="v-item-header" 
+                                        :class="{ 'border-style': index === 3 }" 
+                                        style="overflow: hidden;">
+                                        
+                                        <v-list-item-title 
+                                            :class="{ 'highlight-title': index === 3 }" 
+                                            style="background-color: #272A2F; text-wrap: wrap;">
+                                            {{ item.title }}
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    
+                                </v-list>
+                            </v-menu>
+                            </div>
+                            <div v-else class="auth-header">
                                 <a @click="loginUser" href="">Вход</a>
                                 <button @click="registerUser" class="register">Регистрация</button>
                             </div>
@@ -38,6 +69,40 @@
 import UIIcon from './UI/UIIcon.vue';
 import router from '@/router/router';
 
+const avatar = null;
+// mounted() {
+//     this.LoadAvatar();
+// }
+
+const isUserLogin  = false;
+
+const LoadAvatar = () => {
+    const storedAvatar = localStorage.getItem('userAvatar');
+    if (storedAvatar) {
+        this.avatar = storedAvatar;
+    }else{
+        this.GetAvatar();
+    }
+}
+
+const GetAvatar = async () => {
+     try{
+
+     }
+     catch(error){
+        console.error(error);
+     }
+}
+
+
+
+const items = [
+    { title: 'Профиль' },
+    { title: 'Достижения' },
+    { title: 'Настройки' },
+    { title: 'Выйти из аккаунта' },
+    { title: 'Политика конфиденциальности' },
+];
 
 const Home = () => {
     router.push('/');
@@ -53,6 +118,31 @@ const registerUser = () => {
 </script>
 
 <style scoped>
+
+
+.v-list
+{
+    padding: 0px;
+    background-color: #272A2F;
+    margin-top: 10px;   
+}
+
+.border-style {
+    border-top: solid #323232;
+    border-bottom: solid #323232;
+}
+
+.highlight-title {
+    color: #FF5858;
+}
+
+.v-item-header{
+    background-color: #272A2F;
+}
+.v-item-title-header{
+    background-color: #272A2F;
+}
+
 .main-header{
     /* display: flex; */
     text-decoration: none;
