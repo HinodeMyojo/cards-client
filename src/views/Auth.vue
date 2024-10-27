@@ -57,6 +57,8 @@ const props = defineProps({
     recovery : Boolean,
 })
 
+let token = null;
+
 const recoveryStep = ref(1);
 
 let responseOkMessage = ref(null);
@@ -81,7 +83,15 @@ const registerUser = async (data) => {
 const loginUser = async (data) => {
     try {
         const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/login`, data);
+        const response = await axios.post(`${backendUrl}/auth/login`, data);
+
+        if (response.status === 200) {
+            token = response.data;
+            localStorage.setItem('token', 'Bearer ' + token); 
+            router.push('/');
+            console.log(token);
+        }
+
         console.log(response.data);
     } catch (error) {
         console.error(error);
