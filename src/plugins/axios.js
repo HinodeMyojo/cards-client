@@ -23,15 +23,19 @@ api.interceptors.response.use((response) =>
         const originalRequest = error.config;
         console.log(originalRequest);
 
-
+        // Если мы при запросе получаем 401 ошибку И не было попыток повтороного реквеста И пользователь авторизован
         if (error.response.status === 401 && !originalRequest._retry && authStore.isUserLogin) {
+            // Проставляем флаг повторого запроса (ибо больше 1 раза смысла не имеет)
             originalRequest._retry = true;
             try{
+                // Пытаемся обновить токен
                 const newAccessToken = await authStore.refreshAccessToken();
+                // Если обновление прошло успешно, то добавляем его в headers
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
             }
             catch(error){
+                // Если обновление не удалось, то очищаем токены и выходим на страницу входа
                 console.error(error);
                 authStore.cleanTokens();
             }
