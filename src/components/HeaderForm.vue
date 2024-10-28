@@ -122,8 +122,8 @@ const SetAvatarToPage = (base64Avatar, width = 40, height = 40) => {
 
 const storedUserName = ref('');
 
-const items = ref([
-  { title: 'Привет, {storedUserName}!', action: 'home' },
+const items = computed(() => [
+  { title: `Привет, ${storedUserName.value}!`, action: 'home' },
   { title: 'Достижения', action: 'achievements' },
   { title: 'Настройки', action: 'settings' },
   { title: 'Выйти из аккаунта', action: 'logout' },
@@ -132,14 +132,8 @@ const items = ref([
 
 const LoadUserName = () => {
   const userName = localStorage.getItem('userName');
-  if (userName) {
-    storedUserName.value = userName;
-  }
-  else {
-    storedUserName.value = "Пользователь"
-  }
+  storedUserName.value = userName || 'Пользователь';
 };
-
 
 const handleClick = (item) => {
   switch (item.action) {
