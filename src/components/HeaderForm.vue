@@ -21,7 +21,25 @@
                   <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
                 </a>
               </div>
-              <div v-if="isUserLogin" class="login-user">
+              <div v-if="isUserLogin" class="login-user" id="menu-activator">
+                <!-- Кнопка "Добавить" -->
+                <div class="add-button" style="color: red">
+                  <svg-icon type="mdi" :path="path" :size="33"></svg-icon>
+                </div>
+                <!-- Меню для кнопки добавить -->
+                <div>
+                  <v-menu activator="#menu-activator" class="v-menu-header">
+                    <v-list class="v-list-header" style="background-color: transparent; min-width: 180px">
+                      <v-list-item v-for="(item, index) in addButtonItems" :key="index" :value="index"
+                        class="v-item-header">
+                        <v-list-item-title style="background-color: #272A2F; text-wrap: wrap;">
+                          {{ item.title }}
+                        </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </div>
+                <!-- Меню -->
                 <div>
                   <v-menu class="v-menu-header">
                     <template v-slot:activator="{ props }">
@@ -59,6 +77,8 @@
 <script setup>
 import UIIcon from './UI/UIIcon.vue';
 import router from '@/router/router';
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiPlusCircleOutline } from '@mdi/js';
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import api from '@/plugins/axios';
@@ -69,6 +89,9 @@ const authStore = useAuthStore();
 const isUserLogin = computed(() => authStore.isUserLogin);
 
 // const avatar = null;
+
+// Для иконок
+const path = ref(mdiPlusCircleOutline);
 
 onMounted(() => {
   LoadAvatar();
@@ -130,6 +153,11 @@ const items = computed(() => [
   { title: 'Политика конфиденциальности', action: 'privacy' },
 ]);
 
+const addButtonItems = [
+  { title: 'Добавить модуль', action: 'addModule' },
+  { title: 'Добавить папку', action: 'addFolder' },
+]
+
 const LoadUserName = () => {
   const userName = localStorage.getItem('userName');
   storedUserName.value = userName || 'Пользователь';
@@ -172,6 +200,19 @@ const registerUser = () => {
 </script>
 
 <style scoped>
+.add-button {
+  cursor: pointer;
+}
+
+.add-button:hover {
+  color: #b31275;
+}
+
+.add-button svg-icon {
+  fill: currentColor;
+  /* Позволяет иконке наследовать цвет от родителя */
+}
+
 .userProfile {
   display: flex;
   flex-direction: row;
@@ -184,6 +225,10 @@ const registerUser = () => {
   padding: 0px;
   background-color: #272A2F;
   margin-top: 10px;
+}
+
+.v-list {
+  background: transparent;
 }
 
 .border-style {
@@ -209,6 +254,16 @@ const registerUser = () => {
   width: 100%;
   height: 64px;
 
+}
+
+.wrapper {
+  padding-left: 20%;
+  padding-right: 20%;
+  /* width: 80vh; */
+  width: 100%;
+  height: 100%;
+  /* display: flex;
+  align-items: center; */
 }
 
 .login {
@@ -247,12 +302,7 @@ a:hover {
   transition: 0.3s ease;
 }
 
-.wrapper {
-  padding-left: 20%;
-  padding-right: 20%;
-  width: 100%;
-  height: 100%;
-}
+
 
 .container {
   display: flex;

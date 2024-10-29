@@ -1,8 +1,11 @@
 <template>
-    <div></div>
+    <div>
+        ХУЙ
+    </div>
 </template>
 
 <script setup>
+
 </script>
 
 <style scoped></style>

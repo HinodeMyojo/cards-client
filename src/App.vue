@@ -6,7 +6,11 @@
     <header>
       <HeaderForm />
     </header>
-    <router-view></router-view>
+    <div class="main-content">
+      <div class="main-wrapper">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,5 +62,17 @@ a {
   /* Стили для страниц логина, регистрации и восстановления пароля */
   background-color: #242429;
   /* Добавь другие специфические стили для логина здесь */
+}
+
+.main-content {
+  width: 100%;
+  height: 100vh;
+}
+
+.main-wrapper {
+  padding-left: 20%;
+  padding-right: 20%;
+  width: 100%;
+  height: 100vh;
 }
 </style>
