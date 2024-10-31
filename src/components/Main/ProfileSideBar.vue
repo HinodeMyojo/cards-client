@@ -14,8 +14,9 @@
             </div>
             <hr />
             <div class="search">
-                <v-autocomplete label="Поиск"
-                    :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"></v-autocomplete>
+                <SearchAutocomplete :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                    @select="handleSelect" />
+                <!-- <p>Вы выбрали: {{ selectedItem }}</p> -->
             </div>
             <hr />
             <div class="tree"></div>
@@ -25,10 +26,17 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
 import api from '@/plugins/axios';
 
 const storedUserName = ref('Пользователь');
 const avatarSrc = ref('');
+
+const selectedItem = ref('');
+
+const handleSelect = item => {
+    selectedItem.value = item;
+};
 
 const LoadUserData = async () => {
     const userName = localStorage.getItem('userName');
@@ -57,6 +65,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.search {
+    border-radius: 10px;
+}
+
 .main {
     display: flex;
     border-radius: 25px;
