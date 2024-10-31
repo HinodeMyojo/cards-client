@@ -47,6 +47,7 @@ const isAuthRoute = computed(() => {
   background-color: #1B1B1F;
   box-sizing: border-box;
   color: #d9d9d9;
+  /* color: #F0F6FC; */
 }
 
 a {
@@ -67,6 +68,7 @@ a {
 .main-content {
   width: 100%;
   height: 100vh;
+  margin-top: 25px;
 }
 
 .main-wrapper {

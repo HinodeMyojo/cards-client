@@ -8,6 +8,7 @@
 </template>
 
 <script setup>
+import ProfileSideBar from '@/components/Main/ProfileSideBar.vue';
 </script>
 
 <style scoped>
@@ -20,7 +21,7 @@
 
 .profile-sidebar {
     display: flex;
-    flex: 0.4;
+    flex: 0.3;
 }
 
 .profile-main {

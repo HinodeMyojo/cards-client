@@ -312,7 +312,7 @@ a:hover {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
+  gap: 60px;
 }
 
 .right {
@@ -344,7 +344,7 @@ a:hover {
 .auth-header {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 60px;
 }
 
 .switch-lang {
