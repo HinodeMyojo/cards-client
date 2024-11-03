@@ -38,6 +38,10 @@ export const moduleRoutes = [
         path: '/module/study',
         component: Module,
         props: {'study': true}
+    },
+    {
+        path: '/module/:id',
+        component: Module
     }
 ]
 

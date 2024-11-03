@@ -1,6 +1,6 @@
 <template>
     <div>
-        ХУЙ
+        Модуль
     </div>
 </template>
 

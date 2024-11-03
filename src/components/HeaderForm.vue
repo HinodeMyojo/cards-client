@@ -64,7 +64,6 @@
               <div v-else class="auth-header">
                 <a @click="loginUser" class="login">Вход</a>
                 <button @click="registerUser" class="register">Регистрация</button>
-                <h2>{{ authStore.token }}</h2>
               </div>
             </div>
           </div>
@@ -100,6 +99,7 @@ onMounted(() => {
 
 const logout = async () => {
   await authStore.cleanTokens();
+  cleanLocalStorage();
   router.push('/');
 }
 
@@ -146,7 +146,7 @@ const SetAvatarToPage = (base64Avatar, width = 40, height = 40) => {
 const storedUserName = ref('');
 
 const items = computed(() => [
-  { title: `Привет, ${storedUserName.value}!`, action: 'home' },
+  { title: `Привет, ${storedUserName.value}!`, action: `${storedUserName.value}` },
   { title: 'Достижения', action: 'achievements' },
   { title: 'Настройки', action: 'settings' },
   { title: 'Выйти из аккаунта', action: 'logout' },
@@ -165,8 +165,8 @@ const LoadUserName = () => {
 
 const handleClick = (item) => {
   switch (item.action) {
-    case 'profile':
-      router.push('/profile');
+    case storedUserName.value:
+      router.push(`/${storedUserName.value}`);
       break;
     case 'achievements':
       router.push('/achievements');
@@ -175,7 +175,8 @@ const handleClick = (item) => {
       router.push('/settings');
       break;
     case 'logout':
-      authStore.cleanTokens(); // Выполняем logout
+      logout();
+
       router.push('/');
       break;
     case 'privacy':
@@ -196,6 +197,12 @@ const loginUser = () => {
 const registerUser = () => {
   router.push('/register');
 };
+
+const cleanLocalStorage = () => {
+  localStorage.removeItem("userAvatar");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("recoveryEmail");
+}
 
 </script>
 
@@ -340,11 +347,16 @@ a:hover {
   justify-content: space-between;
 }
 
-.main,
-.auth-header {
+.main {
   display: flex;
   align-items: center;
   gap: 60px;
+}
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  gap: 40px;
 }
 
 .switch-lang {

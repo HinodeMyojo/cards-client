@@ -1,138 +1,185 @@
 <template>
-    <div class="main">
-        <div class="container">
-            <div class="profile">
-                <div class="profile-image">
-                    <div id="sideBarAvatar" class="sideBarAvatar">
-                        <img v-if="avatarSrc" :src="avatarSrc" alt="User Avatar" />
-                        <p v-else>Загрузка аватара...</p>
-                    </div>
-                </div>
-                <div class="profile-info">
-                    <div id="userName" class="userName">{{ storedUserName }}</div>
-                </div>
-            </div>
-            <hr />
-            <div class="search">
-                <SearchAutocomplete :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-                    @select="handleSelect" />
-                <!-- <p>Вы выбрали: {{ selectedItem }}</p> -->
-            </div>
-            <hr />
-            <div class="tree"></div>
+  <div class="main">
+    <div class="container">
+      <div class="profile">
+        <div class="profile-image">
+          <div id="sideBarAvatar" class="sideBarAvatar">
+            <img v-if="avatarSrc" :src="avatarSrc" alt="User Avatar" />
+            <p v-else>Загрузка аватара...</p>
+          </div>
         </div>
+        <div class="profile-info">
+          <div id="userName" class="userName">{{ storedUserName }}</div>
+        </div>
+      </div>
+      <hr />
+      <div class="search">
+        <SearchAutocomplete :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+          @select="handleSelect" />
+        <!-- <p>Вы выбрали: {{ selectedItem }}</p> -->
+      </div>
+      <hr />
+      <div class="tree">
+        <div v-if="items.length > 0" class="moduleItems">
+          <div v-if="items.length > 0" class="moduleItems">
+            <ModuleItem v-for="item in items" :key="item.id" :title="item.title" :id="item.id"
+              @click="moduleClick(item.id)">
+              {{ item.title }}
+            </ModuleItem>
+          </div>
+        </div>
+        <div v-else class="moduleItems">
+          <p>Тут пока ничего нет!</p>
+          <p>Добьте или создайте модули!</p>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
 import api from '@/plugins/axios';
+import router from '@/router/router.js';
+import ModuleItem from '../UI/ModuleItem.vue';
+import { HttpStatusCode } from 'axios';
 
 const storedUserName = ref('Пользователь');
 const avatarSrc = ref('');
 
 const selectedItem = ref('');
 
+const items = ref([]);
+
 const handleSelect = item => {
-    selectedItem.value = item;
+  selectedItem.value = item;
 };
+
+const moduleClick = (id) => {
+  router.push(`/module/${id}`)
+}
 
 const LoadUserData = async () => {
-    const userName = localStorage.getItem('userName');
-    const storedAvatar = localStorage.getItem('userAvatar');
+  const userName = localStorage.getItem('userName');
+  const storedAvatar = localStorage.getItem('userAvatar');
 
-    if (userName) storedUserName.value = userName;
-    if (storedAvatar) {
-        avatarSrc.value = storedAvatar;
-    } else {
-        try {
-            const response = await api.get(`/user/whoami`);
-            const base64Avatar = `data:image/png;base64,${response.data.avatar}`;
-            avatarSrc.value = base64Avatar;
-            storedUserName.value = response.data.userName;
-            localStorage.setItem('userAvatar', base64Avatar);
-            localStorage.setItem('userName', response.data.userName);
-        } catch (error) {
-            console.error('Error loading user data:', error);
-        }
+  if (userName) storedUserName.value = userName;
+  if (storedAvatar) {
+    avatarSrc.value = storedAvatar;
+  } else {
+    try {
+      const response = await api.get(`/user/whoami`);
+      const base64Avatar = `data:image/png;base64,${response.data.avatar}`;
+      avatarSrc.value = base64Avatar;
+      storedUserName.value = response.data.userName;
+      localStorage.setItem('userAvatar', base64Avatar);
+      localStorage.setItem('userName', response.data.userName);
+    } catch (error) {
+      console.error('Error loading user data:', error);
     }
+  }
 };
 
+const LoadUserModules = async () => {
+  try {
+    const response = await api.get(`/module/used-modules`);
+    console.log(response);
+    if (response.status == HttpStatusCode.Ok) {
+      console.log(response.data);
+      items.value.push(...response.data);
+    }
+  }
+  catch (error) {
+    console.error('Error loading user data:', error);
+  }
+}
+
 onMounted(() => {
-    LoadUserData();
+  LoadUserData();
+  LoadUserModules();
 });
 </script>
 
 <style scoped>
 .search {
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 .main {
-    display: flex;
-    border-radius: 25px;
-    width: 100%;
-    height: 50%;
-    background-color: #202127;
+  display: flex;
+  border-radius: 25px;
+  width: 100%;
+  height: 700px;
+  background-color: #202127;
 }
 
 hr {
-    height: 2px;
-    background-color: #272A2F;
-    border: none;
-    margin: 10px 0;
+  height: 2px;
+  background-color: #272A2F;
+  border: none;
+  margin: 10px 0;
+}
+
+.moduleItems {
+  background-color: #202127;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.moduleItems p {
+  background-color: #202127;
 }
 
 .container {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    margin: 15px;
-    background-color: #202127;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 15px;
+  background-color: #202127;
 }
 
 .profile {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    margin-bottom: 5px;
-    background-color: transparent;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  margin-bottom: 5px;
+  background-color: transparent;
 }
 
-.profile-image {
-    border-radius: 50%;
-    overflow: hidden;
-    width: 160px;
-    height: 160px;
-    display: flex;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.sideBarAvatar {
+  background-color: #202127;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 160px;
+  min-width: 160px;
 }
 
-.profile-image img {
-    border-radius: 50%;
-    max-width: 100%;
-    max-height: 100%;
-    border: 4px solid #808080;
-    object-fit: cover;
-    filter: blur(0.2px);
+.sideBarAvatar img {
+  border-radius: 100%;
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border: 4px solid #808080;
 }
 
 .profile-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: large;
-    background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: large;
+  background-color: transparent;
 }
 
 .userName {
-    font-weight: 500;
-    background-color: transparent;
+  font-weight: 500;
+  background-color: transparent;
 }
 </style>
