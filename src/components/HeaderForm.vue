@@ -11,8 +11,8 @@
         <div class="content">
           <div class="content-body">
             <div class="main">
-              <a href="">Главная</a>
-              <a href="">Модули</a>
+              <a href="#">Главная</a>
+              <a href="#">Модули</a>
             </div>
             <div class="right">
               <div class="language">

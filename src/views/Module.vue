@@ -48,13 +48,13 @@ onMounted(async () => {
 
 .module-sidebar {
     display: flex;
-    flex: 0.3;
+    flex: 0.45;
 }
 
 .module-main {
     display: flex;
     flex-direction: column;
-    flex: 0.6;
+    flex: 1;
     gap: 30px;
 }
 

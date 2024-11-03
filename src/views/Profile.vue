@@ -21,11 +21,11 @@ import ProfileSideBar from '@/components/Main/ProfileSideBar.vue';
 
 .profile-sidebar {
     display: flex;
-    flex: 0.3;
+    flex: 0.45;
 }
 
 .profile-main {
     display: flex;
-    flex: 0.6;
+    flex: 1;
 }
 </style>
