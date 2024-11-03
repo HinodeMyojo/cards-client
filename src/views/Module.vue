@@ -6,10 +6,10 @@
         <div class="module-main">
             <div class="module-head">
                 {{ moduleInfo ? moduleInfo.title : 'Loading...' }}
-            </div>
-            <div class="module-info">
                 <p v-if="moduleInfo">{{ moduleInfo.description }}</p>
                 <p v-else>Загрузка</p>
+            </div>
+            <div class="module-info">
             </div>
         </div>
     </div>
@@ -17,24 +17,29 @@
 
 <script setup>
 import ProfileSideBar from '@/components/Main/ProfileSideBar.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useModuleService } from '@/components/composables/useModuleService';
 import { useRoute } from 'vue-router';
 
 const route = useRoute(); // Получаем объект маршрута
-const moduleId = route.params.id; // Извлекаем ID модуля из параметров маршрута
+let moduleId = route.params.id; // Извлекаем ID модуля из параметров маршрута
 const { getModuleById, currentModule } = useModuleService(); // Получаем метод сервиса
 const moduleInfo = ref(null); // Инициализируем реактивную переменную
 
 onMounted(async () => {
-    try {
-        await getModuleById(moduleId); // Ожидаем результат
-        moduleInfo.value = currentModule.value; // Получаем данные текущего модуля
-    } catch (error) {
-        console.error('Error fetching module:', error);
-        // Можно добавить обработку ошибок, если нужно
-    }
+    await getModuleById(moduleId); // Запрашиваем данные для текущего модуля
+    moduleInfo.value = currentModule.value;
 });
+
+// Отслеживаем изменения параметров маршрута
+watch(
+    () => route.params.id,
+    async (newId) => {
+        moduleId = newId; // Обновляем ID модуля
+        await getModuleById(newId); // Получаем новые данные модуля
+        moduleInfo.value = currentModule.value;
+    }
+);
 </script>
 
 <style scoped>
