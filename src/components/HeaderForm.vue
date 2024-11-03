@@ -211,9 +211,9 @@ const cleanLocalStorage = () => {
   cursor: pointer;
 }
 
-.add-button:hover {
+/* .add-button:hover {
   color: #b31275;
-}
+} */
 
 .add-button svg-icon {
   fill: currentColor;
