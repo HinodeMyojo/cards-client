@@ -1,0 +1,31 @@
+<template>
+    <div class="profile-container">
+        <div class="profile-sidebar">
+            <ProfileSideBar />
+        </div>
+        <div class="profile-main"></div>
+    </div>
+</template>
+
+<script setup>
+import ProfileSideBar from '@/components/Main/ProfileSideBar.vue';
+</script>
+
+<style scoped>
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.profile-sidebar {
+    display: flex;
+    flex: 0.45;
+}
+
+.profile-main {
+    display: flex;
+    flex: 1;
+}
+</style>

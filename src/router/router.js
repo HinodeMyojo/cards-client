@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Auth from "@/views/Auth.vue";
+import Module from "@/views/Module.vue";
+import Profile from "@/views/Profile.vue";
 import App from "@/App.vue";
 import HomePage from '@/views/HomePage.vue';
 
@@ -21,6 +23,35 @@ export const authRoutes = [
     }
 ] 
 
+export const moduleRoutes = [
+    {
+        path: '/module/create',
+        component: Module,
+        props: {'create': true}
+    },
+    {
+        path: '/module/edit',
+        component: Module,
+        props: {'edit': true}
+    },
+    {
+        path: '/module/study',
+        component: Module,
+        props: {'study': true}
+    },
+    {
+        path: '/module/:id',
+        component: Module
+    }
+]
+
+export const profileRoutes = [
+    {
+        path: '/:username',
+        component: Profile
+    }
+]
+
 const routes = [
     {
         path: '/',
@@ -29,6 +60,8 @@ const routes = [
 ]
 
 allRoutersToRoutes(authRoutes);
+allRoutersToRoutes(moduleRoutes);
+allRoutersToRoutes(profileRoutes);
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.VITE_BASE_URL || '/'), // Используем VITE_BASE_URL

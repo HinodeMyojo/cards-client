@@ -11,8 +11,8 @@
         <div class="content">
           <div class="content-body">
             <div class="main">
-              <a href="">Главная</a>
-              <a href="">Модули</a>
+              <a href="#">Главная</a>
+              <a href="#">Модули</a>
             </div>
             <div class="right">
               <div class="language">
@@ -21,7 +21,25 @@
                   <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
                 </a>
               </div>
-              <div v-if="isUserLogin" class="login-user">
+              <div v-if="isUserLogin" class="login-user" id="menu-activator">
+                <!-- Кнопка "Добавить" -->
+                <div class="add-button" style="color: red">
+                  <svg-icon type="mdi" :path="path" :size="33"></svg-icon>
+                </div>
+                <!-- Меню для кнопки добавить -->
+                <div>
+                  <v-menu activator="#menu-activator" class="v-menu-header">
+                    <v-list class="v-list-header" style="background-color: transparent; min-width: 180px">
+                      <v-list-item v-for="(item, index) in addButtonItems" :key="index" :value="index"
+                        class="v-item-header">
+                        <v-list-item-title style="background-color: #272A2F; text-wrap: wrap;">
+                          {{ item.title }}
+                        </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </div>
+                <!-- Меню -->
                 <div>
                   <v-menu class="v-menu-header">
                     <template v-slot:activator="{ props }">
@@ -46,7 +64,6 @@
               <div v-else class="auth-header">
                 <a @click="loginUser" class="login">Вход</a>
                 <button @click="registerUser" class="register">Регистрация</button>
-                <h2>{{ authStore.token }}</h2>
               </div>
             </div>
           </div>
@@ -59,6 +76,8 @@
 <script setup>
 import UIIcon from './UI/UIIcon.vue';
 import router from '@/router/router';
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiPlusCircleOutline } from '@mdi/js';
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import api from '@/plugins/axios';
@@ -70,6 +89,9 @@ const isUserLogin = computed(() => authStore.isUserLogin);
 
 // const avatar = null;
 
+// Для иконок
+const path = ref(mdiPlusCircleOutline);
+
 onMounted(() => {
   LoadAvatar();
   LoadUserName();
@@ -77,6 +99,7 @@ onMounted(() => {
 
 const logout = async () => {
   await authStore.cleanTokens();
+  cleanLocalStorage();
   router.push('/');
 }
 
@@ -123,12 +146,17 @@ const SetAvatarToPage = (base64Avatar, width = 40, height = 40) => {
 const storedUserName = ref('');
 
 const items = computed(() => [
-  { title: `Привет, ${storedUserName.value}!`, action: 'home' },
+  { title: `Привет, ${storedUserName.value}!`, action: `${storedUserName.value}` },
   { title: 'Достижения', action: 'achievements' },
   { title: 'Настройки', action: 'settings' },
   { title: 'Выйти из аккаунта', action: 'logout' },
   { title: 'Политика конфиденциальности', action: 'privacy' },
 ]);
+
+const addButtonItems = [
+  { title: 'Добавить модуль', action: 'addModule' },
+  { title: 'Добавить папку', action: 'addFolder' },
+]
 
 const LoadUserName = () => {
   const userName = localStorage.getItem('userName');
@@ -137,8 +165,8 @@ const LoadUserName = () => {
 
 const handleClick = (item) => {
   switch (item.action) {
-    case 'profile':
-      router.push('/profile');
+    case storedUserName.value:
+      router.push(`/${storedUserName.value}`);
       break;
     case 'achievements':
       router.push('/achievements');
@@ -147,7 +175,8 @@ const handleClick = (item) => {
       router.push('/settings');
       break;
     case 'logout':
-      authStore.cleanTokens(); // Выполняем logout
+      logout();
+
       router.push('/');
       break;
     case 'privacy':
@@ -169,9 +198,28 @@ const registerUser = () => {
   router.push('/register');
 };
 
+const cleanLocalStorage = () => {
+  localStorage.removeItem("userAvatar");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("recoveryEmail");
+}
+
 </script>
 
 <style scoped>
+.add-button {
+  cursor: pointer;
+}
+
+/* .add-button:hover {
+  color: #b31275;
+} */
+
+.add-button svg-icon {
+  fill: currentColor;
+  /* Позволяет иконке наследовать цвет от родителя */
+}
+
 .userProfile {
   display: flex;
   flex-direction: row;
@@ -184,6 +232,10 @@ const registerUser = () => {
   padding: 0px;
   background-color: #272A2F;
   margin-top: 10px;
+}
+
+.v-list {
+  background: transparent;
 }
 
 .border-style {
@@ -209,6 +261,16 @@ const registerUser = () => {
   width: 100%;
   height: 64px;
 
+}
+
+.wrapper {
+  padding-left: 20%;
+  padding-right: 20%;
+  /* width: 80vh; */
+  width: 100%;
+  height: 100%;
+  /* display: flex;
+  align-items: center; */
 }
 
 .login {
@@ -247,12 +309,7 @@ a:hover {
   transition: 0.3s ease;
 }
 
-.wrapper {
-  padding-left: 20%;
-  padding-right: 20%;
-  width: 100%;
-  height: 100%;
-}
+
 
 .container {
   display: flex;
@@ -262,7 +319,7 @@ a:hover {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
+  gap: 60px;
 }
 
 .right {
@@ -290,11 +347,16 @@ a:hover {
   justify-content: space-between;
 }
 
-.main,
+.main {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
 .auth-header {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 40px;
 }
 
 .switch-lang {

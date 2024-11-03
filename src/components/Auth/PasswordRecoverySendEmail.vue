@@ -2,13 +2,7 @@
   <h3>Восстановление пароля</h3>
   <form class="login-form" @submit.prevent="submitForm">
     <label for="Email">Email</label>
-    <input
-      v-model="data.email"
-      type="email"
-      id="Email"
-      placeholder="AlphaCentauri@mail.ru"
-      required
-    />
+    <input v-model="data.email" type="email" id="Email" placeholder="AlphaCentauri@mail.ru" required />
     <div class="buttons">
       <button class="fill" type="submit" @click="sendEmail">Отправить письмо</button>
       <button class="transparent" type="button" @click="loginUser">
