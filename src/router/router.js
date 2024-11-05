@@ -2,14 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Auth from "@/views/Auth.vue";
 import Module from "@/views/Module.vue";
 import Profile from "@/views/Profile.vue";
-import App from "@/App.vue";
 import HomePage from '@/views/HomePage.vue';
 
 export const authRoutes = [
     {
         path: '/login',
         component: Auth,
-        props: { 'login': true }
+        name: 'Login',
+        props: { 'login': true },
     },
     {
         path: '/register',
@@ -48,7 +48,8 @@ export const moduleRoutes = [
 export const profileRoutes = [
     {
         path: '/:username',
-        component: Profile
+        component: Profile,
+        name: 'Profile'
     }
 ]
 
@@ -58,6 +59,7 @@ const routes = [
         component: HomePage
     }
 ]
+
 
 allRoutersToRoutes(authRoutes);
 allRoutersToRoutes(moduleRoutes);
