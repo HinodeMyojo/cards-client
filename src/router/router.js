@@ -76,6 +76,7 @@ function allRoutersToRoutes(routers) {
         routes.push(router)
     })
 }
+// Создаем правила рефреша для ВСЕГО!
 
 
 export default router;

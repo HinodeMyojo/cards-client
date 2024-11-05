@@ -41,6 +41,8 @@ const decrement = () => {
 .card{
     display: flex;
     align-self: center;
+    height: 100%;
+    width: 100%;
 }
 p{
     font-size: 28px;

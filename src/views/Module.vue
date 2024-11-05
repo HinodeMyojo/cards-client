@@ -14,7 +14,9 @@
                 </div>
                 <hr />
                 <div class="module-card">
-                    <Card></Card>
+                    <div class="module-card" v-if="elements.length > 0">
+                        <Card :keyWord="elements[0].key" :valueWord="elements[0].value"></Card>
+                    </div>
                 </div>
                 <div class="module-buttons"></div>
                 
@@ -35,15 +37,18 @@ import Card from '@/components/Main/Card.vue';
 
 const route = useRoute(); // Получаем объект маршрута
 let moduleId = route.params.id; // Извлекаем ID модуля из параметров маршрута
-const { getModuleById, currentModule } = useModuleService(); // Получаем метод сервиса
-const moduleInfo = ref(""); // Инициализируем реактивную переменную
+const { getModuleById, currentModule } = useModuleService(); 
+const moduleInfo = ref(""); 
+const elements = ref([]); 
+
 
 onMounted(async () => {
     await getModuleById(moduleId); // Запрашиваем данные для текущего модуля
     moduleInfo.value = currentModule.value;
+    elements.value = moduleInfo.value.elements || [];
 });
 
-// Отслеживаем изменения параметров маршрута
+
 watch(
     () => route.params.id,
     async (newId) => {
@@ -52,6 +57,9 @@ watch(
         moduleInfo.value = currentModule.value;
     }
 );
+
+
+// console.log(currentModule.value);
 </script>
 
 <style scoped>
