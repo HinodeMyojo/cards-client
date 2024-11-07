@@ -1,8 +1,8 @@
 <template>
   <div class="card-main">
-    <div class="card-icon-90">
+    <button class="card-icon-90" @click="prevElement">
       <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
-    </div>
+    </button>
     <div class="card-container">
       <div class="card-inner">
         <div
@@ -25,41 +25,74 @@
         </div>
       </div>
     </div>
-    <div class="card-icon">
+    <button class="card-icon" @click="nextElement">
       <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
-    </div>
+    </button>
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs } from 'vue'
+import { ref, toRefs, watch } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiArrowRightBoldCircleOutline } from '@mdi/js'
 
-const state = ref(true)
-
-const path = ref(mdiArrowRightBoldCircleOutline)
+// Список ключ:значение
 
 const props = defineProps({
-  keyWord: {
-    type: String,
-    required: true
-  },
-  valueWord: {
-    type: String,
+  wordsArray: {
+    type: Array,
     required: true
   },
   backgroundColor: {
     type: String,
-    default: '#2B2C34' // значение по умолчанию
+    default: '#2B2C34'
   }
 })
+
+// Реактивные переменные
+const state = ref(true)
+const path = ref(mdiArrowRightBoldCircleOutline)
+
+const keyWord = ref('')
+const valueWord = ref('')
+
+// Инициализация слов из переданного массива
+watch(
+  () => props.wordsArray,
+  (newWordsArray) => {
+    if (newWordsArray.length > 0) {
+      keyWord.value = newWordsArray[0].key
+      valueWord.value = newWordsArray[0].value
+    }
+  },
+  { immediate: true }
+)
+
+const currentIndex = ref(0)
+
+// Функция для перехода к следующему элементу
+const nextElement = () => {
+  if (currentIndex.value < props.wordsArray.length - 1) {
+    currentIndex.value += 1 // Переходим к следующему элементу
+  }
+  keyWord.value = props.wordsArray[currentIndex.value].key
+  valueWord.value = props.wordsArray[currentIndex.value].value
+}
+
+// Функция для перехода к предыдущему элементу
+const prevElement = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value -= 1 // Переходим к предыдущему элементу
+  }
+  keyWord.value = props.wordsArray[currentIndex.value].key
+  valueWord.value = props.wordsArray[currentIndex.value].value
+}
+
+const { backgroundColor } = toRefs(props)
 
 const changeSide = () => {
   state.value = !state.value
 }
-
-const { keyWord, valueWord, backgroundColor } = toRefs(props)
 </script>
 
 <style scoped>
