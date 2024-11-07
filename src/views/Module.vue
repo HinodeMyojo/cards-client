@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <hr />
-                <div class="module-card">
+                <div class="module-card-container">
                     <div class="module-card" v-if="elements.length > 0">
                         <Card :keyWord="elements[0].key" :valueWord="elements[0].value"></Card>
                     </div>
@@ -122,12 +122,22 @@ watch(
     font-size: 28px;
 }
 
+.module-card-container{
+    display: flex;
+    margin-top: 50px;
+    
+}
+
 .module-card {
-    /* background-color: #2B2C34; */
+    display: flex;
+    flex: 1;
+    background-color: #202127;
+    align-items: center;
+    justify-content: center;
 }
 
 hr{
-    height: 4px;
+    height: 2px;
     background-color: #3F3F3F;
     border: none;
 }
