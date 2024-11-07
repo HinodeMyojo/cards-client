@@ -1,32 +1,44 @@
 <template>
-  <div class="card-container">
-    <div class="card-inner">
-      <div
-        class="card-face-key"
-        :style="{ backgroundColor: backgroundColor }"
-        :class="{ active: !state }"
-        @click="changeSide"
-      >
-        {{ keyWord }}
-        <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
+  <div class="card-main">
+    <div class="card-icon-90">
+      <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
+    </div>
+    <div class="card-container">
+      <div class="card-inner">
+        <div
+          class="card-face-key"
+          :style="{ backgroundColor: backgroundColor }"
+          :class="{ active: !state }"
+          @click="changeSide"
+        >
+          {{ keyWord }}
+          <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
+        </div>
+        <div
+          class="card-face-value"
+          :style="{ backgroundColor: backgroundColor }"
+          :class="{ active: state }"
+          @click="changeSide"
+        >
+          {{ valueWord }}
+          <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
+        </div>
       </div>
-      <div
-        class="card-face-value"
-        :style="{ backgroundColor: backgroundColor }"
-        :class="{ active: state }"
-        @click="changeSide"
-      >
-        {{ valueWord }}
-        <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
-      </div>
+    </div>
+    <div class="card-icon">
+      <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, toRefs } from 'vue'
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiArrowRightBoldCircleOutline } from '@mdi/js'
 
 const state = ref(true)
+
+const path = ref(mdiArrowRightBoldCircleOutline)
 
 const props = defineProps({
   keyWord: {
@@ -51,8 +63,26 @@ const { keyWord, valueWord, backgroundColor } = toRefs(props)
 </script>
 
 <style scoped>
+.card-icon,
+.card-icon-90 {
+  background-color: transparent;
+}
+.card-icon-90 {
+  transform: rotate(180deg);
+}
 .active {
   transform: rotateY(180deg);
+}
+svg {
+  background-color: transparent;
+  cursor: pointer;
+}
+.card-main {
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+  align-items: center;
+  gap: 10px;
 }
 .card-container {
   background-color: transparent;
