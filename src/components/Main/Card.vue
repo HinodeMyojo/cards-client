@@ -172,10 +172,10 @@ svg {
 
 .helper {
   align-self: center;
-  font-size: 13px;
-  color: #44454c;
+  font-size: 16px;
+  color: #64656e;
   background-color: transparent;
   position: absolute;
-  bottom: 20px;
+  bottom: 50px;
 }
 </style>
