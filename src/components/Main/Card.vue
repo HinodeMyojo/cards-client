@@ -1,33 +1,36 @@
 <template>
   <div class="card-main">
-    <button class="card-icon-90" @click="prevElement">
+    <div class="card-settings">
+      <swiper :slidesPerView="1" :spaceBetween="30" :keyboard="{
+        enabled: true
+      }" :pagination="{
+        clickable: true,
+        type: 'fraction'
+      }" :navigation="true" :modules="modules" class="mySwiper">
+        <swiper-slide v-for="slide in props.wordsArray" :key="slide.key">
+          <div class="card-container">
+            <div class="card-inner">
+              <div class="card-face-key" :style="{ backgroundColor: backgroundColor }" :class="{ active: !state }"
+                @click="changeSide">
+                {{ slide.key }}
+                <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
+              </div>
+              <div class="card-face-value" :style="{ backgroundColor: backgroundColor }" :class="{ active: state }"
+                @click="changeSide">
+                {{ slide.value }}
+                <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
+              </div>
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper>
+    </div>
+    <!-- <button class="card-icon-90" @click="prevElement">
       <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
     </button>
-    <div class="card-container">
-      <div class="card-inner">
-        <div
-          class="card-face-key"
-          :style="{ backgroundColor: backgroundColor }"
-          :class="{ active: !state }"
-          @click="changeSide"
-        >
-          {{ keyWord }}
-          <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
-        </div>
-        <div
-          class="card-face-value"
-          :style="{ backgroundColor: backgroundColor }"
-          :class="{ active: state }"
-          @click="changeSide"
-        >
-          {{ valueWord }}
-          <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
-        </div>
-      </div>
-    </div>
     <button class="card-icon" @click="nextElement">
       <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
-    </button>
+    </button> -->
   </div>
 </template>
 
@@ -35,7 +38,18 @@
 import { ref, toRefs, watch } from 'vue'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiArrowRightBoldCircleOutline } from '@mdi/js'
+import { Swiper, SwiperSlide } from 'swiper/vue'
 
+// Import Swiper styles
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+
+// Import required modules
+import { Keyboard, Pagination, Navigation } from 'swiper/modules'
+
+// Declare the modules array to be used in the swiper
+const modules = [Keyboard, Pagination, Navigation]
 // Список ключ:значение
 
 const props = defineProps({
@@ -68,26 +82,6 @@ watch(
   { immediate: true }
 )
 
-const currentIndex = ref(0)
-
-// Функция для перехода к следующему элементу
-const nextElement = () => {
-  if (currentIndex.value < props.wordsArray.length - 1) {
-    currentIndex.value += 1 // Переходим к следующему элементу
-  }
-  keyWord.value = props.wordsArray[currentIndex.value].key
-  valueWord.value = props.wordsArray[currentIndex.value].value
-}
-
-// Функция для перехода к предыдущему элементу
-const prevElement = () => {
-  if (currentIndex.value > 0) {
-    currentIndex.value -= 1 // Переходим к предыдущему элементу
-  }
-  keyWord.value = props.wordsArray[currentIndex.value].key
-  valueWord.value = props.wordsArray[currentIndex.value].value
-}
-
 const { backgroundColor } = toRefs(props)
 
 const changeSide = () => {
@@ -96,34 +90,63 @@ const changeSide = () => {
 </script>
 
 <style scoped>
+.swiper {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background-color: transparent;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .card-icon,
 .card-icon-90 {
   background-color: transparent;
 }
+
 .card-icon-90 {
   transform: rotate(180deg);
 }
+
 .active {
   transform: rotateY(180deg);
 }
+
 svg {
   background-color: transparent;
   cursor: pointer;
 }
+
 .card-main {
+  background-color: transparent;
+}
+
+.card-settings {
   display: flex;
   flex-direction: row;
   background-color: transparent;
   align-items: center;
   gap: 10px;
+  height: 290px;
+  width: 550px;
 }
+
 .card-container {
-  background-color: transparent;
+  background-color: #202127;
   min-height: 290px;
   min-width: 550px;
-
   display: flex;
 }
+
 .card-inner {
   position: relative;
   flex: 1;
