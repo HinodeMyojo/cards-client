@@ -68,7 +68,7 @@ a {
 
 .main-content {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   margin-top: 25px;
 }
 
@@ -76,6 +76,6 @@ a {
   padding-left: 20%;
   padding-right: 20%;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
 }
 </style>

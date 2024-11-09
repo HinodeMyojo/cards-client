@@ -32,6 +32,34 @@
         </div>
       </div>
       <div class="module-info">
+        <div class="module-info-container">
+          <h2>Термины в модуле</h2>
+          <hr>
+          <div class="module-table">
+            <!-- Заголовок таблицы -->
+            <table class="module-table-content">
+              <thead class="table-header">
+                <tr class="table-header-elements">
+                  <th v-for="(header, index) in headers" :key="index"
+                    @click="header.sortable ? sortColumn(header.key) : null"
+                    :class="{ 'header-element': header.sortable }">
+                    {{ header.title }}
+                    <svg-icon v-if="header.sortable" type="mdi"
+                      :path="sortDirection === 'asc' ? pathAscSort : pathDescSort"></svg-icon>
+                  </th>
+                </tr>
+              </thead>
+              <!-- Строки таблицы -->
+              <tbody class="table-body">
+                <tr v-for="(item, index) in sortedElements" :key="index" class="table-row">
+                  <td v-for="header in headers" :key="header.key">
+                    {{ item[header.key] }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -39,13 +67,15 @@
 
 <script setup>
 import ProfileSideBar from '@/components/Main/ProfileSideBar.vue';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useModuleService } from '@/components/composables/useModuleService';
 import { useRoute } from 'vue-router';
 import SvgIcon from '@jamescoyle/vue-icon';
+// Иконки
 import { mdiCards } from '@mdi/js';
 import { mdiFountainPenTip } from '@mdi/js';
 import { mdiSchool } from '@mdi/js';
+import { mdiSort } from '@mdi/js';
 import Button from '@/components/UI/Button.vue';
 import Card from '@/components/Main/Card.vue';
 
@@ -53,6 +83,41 @@ import Card from '@/components/Main/Card.vue';
 const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)
 const pathMdiSchool = ref(mdiSchool)
+const pathAscSort = ref(mdiSort)
+
+// Для таблицы
+const headers = [
+  {
+    title: 'Ключ',
+    sortable: false,
+    key: 'key',
+  },
+  { title: 'Значение', sortable: true, key: 'value' },
+  { title: 'Контент', sortable: true, key: 'content' }
+]
+// Состояние сортировки
+const sortDirection = ref('asc');
+const sortKey = ref(null);
+
+// Функция сортировки
+function sortColumn(key) {
+  if (sortKey.value === key) {
+    // Переключение направления сортировки
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    // Новый ключ сортировки
+    sortKey.value = key;
+    sortDirection.value = 'asc';
+  }
+}
+
+// Вычисляемый массив для сортировки данных
+const sortedElements = computed(() => {
+  return [...elements.value].sort((a, b) => {
+    const result = a[sortKey.value] > b[sortKey.value] ? 1 : -1;
+    return sortDirection.value === 'asc' ? result : -result;
+  });
+});
 
 const route = useRoute();
 let moduleId = route.params.id;
@@ -85,6 +150,58 @@ watch(
   gap: 30px;
 }
 
+.module-table-content {
+  width: 100%;
+  height: auto;
+  /* border: #ddd 1px solid; */
+}
+
+.header-cell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.header-element {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.table-header-elements {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: center;
+  width: 100%;
+  background-color: #2B2C34;
+}
+
+.table-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  /* align-items: center; */
+  width: 100%;
+  /* margin-top: 10px; */
+  /* background-color: #2B2C34; */
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  background-color: #2B2C34;
+  gap: 5px;
+  /* align-items: center; */
+  width: 100%;
+}
+
+
+
 .module-sidebar {
   flex: 0.45;
 }
@@ -96,9 +213,28 @@ watch(
   gap: 30px;
 }
 
-.module-head {
+.module-table {
+  margin-top: 10px;
+}
+
+
+
+
+.cell {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.module-head,
+.module-info {
   background-color: var(--module-bg-color, #202127);
   border-radius: 25px;
+}
+
+.module-info-container {
+  padding: 10px 20px;
 }
 
 .module-head {
@@ -113,8 +249,14 @@ watch(
   justify-content: space-between;
 }
 
+h2 {
+  font-weight: 400;
+  font-size: 28px;
+}
+
 .module-title h2 {
   font-size: 28px;
+  font-weight: 400;
 }
 
 .module-button {
