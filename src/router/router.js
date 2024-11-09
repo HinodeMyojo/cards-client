@@ -1,13 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Auth from "@/views/Auth.vue";
-import App from "@/App.vue";
+import Module from "@/views/Module.vue";
+import Profile from "@/views/Profile.vue";
 import HomePage from '@/views/HomePage.vue';
 
 export const authRoutes = [
     {
         path: '/login',
         component: Auth,
-        props: { 'login': true }
+        name: 'Login',
+        props: { 'login': true },
     },
     {
         path: '/register',
@@ -21,6 +23,36 @@ export const authRoutes = [
     }
 ] 
 
+export const moduleRoutes = [
+    {
+        path: '/module/create',
+        component: Module,
+        props: {'create': true}
+    },
+    {
+        path: '/module/edit',
+        component: Module,
+        props: {'edit': true}
+    },
+    {
+        path: '/module/study',
+        component: Module,
+        props: {'study': true}
+    },
+    {
+        path: '/module/:id',
+        component: Module
+    }
+]
+
+export const profileRoutes = [
+    {
+        path: '/:username',
+        component: Profile,
+        name: 'Profile'
+    }
+]
+
 const routes = [
     {
         path: '/',
@@ -28,7 +60,10 @@ const routes = [
     }
 ]
 
+
 allRoutersToRoutes(authRoutes);
+allRoutersToRoutes(moduleRoutes);
+allRoutersToRoutes(profileRoutes);
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.VITE_BASE_URL || '/'), // Используем VITE_BASE_URL
@@ -41,6 +76,7 @@ function allRoutersToRoutes(routers) {
         routes.push(router)
     })
 }
+// Создаем правила рефреша для ВСЕГО!
 
 
 export default router;

@@ -6,7 +6,11 @@
     <header>
       <HeaderForm />
     </header>
-    <router-view></router-view>
+    <div class="main-content">
+      <div class="main-wrapper">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,9 +44,10 @@ const isAuthRoute = computed(() => {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #1B1B1F;
+
   box-sizing: border-box;
   color: #d9d9d9;
+  /* color: #F0F6FC; */
 }
 
 a {
@@ -52,11 +57,25 @@ a {
 .app {
   display: flex;
   flex-direction: column;
+  background-color: #1B1B1F;
 }
 
 .app-login {
   /* Стили для страниц логина, регистрации и восстановления пароля */
   background-color: #242429;
   /* Добавь другие специфические стили для логина здесь */
+}
+
+.main-content {
+  width: 100%;
+  min-height: 100vh;
+  margin-top: 25px;
+}
+
+.main-wrapper {
+  padding-left: 20%;
+  padding-right: 20%;
+  width: 100%;
+  min-height: 100vh;
 }
 </style>
