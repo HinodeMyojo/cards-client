@@ -10,13 +10,13 @@
         <swiper-slide v-for="slide in props.wordsArray" :key="slide.key">
           <div class="card-container">
             <div class="card-inner">
-              <div class="card-face-key" :style="{ backgroundColor: backgroundColor }" :class="{ active: !state }"
-                @click="changeSide">
+              <div class="card-face-key" tabindex="0" :style="{ backgroundColor: backgroundColor }"
+                :class="{ active: !state }" @click="changeSide" @keydown.enter="changeSide">
                 {{ slide.key }}
                 <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
               </div>
-              <div class="card-face-value" :style="{ backgroundColor: backgroundColor }" :class="{ active: state }"
-                @click="changeSide">
+              <div class="card-face-value" tabindex="0" :style="{ backgroundColor: backgroundColor }"
+                :class="{ active: state }" @click="changeSide" @keydown.enter="changeSide">
                 {{ slide.value }}
                 <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
               </div>
@@ -25,12 +25,6 @@
         </swiper-slide>
       </swiper>
     </div>
-    <!-- <button class="card-icon-90" @click="prevElement">
-      <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
-    </button>
-    <button class="card-icon" @click="nextElement">
-      <svg-icon type="mdi" :path="path" :size="40"></svg-icon>
-    </button> -->
   </div>
 </template>
 
@@ -88,13 +82,23 @@ const changeSide = () => {
   state.value = !state.value
 }
 </script>
-
+<style>
+.swiper-pagination-fraction,
+.swiper-pagination-current,
+.swiper-pagination-total,
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: transparent !important;
+}
+</style>
 <style scoped>
 .swiper {
   width: 100%;
   height: 100%;
   background-color: transparent;
 }
+
+
 
 .swiper-slide {
   text-align: center;
@@ -137,13 +141,13 @@ svg {
   align-items: center;
   gap: 10px;
   height: 290px;
-  width: 550px;
+  width: 570px;
 }
 
 .card-container {
   background-color: #202127;
-  min-height: 290px;
-  min-width: 550px;
+  min-height: 100%;
+  min-width: 100%;
   display: flex;
 }
 
