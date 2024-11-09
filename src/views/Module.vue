@@ -36,28 +36,7 @@
           <h2>Термины в модуле</h2>
           <hr>
           <div class="module-table">
-            <!-- Заголовок таблицы -->
-            <table class="module-table-content">
-              <thead class="table-header">
-                <tr class="table-header-elements">
-                  <th v-for="(header, index) in headers" :key="index"
-                    @click="header.sortable ? sortColumn(header.key) : null"
-                    :class="{ 'header-element': header.sortable }">
-                    {{ header.title }}
-                    <svg-icon v-if="header.sortable" type="mdi"
-                      :path="sortDirection === 'asc' ? pathAscSort : pathDescSort"></svg-icon>
-                  </th>
-                </tr>
-              </thead>
-              <!-- Строки таблицы -->
-              <tbody class="table-body">
-                <tr v-for="(item, index) in sortedElements" :key="index" class="table-row">
-                  <td v-for="header in headers" :key="header.key">
-                    {{ item[header.key] }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <Table></Table>
           </div>
         </div>
       </div>
@@ -78,6 +57,7 @@ import { mdiSchool } from '@mdi/js';
 import { mdiSort } from '@mdi/js';
 import Button from '@/components/UI/Button.vue';
 import Card from '@/components/Main/Card.vue';
+import Table from '@/components/UI/Table.vue';
 
 // Иконки
 const pathMdiCards = ref(mdiCards)
@@ -86,7 +66,7 @@ const pathMdiSchool = ref(mdiSchool)
 const pathAscSort = ref(mdiSort)
 
 // Для таблицы
-const headers = [
+const headers = ref([
   {
     title: 'Ключ',
     sortable: false,
@@ -94,30 +74,35 @@ const headers = [
   },
   { title: 'Значение', sortable: true, key: 'value' },
   { title: 'Контент', sortable: true, key: 'content' }
-]
-// Состояние сортировки
-const sortDirection = ref('asc');
-const sortKey = ref(null);
+])
 
-// Функция сортировки
-function sortColumn(key) {
-  if (sortKey.value === key) {
-    // Переключение направления сортировки
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
-  } else {
-    // Новый ключ сортировки
-    sortKey.value = key;
-    sortDirection.value = 'asc';
-  }
+const remove = (key) => {
+  headers.value = headers.value.filter(header => header.key !== key)
 }
 
-// Вычисляемый массив для сортировки данных
-const sortedElements = computed(() => {
-  return [...elements.value].sort((a, b) => {
-    const result = a[sortKey.value] > b[sortKey.value] ? 1 : -1;
-    return sortDirection.value === 'asc' ? result : -result;
-  });
-});
+// Состояние сортировки
+// const sortDirection = ref('asc');
+// const sortKey = ref(null);
+
+// // Функция сортировки
+// function sortColumn(key) {
+//   if (sortKey.value === key) {
+//     // Переключение направления сортировки
+//     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+//   } else {
+//     // Новый ключ сортировки
+//     sortKey.value = key;
+//     sortDirection.value = 'asc';
+//   }
+// }
+
+// // Вычисляемый массив для сортировки данных
+// const sortedElements = computed(() => {
+//   return [...elements.value].sort((a, b) => {
+//     const result = a[sortKey.value] > b[sortKey.value] ? 1 : -1;
+//     return sortDirection.value === 'asc' ? result : -result;
+//   });
+// });
 
 const route = useRoute();
 let moduleId = route.params.id;
