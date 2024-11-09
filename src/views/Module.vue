@@ -80,30 +80,6 @@ const remove = (key) => {
   headers.value = headers.value.filter(header => header.key !== key)
 }
 
-// Состояние сортировки
-// const sortDirection = ref('asc');
-// const sortKey = ref(null);
-
-// // Функция сортировки
-// function sortColumn(key) {
-//   if (sortKey.value === key) {
-//     // Переключение направления сортировки
-//     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
-//   } else {
-//     // Новый ключ сортировки
-//     sortKey.value = key;
-//     sortDirection.value = 'asc';
-//   }
-// }
-
-// // Вычисляемый массив для сортировки данных
-// const sortedElements = computed(() => {
-//   return [...elements.value].sort((a, b) => {
-//     const result = a[sortKey.value] > b[sortKey.value] ? 1 : -1;
-//     return sortDirection.value === 'asc' ? result : -result;
-//   });
-// });
-
 const route = useRoute();
 let moduleId = route.params.id;
 const { getModuleById, currentModule } = useModuleService();
