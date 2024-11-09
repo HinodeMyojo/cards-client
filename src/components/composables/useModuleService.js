@@ -8,6 +8,7 @@ export function useModuleService() {
     const modules = ref([]); // Хранит список всех модулей
     const loading = ref(false); // Указывает, находится ли компонент в процессе загрузки данных
     const error = ref(null); // Хранит информацию об ошибках
+    const headers = ref([]); // для хранения инфы о заголовках таблицы
 
     // Асинхронная функция для получения списка модулей
     const getModules = async () => {
@@ -16,7 +17,7 @@ export function useModuleService() {
 
         try {
             // Выполняем запрос к API для получения всех модулей
-            const response = await moduleService.getModules(); // Предполагается, что есть метод для получения всех модулей
+            const response = await moduleService.getModules(); 
             modules.value = response.data; // Заполняем реактивный массив модулей полученными данными
         } catch (err) {
             // Если произошла ошибка, сохраняем её сообщение
@@ -25,6 +26,15 @@ export function useModuleService() {
             loading.value = false; // Сбрасываем статус загрузки в false после завершения запроса
         }
     };
+
+    const getHeaders = async() => {
+        try {
+            const response = await moduleService.getHeaders();
+            headers.value = response.data;
+        } catch (err) {
+            error.value = err.message || 'Ошибка при загрузке настоек таблицы';
+        }
+    }
 
     // Асинхронная функция для получения модуля по его ID
     const getModuleById = async (moduleId) => {
@@ -53,5 +63,8 @@ export function useModuleService() {
         getModuleById, // Функция для получения модуля по ID
         // createModule, // Место для функции создания модуля
         // updateModule, // Место для функции обновления модуля
+        headers,
+        getHeaders,
+        
     };
 }
