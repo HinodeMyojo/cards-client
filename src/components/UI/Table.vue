@@ -1,5 +1,5 @@
 <template>
-    <v-data-table :headers="headers" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]">
+    <v-data-table :headers="headers" :items="elements" :sort-by="[{ key: 'calories', order: 'asc' }]">
         <template v-slot:item.actions="{ item }">
             <v-icon class="me-2" size="small" @click="editItem(item)">
                 mdi-pencil
@@ -13,24 +13,22 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, defineProps } from 'vue'
+
+const { headers, elements } = defineProps({
+    headers: {
+        type: Array,
+        required: true
+    },
+    elements: {
+        type: Array,
+        required: true
+    }
+})
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const headers = [
-    {
-        title: 'Dessert (100g serving)',
-        align: 'start',
-        sortable: false,
-        key: 'name',
-    },
-    { title: 'Calories', key: 'calories' },
-    { title: 'Fat (g)', key: 'fat' },
-    { title: 'Carbs (g)', key: 'carbs' },
-    { title: 'Protein (g)', key: 'protein' },
-    { title: 'Actions', key: 'actions', sortable: false },
-]
 
 const desserts = ref([])
 const editedIndex = ref(-1)

@@ -36,7 +36,7 @@
           <h2>Термины в модуле</h2>
           <hr>
           <div class="module-table">
-            <Table></Table>
+            <Table v-if="headersData && elements" :headers="headersData" :elements="elements"></Table>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
 
 <script setup>
 import ProfileSideBar from '@/components/Main/ProfileSideBar.vue';
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useModuleService } from '@/components/composables/useModuleService';
 import { useRoute } from 'vue-router';
 import SvgIcon from '@jamescoyle/vue-icon';
@@ -54,7 +54,6 @@ import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiCards } from '@mdi/js';
 import { mdiFountainPenTip } from '@mdi/js';
 import { mdiSchool } from '@mdi/js';
-import { mdiSort } from '@mdi/js';
 import Button from '@/components/UI/Button.vue';
 import Card from '@/components/Main/Card.vue';
 import Table from '@/components/UI/Table.vue';
@@ -63,33 +62,24 @@ import Table from '@/components/UI/Table.vue';
 const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)
 const pathMdiSchool = ref(mdiSchool)
-const pathAscSort = ref(mdiSort)
 
 // Для таблицы
-const headers = ref([
-  {
-    title: 'Ключ',
-    sortable: false,
-    key: 'key',
-  },
-  { title: 'Значение', sortable: true, key: 'value' },
-  { title: 'Контент', sortable: true, key: 'content' }
-])
-
-const remove = (key) => {
-  headers.value = headers.value.filter(header => header.key !== key)
-}
 
 const route = useRoute();
 let moduleId = route.params.id;
-const { getModuleById, currentModule } = useModuleService();
+const { getModuleById, currentModule, getHeaders, headers } = useModuleService();
 const moduleInfo = ref('');
 const elements = ref([]);
+const headersData = ref(null);
 
 onMounted(async () => {
   await getModuleById(moduleId);
   moduleInfo.value = currentModule.value;
   elements.value = moduleInfo.value.elements || [];
+  await getHeaders();
+  headersData.value = headers.value
+  console.log('Headers Data:', headersData.value);
+  console.log('Elements:', elements.value);
 });
 
 watch(
