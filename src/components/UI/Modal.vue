@@ -1,56 +1,72 @@
 <template>
-    <div class="text-center pa-4">
-        <v-btn @click="dialog = true"> Open Dialog </v-btn>
-        <v-dialog v-model="dialog" width="auto">
-            <v-card max-width="400" class="main">
-                <v-card-text>
-                    <h2>LOREMIN EFEDFDgmreajgjfkgoregoir
-                    </h2>
-                    {{ text }}
-                </v-card-text>
-                <v-card-actions class="buttons">
-                    <v-btn class="yes" @click="yes">Да</v-btn>
-                    <v-btn class="no" @click="no">Нет</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+    <div class="main">
+        <h2>{{ props.text }}</h2>
+        <div class="buttons">
+            <Button class="yes" @click="yes">Да</Button>
+            <Button class="no" @click="no">Нет</Button>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
 
-const dialog = ref(false)
+const emit = defineEmits(['yes', 'no'])
+
+const props = defineProps({
+    text: {
+        type: String,
+        Required: true
+    }
+})
+
+const yes = () => {
+    emit('yes')
+}
+const no = () => {
+    emit('no')
+}
 
 </script>
 
 <style scoped>
 .main {
-    border-radius: 20px !important;
+    width: 400px;
+    height: 180px;
+    background-color: #2C2F3A;
+    /* Более светлый оттенок для фона */
+    border-radius: 20px;
+    /* Увеличенный радиус для более мягких углов */
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    gap: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    /* Легкая тень для глубины */
+    padding: 20px;
     transition: all 0.3s ease-in-out;
+    /* Плавные анимации для всех изменений */
 }
 
 h2 {
     font-weight: 400;
     font-size: 24px;
+    /* Немного меньше для лучшего баланса */
+    color: #FFFFFF;
+    /* Белый цвет для заголовка */
     text-align: center;
 }
 
 .buttons {
     width: 100%;
     display: flex;
-    justify-content: space-evenly !important;
+    justify-content: space-evenly;
 }
 
 Button {
     width: 140px;
     height: 50px;
-    /* background-color: #3C434D; */
+    background-color: #3C434D;
     /* Более приятный оттенок серого */
     border-radius: 12px;
     /* Округление углов для более гладкого вида */
@@ -116,5 +132,18 @@ Button:active {
     /* Уменьшение кнопки при нажатии */
     color: #45a049;
     border: 1px solid #45a049;
+}
+
+/* Добавим адаптивность на мобильных устройствах */
+@media (max-width: 480px) {
+    .main {
+        width: 90%;
+        height: 200px;
+    }
+
+    Button {
+        width: 120px;
+        font-size: 14px;
+    }
 }
 </style>
