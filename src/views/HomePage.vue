@@ -1,8 +1,12 @@
 <template>
-    <div></div>
+    <div>
+        <!-- Vue content -->
+    </div>
 </template>
 
 <script setup>
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Add styles here */
+</style>

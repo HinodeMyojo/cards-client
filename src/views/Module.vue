@@ -36,7 +36,9 @@
           <h2>Термины в модуле</h2>
           <hr>
           <div class="module-table">
-            <Table v-if="headersData && elements" :headers="headersData" :elements="elements"></Table>
+            <Table v-if="headersData && elements" :headers="headersData" :elements="elements"
+              @delete-item="deleteElement">
+            </Table>
           </div>
         </div>
       </div>
@@ -47,7 +49,10 @@
 <script setup>
 import ProfileSideBar from '@/components/Main/ProfileSideBar.vue';
 import { onMounted, ref, watch } from 'vue';
+// Компосаблы
 import { useModuleService } from '@/components/composables/useModuleService';
+import { useElementService } from '@/components/composables/useElementService';
+//
 import { useRoute } from 'vue-router';
 import SvgIcon from '@jamescoyle/vue-icon';
 // Иконки
@@ -58,19 +63,28 @@ import Button from '@/components/UI/Button.vue';
 import Card from '@/components/Main/Card.vue';
 import Table from '@/components/UI/Table.vue';
 
+
 // Иконки
 const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)
 const pathMdiSchool = ref(mdiSchool)
 
-// Для таблицы
-
+// Секция таблицы
 const route = useRoute();
 let moduleId = route.params.id;
 const { getModuleById, currentModule, getHeaders, headers } = useModuleService();
+const { deleteElementById } = useElementService();
 const moduleInfo = ref('');
 const elements = ref([]);
 const headersData = ref(null);
+
+const deleteElement = async (id) => {
+  await deleteElementById(id);
+  console.log("Element was deleted");
+  await getModuleById(moduleId);
+  moduleInfo.value = currentModule.value;
+  elements.value = moduleInfo.value.elements || [];
+}
 
 onMounted(async () => {
   await getModuleById(moduleId);
