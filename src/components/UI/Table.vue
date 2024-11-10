@@ -11,33 +11,36 @@
                 <v-btn color="primary" @click="initialize"> Reset </v-btn>
             </template>
         </v-data-table>
-        <Modal v-if="isModalVisible" :text="modalText" @yes="handleYes" @no="handleNo" />
+        <Modal :text="modalText" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
     </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, defineProps } from 'vue'
 import Modal from './Modal.vue';
-// модалка
-const isModalVisible = ref(false)
-const modalText = ref('Вы уверены, что хотите удалить элемент?')
 
-// Открытие модалки
-const openModal = () => {
-    isModalVisible.value = true
+// секция модалки
+const modalText = ref("Вы уверены, что хотите удалить объект?")
+const isDialogOpen = ref(false)
+const itemToDelete = ref(null)
+const elementId = ref(null)
+
+const deleteItem = (item) => {
+    itemToDelete.value = item
+    isDialogOpen.value = true
+    elementId.value = item.id
 }
 
-// Обработчики событий
-const handleYes = () => {
-    console.log('Вы нажали "Да"')
-    isModalVisible.value = false // Закрыть модалку
+const handleAnswer = (answer) => {
+    if (answer) {
+        // Удаляем элемент
+        console.log("Типа удалили компонент")
+        console.log(elementId.value)
+    }
+    isDialogOpen.value = false
+    console.log("Типа нет")
 }
-
-const handleNo = () => {
-    console.log('Вы нажали "Нет"')
-    isModalVisible.value = false // Закрыть модалку
-}
-
+// секция
 
 const { headers, elements } = defineProps({
     headers: {
@@ -91,13 +94,13 @@ const formTitle = computed(() =>
     editedIndex.value === -1 ? 'New Item' : 'Edit Item'
 )
 
-watch(dialog, (val) => {
-    if (!val) close()
-})
+// watch(dialog, (val) => {
+//     if (!val) close()
+// })
 
-watch(dialogDelete, (val) => {
-    if (!val) closeDelete()
-})
+// watch(dialogDelete, (val) => {
+//     if (!val) closeDelete()
+// })
 
 // TODO
 const initialize = () => {
@@ -108,10 +111,7 @@ const editItem = (item) => {
 
 }
 
-const deleteItem = (item) => {
-    modalText.value = `Вы уверены, что хотите удалить элемент: ${item.name}?`
-    isModalVisible.value = true
-}
+
 const deleteItemConfirm = () => {
     desserts.value.splice(editedIndex.value, 1)
     closeDelete()

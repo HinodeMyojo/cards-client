@@ -1,72 +1,70 @@
 <template>
-    <div class="main">
-        <h2>{{ props.text }}</h2>
-        <div class="buttons">
-            <Button class="yes" @click="yes">Да</Button>
-            <Button class="no" @click="no">Нет</Button>
-        </div>
-    </div>
+    <v-dialog v-model="dialog" width="auto">
+        <v-card max-width="400" class="main">
+            <v-card-text>
+                <h2>{{ text }}</h2>
+            </v-card-text>
+            <v-card-actions class="buttons">
+                <v-btn class="yes" @click="$emit('answer', true)">Да</v-btn>
+                <v-btn class="no" @click="$emit('answer', false)">Нет</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
-<script setup>
 
-const emit = defineEmits(['yes', 'no'])
+<script setup>
+import { ref, watch, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
-    text: {
-        type: String,
-        Required: true
-    }
+    text: String,
+    dialog: Boolean
 })
 
-const yes = () => {
-    emit('yes')
-}
-const no = () => {
-    emit('no')
-}
+const emit = defineEmits(['update:dialog'])
 
+// Используем v-model для синхронизации состояния dialog
+const dialog = ref(props.dialog)
+
+// Следим за изменениями пропса dialog и синхронизируем с локальным состоянием
+watch(() => props.dialog, (newVal) => {
+    dialog.value = newVal
+})
+
+watch(dialog, (newVal) => {
+    // Когда dialog закрывается, передаем новое состояние в родительский компонент
+    emit('update:dialog', newVal)
+})
 </script>
+
 
 <style scoped>
 .main {
-    width: 400px;
-    height: 180px;
-    background-color: #2C2F3A;
-    /* Более светлый оттенок для фона */
-    border-radius: 20px;
-    /* Увеличенный радиус для более мягких углов */
+    border-radius: 20px !important;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    /* Легкая тень для глубины */
-    padding: 20px;
     transition: all 0.3s ease-in-out;
-    /* Плавные анимации для всех изменений */
 }
 
 h2 {
     font-weight: 400;
     font-size: 24px;
-    /* Немного меньше для лучшего баланса */
-    color: #FFFFFF;
-    /* Белый цвет для заголовка */
     text-align: center;
 }
 
 .buttons {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-evenly !important;
 }
 
 Button {
     width: 140px;
     height: 50px;
-    background-color: #3C434D;
+    /* background-color: #3C434D; */
     /* Более приятный оттенок серого */
     border-radius: 12px;
     /* Округление углов для более гладкого вида */
@@ -132,18 +130,5 @@ Button:active {
     /* Уменьшение кнопки при нажатии */
     color: #45a049;
     border: 1px solid #45a049;
-}
-
-/* Добавим адаптивность на мобильных устройствах */
-@media (max-width: 480px) {
-    .main {
-        width: 90%;
-        height: 200px;
-    }
-
-    Button {
-        width: 120px;
-        font-size: 14px;
-    }
 }
 </style>

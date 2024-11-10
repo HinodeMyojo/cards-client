@@ -1,16 +1,14 @@
 <template>
     <div class="text-center pa-4">
-        <v-btn @click="dialog = true"> Open Dialog </v-btn>
+        <v-btn @click="dialog = true">Open Dialog</v-btn>
         <v-dialog v-model="dialog" width="auto">
             <v-card max-width="400" class="main">
                 <v-card-text>
-                    <h2>LOREMIN EFEDFDgmreajgjfkgoregoir
-                    </h2>
-                    {{ text }}
+                    <h2>{{ props.text }}</h2>
                 </v-card-text>
                 <v-card-actions class="buttons">
-                    <v-btn class="yes" @click="yes">Да</v-btn>
-                    <v-btn class="no" @click="no">Нет</v-btn>
+                    <v-btn class="yes" @click="$emit('answer', true)">Да</v-btn>
+                    <v-btn class="no" @click="$emit('answer', false)">Нет</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -18,11 +16,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
 
-const dialog = ref(false)
+const props = defineProps({
+    text: String,
+    dialog: Boolean
+})
+const dialog = ref(props.dialog) // Локальная переменная для управления состоянием модалки
 
 </script>
+
 
 <style scoped>
 .main {
