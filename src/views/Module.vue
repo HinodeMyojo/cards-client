@@ -58,6 +58,7 @@ import Button from '@/components/UI/Button.vue';
 import Card from '@/components/Main/Card.vue';
 import Table from '@/components/UI/Table.vue';
 
+
 // Иконки
 const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)

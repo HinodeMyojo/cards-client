@@ -253,21 +253,21 @@ const cleanLocalStorage = () => {
 }
 
 .main-header {
-  /* display: flex; */
   text-decoration: none;
   width: 100%;
   height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Центрирует .wrapper */
 }
 
 .wrapper {
-  padding-left: 20%;
-  padding-right: 20%;
-  /* width: 80vh; */
-  width: 100%;
+  width: 60%;
   height: 100%;
-  /* display: flex;
-  align-items: center; */
+  display: flex;
 }
+
 
 .login {
   cursor: pointer;

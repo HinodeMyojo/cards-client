@@ -1,29 +1,40 @@
 <template>
-    <div class="text-center pa-4">
-        <v-btn @click="dialog = true">Open Dialog</v-btn>
-        <v-dialog v-model="dialog" width="auto">
-            <v-card max-width="400" class="main">
-                <v-card-text>
-                    <h2>{{ props.text }}</h2>
-                </v-card-text>
-                <v-card-actions class="buttons">
-                    <v-btn class="yes" @click="$emit('answer', true)">Да</v-btn>
-                    <v-btn class="no" @click="$emit('answer', false)">Нет</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </div>
+    <v-dialog v-model="dialog" width="auto">
+        <v-card max-width="400" class="main">
+            <v-card-text>
+                <h2>{{ text }}</h2>
+            </v-card-text>
+            <v-card-actions class="buttons">
+                <v-btn class="yes" @click="$emit('answer', true)">Да</v-btn>
+                <v-btn class="no" @click="$emit('answer', false)">Нет</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
+
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, watch, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
     text: String,
     dialog: Boolean
 })
-const dialog = ref(props.dialog) // Локальная переменная для управления состоянием модалки
 
+const emit = defineEmits(['update:dialog'])
+
+// Используем v-model для синхронизации состояния dialog
+const dialog = ref(props.dialog)
+
+// Следим за изменениями пропса dialog и синхронизируем с локальным состоянием
+watch(() => props.dialog, (newVal) => {
+    dialog.value = newVal
+})
+
+watch(dialog, (newVal) => {
+    // Когда dialog закрывается, передаем новое состояние в родительский компонент
+    emit('update:dialog', newVal)
+})
 </script>
 
 

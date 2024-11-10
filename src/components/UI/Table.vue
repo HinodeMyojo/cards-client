@@ -1,19 +1,46 @@
 <template>
-    <v-data-table :headers="headers" :items="elements" :sort-by="[{ key: 'calories', order: 'asc' }]">
-        <template v-slot:item.actions="{ item }">
-            <v-icon class="me-2" size="small" @click="editItem(item)">
-                mdi-pencil
-            </v-icon>
-            <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
-        </template>
-        <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
-        </template>
-    </v-data-table>
+    <div class="table">
+        <v-data-table :headers="headersWithActions" :items="elements" :sort-by="[{ key: 'calories', order: 'asc' }]">
+            <template v-slot:item.actions="{ item }">
+                <v-icon class="me-2" size="small" @click="editItem(item)">
+                    mdi-pencil
+                </v-icon>
+                <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+            </template>
+            <template v-slot:no-data>
+                <v-btn color="primary" @click="initialize"> Reset </v-btn>
+            </template>
+        </v-data-table>
+        <Modal :text="modalText" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
+    </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, defineProps } from 'vue'
+import Modal from './Modal.vue';
+
+// секция модалки
+const modalText = ref("Вы уверены, что хотите удалить объект?")
+const isDialogOpen = ref(false)
+const itemToDelete = ref(null)
+const elementId = ref(null)
+
+const deleteItem = (item) => {
+    itemToDelete.value = item
+    isDialogOpen.value = true
+    elementId.value = item.id
+}
+
+const handleAnswer = (answer) => {
+    if (answer) {
+        // Удаляем элемент
+        console.log("Типа удалили компонент")
+        console.log(elementId.value)
+    }
+    isDialogOpen.value = false
+    console.log("Типа нет")
+}
+// секция
 
 const { headers, elements } = defineProps({
     headers: {
@@ -25,6 +52,20 @@ const { headers, elements } = defineProps({
         required: true
     }
 })
+
+const headersWithActions = ref([...headers]);
+
+// После получения пропсов, добавим новый столбец "Actions"
+watch([headers, elements], () => {
+    if (!headersWithActions.value.some(h => h.key === 'actions')) {
+        headersWithActions.value.push({
+            Title: 'Actions',
+            align: 'center',
+            key: 'actions',
+            sortable: false
+        });
+    }
+}, { immediate: true });
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
@@ -53,40 +94,23 @@ const formTitle = computed(() =>
     editedIndex.value === -1 ? 'New Item' : 'Edit Item'
 )
 
-watch(dialog, (val) => {
-    if (!val) close()
-})
+// watch(dialog, (val) => {
+//     if (!val) close()
+// })
 
-watch(dialogDelete, (val) => {
-    if (!val) closeDelete()
-})
+// watch(dialogDelete, (val) => {
+//     if (!val) closeDelete()
+// })
 
+// TODO
 const initialize = () => {
-    desserts.value = [
-        { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0 },
-        { name: 'Ice cream sandwich', calories: 237, fat: 9.0, carbs: 37, protein: 4.3 },
-        { name: 'Eclair', calories: 262, fat: 16.0, carbs: 23, protein: 6.0 },
-        { name: 'Cupcake', calories: 305, fat: 3.7, carbs: 67, protein: 4.3 },
-        { name: 'Gingerbread', calories: 356, fat: 16.0, carbs: 49, protein: 3.9 },
-        { name: 'Jelly bean', calories: 375, fat: 0.0, carbs: 94, protein: 0.0 },
-        { name: 'Lollipop', calories: 392, fat: 0.2, carbs: 98, protein: 0 },
-        { name: 'Honeycomb', calories: 408, fat: 3.2, carbs: 87, protein: 6.5 },
-        { name: 'Donut', calories: 452, fat: 25.0, carbs: 51, protein: 4.9 },
-        { name: 'KitKat', calories: 518, fat: 26.0, carbs: 65, protein: 7 }
-    ]
 }
 
+// TODO
 const editItem = (item) => {
-    editedIndex.value = desserts.value.indexOf(item)
-    editedItem.value = { ...item }
-    dialog.value = true
+
 }
 
-const deleteItem = (item) => {
-    editedIndex.value = desserts.value.indexOf(item)
-    editedItem.value = { ...item }
-    dialogDelete.value = true
-}
 
 const deleteItemConfirm = () => {
     desserts.value.splice(editedIndex.value, 1)
@@ -116,3 +140,12 @@ const save = () => {
 
 onMounted(initialize)
 </script>
+<style scoped>
+:root .v-theme--dark {
+    background-color: #2B2C34;
+}
+
+.table {
+    border-radius: 20px;
+}
+</style>

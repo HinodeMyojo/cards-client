@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
+import router from '@/router/router'
 
 // Получаем базовый URL
 const api = axios.create({
@@ -38,6 +39,7 @@ api.interceptors.response.use((response) =>
                 // Если обновление не удалось, то очищаем токены и выходим на страницу входа
                 console.error(error);
                 authStore.cleanTokens();
+                router.push('/login')
             }
         }
 
