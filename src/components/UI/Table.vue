@@ -16,8 +16,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, defineProps } from 'vue'
+import { ref, computed, watch, onMounted, defineProps, defineEmits } from 'vue'
 import Modal from './Modal.vue';
+const emit = defineEmits();
 
 // секция модалки
 const modalText = ref("Вы уверены, что хотите удалить объект?")
@@ -36,6 +37,7 @@ const handleAnswer = (answer) => {
         // Удаляем элемент
         console.log("Типа удалили компонент")
         console.log(elementId.value)
+        emit('delete-item', elementId.value)
     }
     isDialogOpen.value = false
     console.log("Типа нет")
