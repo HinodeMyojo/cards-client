@@ -208,13 +208,8 @@ const cleanLocalStorage = () => {
   cursor: pointer;
 }
 
-/* .add-button:hover {
-  color: #b31275;
-} */
-
 .add-button svg-icon {
   fill: currentColor;
-  /* Позволяет иконке наследовать цвет от родителя */
 }
 
 .userProfile {
@@ -259,7 +254,6 @@ const cleanLocalStorage = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Центрирует .wrapper */
 }
 
 .wrapper {
@@ -363,9 +357,6 @@ a:hover {
   cursor: pointer;
 }
 
-/* .switch-lang:hover{
-    
-} */
 
 .logo-text {
   font-weight: 700;

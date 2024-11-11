@@ -110,6 +110,7 @@ h2 {
 .buttons {
     width: 100%;
     margin-bottom: 20px;
+    margin-top: -10px;
     display: flex;
     justify-content: space-evenly !important;
 }
