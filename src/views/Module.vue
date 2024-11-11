@@ -16,6 +16,10 @@
         <div v-if="elements.length > 0" class="module-card">
           <Card :wordsArray="elements" />
         </div>
+        <div v-else class="module-nope">
+          <img src="@/assets/images/magnifier.png" alt="">
+          <h2>В этом модуле пока нет элементов. Добавьте их, чтобы начать обучение!</h2>
+        </div>
         <div class="module-choice-button">
           <button class="choice-button">
             <svg-icon type="mdi" :path="pathMdiCards"></svg-icon>
@@ -113,6 +117,23 @@ watch(
   flex-direction: row;
   width: 100%;
   gap: 30px;
+}
+
+.module-card,
+.module-nope {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  max-width: 100%;
+  min-height: 290px;
+}
+
+.module-nope img {
+  max-width: 90%;
+  max-height: 250px;
+
 }
 
 .module-table-content {
@@ -236,13 +257,7 @@ h2 {
   color: #F84545;
 }
 
-.module-card {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-}
+
 
 .module-choice-button {
   display: flex;
