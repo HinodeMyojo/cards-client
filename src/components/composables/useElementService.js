@@ -11,5 +11,15 @@ export function useElementService() {
         }
     };
 
-    return { deleteElementById };
+    const addElementToModule = async(model) => {
+        try{
+            await elementService.addElementToModule(model);
+            console.log("element was created")
+        }
+        catch(error){
+            console.error(error)
+        }
+    }
+
+    return { deleteElementById, addElementToModule };
 }

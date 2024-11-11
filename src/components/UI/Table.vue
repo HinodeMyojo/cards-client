@@ -8,7 +8,7 @@
                 <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
             </template>
             <template v-slot:no-data>
-                <v-btn color="primary" @click="initialize"> Reset </v-btn>
+                <h2>Тут пусто!</h2>
             </template>
         </v-data-table>
         <Modal :text="modalText" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
@@ -145,6 +145,10 @@ onMounted(initialize)
 <style scoped>
 :root .v-theme--dark {
     background-color: #2B2C34;
+}
+
+h2 {
+    font-weight: 400;
 }
 
 .table {

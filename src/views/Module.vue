@@ -16,9 +16,13 @@
         <div v-if="elements.length > 0" class="module-card">
           <Card :wordsArray="elements" />
         </div>
-        <div v-else class="module-nope">
+        <div v-else-if="moduleInfo.userId === userId" class="module-nope">
           <img src="@/assets/images/magnifier.png" alt="">
           <h2>В этом модуле пока нет элементов. Добавьте их, чтобы начать обучение!</h2>
+        </div>
+        <div v-else class="module-nope">
+          <img src="@/assets/images/magnifier.png" alt="">
+          <h2>В этом модуле пока нет элементов.</h2>
         </div>
         <div class="module-choice-button">
           <button class="choice-button">
@@ -37,7 +41,14 @@
       </div>
       <div class="module-info">
         <div class="module-info-container">
-          <h2>Термины в модуле</h2>
+          <div v-if="moduleInfo.userId === userId" class="module-table-header">
+            <h2>Термины в модуле</h2>
+            <button class="add-table-btn" @click="AddElement">Добавить элемент</button>
+            <AddElementModal v-model:dialog="isDialogOpen" @submit-form="addElement" />
+          </div>
+          <div v-else class="module-table-header">
+            <h2>Термины в модуле</h2>
+          </div>
           <hr>
           <div class="module-table">
             <Table v-if="headersData && elements" :headers="headersData" :elements="elements"
@@ -66,6 +77,7 @@ import { mdiSchool } from '@mdi/js';
 import Button from '@/components/UI/Button.vue';
 import Card from '@/components/Main/Card.vue';
 import Table from '@/components/UI/Table.vue';
+import AddElementModal from '@/components/UI/Module/AddElementModal.vue';
 
 
 // Иконки
@@ -73,27 +85,47 @@ const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)
 const pathMdiSchool = ref(mdiSchool)
 
+// Для модалки по добавлению 
+const isDialogOpen = ref(false)
+const AddElement = () => {
+  isDialogOpen.value = true
+}
+const addElement = async (data) => {
+  if (data) {
+    const model = {
+      key: data.key,
+      value: data.value,
+      moduleId
+    }
+    await addElementToModule(model);
+    await refreshTableData(moduleId)
+  }
+}
+
 // Секция таблицы
 const route = useRoute();
 let moduleId = route.params.id;
 const { getModuleById, currentModule, getHeaders, headers } = useModuleService();
-const { deleteElementById } = useElementService();
+const { deleteElementById, addElementToModule } = useElementService();
 const moduleInfo = ref('');
 const elements = ref([]);
 const headersData = ref(null);
 
-const deleteElement = async (id) => {
-  await deleteElementById(id);
-  console.log("Element was deleted");
+// Обновление данных таблицы
+const refreshTableData = async (moduleId) => {
   await getModuleById(moduleId);
   moduleInfo.value = currentModule.value;
   elements.value = moduleInfo.value.elements || [];
 }
 
+const deleteElement = async (id) => {
+  await deleteElementById(id);
+  console.log("Element was deleted");
+  await refreshTableData(moduleId)
+}
+
 onMounted(async () => {
-  await getModuleById(moduleId);
-  moduleInfo.value = currentModule.value;
-  elements.value = moduleInfo.value.elements || [];
+  await refreshTableData(moduleId)
   await getHeaders();
   headersData.value = headers.value
   console.log('Headers Data:', headersData.value);
@@ -117,6 +149,41 @@ watch(
   flex-direction: row;
   width: 100%;
   gap: 30px;
+}
+
+.module-table-header {
+  display: flex;
+  flex-direction: row;
+  min-width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-table-btn {
+  background-color: #272A2F;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-table-btn:hover {
+  border: 1px solid #D459FF;
+  background-color: #33363D;
+  box-shadow: 0 6px 12px rgba(212, 89, 255, 0.2);
+}
+
+.add-table-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-table-btn:focus {
+  outline: 2px solid #D459FF;
+  outline-offset: 2px;
 }
 
 .module-card,

@@ -7,5 +7,8 @@ export const elementService = {
     },
     deleteElement(id) {
         return api.delete(`/element/${id}`)
+    },
+    addElementToModule(model) {
+        return api.post(`/element`, model)
     }
 }
