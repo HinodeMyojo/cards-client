@@ -1,11 +1,11 @@
 <template>
     <v-dialog v-model="dialog" max-width="600px">
         <v-card class="main" :class="['main-element', { 'shifted': isPreview }]" prepend-icon="mdi-cards"
-            title="Создание элемента">
+            :title="elementId === 0 ? 'Создание элемента' : 'Редактирование элемента'">
             <v-card-text class="inputs-text">
                 <v-row dense class="inputs">
-                    <v-textarea v-model="key" :counter="128" label="Ключ" required auto-grow rows="1"></v-textarea>
-                    <v-textarea v-model="value" :counter="128" label="Значение" auto-grow rows="1"></v-textarea>
+                    <v-textarea v-model="keyWord" :counter="128" label="Ключ" required auto-grow rows="1"></v-textarea>
+                    <v-textarea v-model="valueWord" :counter="128" label="Значение" auto-grow rows="1"></v-textarea>
                 </v-row>
                 <div class="checkboxes">
                     <v-checkbox v-model="isExtended" label="Расширенный элемент" class="checkbox"></v-checkbox>
@@ -19,41 +19,64 @@
                 </v-expand-transition>
             </v-card-text>
             <v-card-actions class="buttons">
-                <v-btn class="green" @click="submitForm">Добавить</v-btn>
+                <v-btn v-if="elementId === 0" class="green" @click="submitForm">Добавить</v-btn>
+                <v-btn v-else class="green" @click="submitForm">Изменить</v-btn>
                 <v-btn class="red" @click="dialog = false">Отмена</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
-
+<!-- Временное решение (нет ничего более постоянного, чем временное, ага))) Я буду ожидать elementId. 
+Если не присылают -> буду отсылать 0, типа на создание. Иначе отсылаю присланный elementId -->
 
 <script setup>
 import { ref, watch, defineProps, defineEmits } from 'vue'
 
+const dialog = ref(false)
+const elementId = ref(0);
+const keyWord = ref('');
+const valueWord = ref('');
+
 const props = defineProps({
-    dialog: Boolean
+    dialog: Boolean,
+    elementId: Number,
+    keyWord: String,
+    valueWord: String
 })
 
-const key = ref('');
-const value = ref('');
-
+// Расширенная ли форма
 const isExtended = ref(false)
 
 const submitForm = () => {
-    emit('submit-form', { key: key.value, value: value.value });
+    emit('submit-form', { key: keyWord.value, value: valueWord.value, elementId: elementId.value });
     dialog.value = false;
 }
 
 const emit = defineEmits(['update:dialog'])
 
 // Используем v-model для синхронизации состояния dialog
-const dialog = ref(false)
+// Наши реактивчики!
+
+watch(() => props.elementId, (newId) => {
+    elementId.value = newId;
+    if (newId === 0) {
+        keyWord.value = '';
+        valueWord.value = '';
+    }
+});
+
+watch(() => props.keyWord, (newKey) => {
+    keyWord.value = newKey;
+});
+
+watch(() => props.valueWord, (newValue) => {
+    valueWord.value = newValue;
+});
+
 
 // Следим за изменениями пропса dialog и синхронизируем с локальным состоянием
 watch(() => props.dialog, (newVal) => {
     dialog.value = newVal
-    key.value = '';
-    value.value = '';
 })
 
 watch(dialog, (newVal) => {
@@ -61,7 +84,6 @@ watch(dialog, (newVal) => {
     emit('update:dialog', newVal)
 })
 </script>
-
 
 <style scoped>
 .inputs-text {

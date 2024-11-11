@@ -10,5 +10,9 @@ export const elementService = {
     },
     addElementToModule(model) {
         return api.post(`/element`, model)
+    },
+    editElementById(model) {
+        return api.put(`/element`, model)
     }
+
 }

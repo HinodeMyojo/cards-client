@@ -44,7 +44,7 @@
           <div v-if="moduleInfo.userId === userId" class="module-table-header">
             <h2>Термины в модуле</h2>
             <button class="add-table-btn" @click="AddElement">Добавить элемент</button>
-            <AddElementModal v-model:dialog="isDialogOpen" @submit-form="addElement" />
+            <ElementModal v-model:dialog="isDialogOpen" :key-word="''" :value-word="''" @submit-form="addElement" />
           </div>
           <div v-else class="module-table-header">
             <h2>Термины в модуле</h2>
@@ -52,7 +52,7 @@
           <hr>
           <div class="module-table">
             <Table v-if="headersData && elements" :headers="headersData" :elements="elements"
-              @delete-item="deleteElement">
+              @delete-item="deleteElement" @edit-item="editElement">
             </Table>
           </div>
         </div>
@@ -77,7 +77,7 @@ import { mdiSchool } from '@mdi/js';
 import Button from '@/components/UI/Button.vue';
 import Card from '@/components/Main/Card.vue';
 import Table from '@/components/UI/Table.vue';
-import AddElementModal from '@/components/UI/Module/AddElementModal.vue';
+import ElementModal from '@/components/UI/Module/ElementModal.vue';
 
 
 // Иконки
@@ -106,10 +106,22 @@ const addElement = async (data) => {
 const route = useRoute();
 let moduleId = route.params.id;
 const { getModuleById, currentModule, getHeaders, headers } = useModuleService();
-const { deleteElementById, addElementToModule } = useElementService();
+const { deleteElementById, addElementToModule, editElementById } = useElementService();
 const moduleInfo = ref('');
 const elements = ref([]);
 const headersData = ref(null);
+
+// Обновление данных (данные приходят из таблицы)
+const editElement = async (data) => {
+  const model = {
+    key: data.key,
+    value: data.value,
+    elementId: data.elementId,
+    moduleId
+  }
+  await editElementById(model);
+  await refreshTableData(moduleId)
+}
 
 // Обновление данных таблицы
 const refreshTableData = async (moduleId) => {

@@ -21,5 +21,15 @@ export function useElementService() {
         }
     }
 
-    return { deleteElementById, addElementToModule };
+    const editElementById = async(model) => {
+        try{
+            await elementService.editElementById(model);
+            console.log("element was updated")
+        }
+        catch(error){
+            console.error(error)
+        }
+    }
+
+    return { deleteElementById, addElementToModule, editElementById };
 }
