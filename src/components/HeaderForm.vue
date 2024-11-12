@@ -30,9 +30,17 @@
                 <!-- Меню для кнопки добавить -->
                 <div>
                   <v-menu activator="#menu-activator" class="v-menu-header">
-                    <v-list class="v-list-header" style="background-color: transparent; min-width: 180px">
-                      <v-list-item v-for="(item, index) in addButtonItems" :key="index" :value="index"
-                        class="v-item-header">
+                    <v-list
+                      class="v-list-header"
+                      style="background-color: transparent; min-width: 180px"
+                    >
+                      <v-list-item
+                        v-for="(item, index) in addButtonItems"
+                        :key="index"
+                        :value="index"
+                        class="v-item-header"
+                        @click="handleClick(item)"
+                      >
                         <v-list-item-title style="background-color: #272a2f; text-wrap: wrap">
                           {{ item.title }}
                         </v-list-item-title>
@@ -49,12 +57,23 @@
                         <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
                       </div>
                     </template>
-                    <v-list class="v-list-header"
-                      style="border-radius: 10px; background: transparent; min-width: 200px">
-                      <v-list-item v-for="(item, index) in items" :key="index" :value="index" class="v-item-header"
-                        :class="{ 'border-style': index === 3 }" style="overflow: hidden" @click="handleClick(item)">
-                        <v-list-item-title :class="{ 'highlight-title': index === 3 }"
-                          style="background-color: #272a2f; text-wrap: wrap">
+                    <v-list
+                      class="v-list-header"
+                      style="border-radius: 10px; background: transparent; min-width: 200px"
+                    >
+                      <v-list-item
+                        v-for="(item, index) in items"
+                        :key="index"
+                        :value="index"
+                        class="v-item-header"
+                        :class="{ 'border-style': index === 3 }"
+                        style="overflow: hidden"
+                        @click="handleClick(item)"
+                      >
+                        <v-list-item-title
+                          :class="{ 'highlight-title': index === 3 }"
+                          style="background-color: #272a2f; text-wrap: wrap"
+                        >
                           {{ item.title }}
                         </v-list-item-title>
                       </v-list-item>
@@ -152,8 +171,8 @@ const items = computed(() => [
 ])
 
 const addButtonItems = [
-  { title: 'Добавить модуль', action: 'addModule' },
-  { title: 'Добавить папку', action: 'addFolder' }
+  { title: 'Создать модуль', action: 'createModule' },
+  { title: 'Создать папку', action: 'createFolder' }
 ]
 
 const LoadUserName = () => {
@@ -166,6 +185,12 @@ const handleClick = (item) => {
     case storedUserName.value:
       router.push(`/${storedUserName.value}`)
       break
+    case 'createModule':
+      router.push('/module/create')
+      break
+    case 'createFolder':
+      router.push('/folder/create')
+      break
     case 'achievements':
       router.push('/achievements')
       break
@@ -174,7 +199,6 @@ const handleClick = (item) => {
       break
     case 'logout':
       logout()
-
       router.push('/')
       break
     case 'privacy':
@@ -261,7 +285,6 @@ const cleanLocalStorage = () => {
   height: 100%;
   display: flex;
 }
-
 
 .login {
   cursor: pointer;
@@ -356,7 +379,6 @@ a:hover {
 .logo {
   cursor: pointer;
 }
-
 
 .logo-text {
   font-weight: 700;
