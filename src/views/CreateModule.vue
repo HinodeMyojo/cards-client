@@ -50,7 +50,7 @@ import CreateElememtItem from '@/components/UI/Module/CreateElememtItem.vue';
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
 
 const visibleStatus = ref("Публичная");
-const slider = ref(0);
+const slider = ref(3);
 
 const inputName = ref('');
 const inputDescription = ref('');
