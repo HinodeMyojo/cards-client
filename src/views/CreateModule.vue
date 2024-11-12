@@ -14,11 +14,11 @@
         <div class="module-create-setting-params">
           <div class="input">
             <p>Название:</p>
-            <input v-model="message" placeholder="Модуль по изучению звёздных скоплений" />
+            <input v-model="inputName" placeholder="Модуль по изучению звёздных скоплений" />
           </div>
           <div class="input">
             <p>Описание:</p>
-            <input v-model="message" placeholder="Звёздные скопления - это скопления из звёзд" />
+            <input v-model="inputDescription" placeholder="Звёздные скопления - это скопления из звёзд" />
           </div>
           <div class="switch">
             <p>Доступ:</p>
@@ -51,6 +51,9 @@ import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
 
 const visibleStatus = ref("Публичная");
 const slider = ref(0);
+
+const inputName = ref('');
+const inputDescription = ref('');
 
 </script>
 
