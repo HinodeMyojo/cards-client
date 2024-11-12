@@ -27,7 +27,8 @@ export const authRoutes = [
 export const moduleRoutes = [
   {
     path: '/module/create',
-    component: CreateModule
+    component: Module,
+    props: { typeOfModuleState: "createModule" }
   },
   {
     path: '/module/edit',
@@ -39,7 +40,8 @@ export const moduleRoutes = [
   },
   {
     path: '/module/:id',
-    component: Module
+    component: Module,
+    props: { typeOfModuleState: "concreteModule" }
   }
 ]
 

@@ -18,7 +18,12 @@ import ProfileSideBar from '@/components/Main/ProfileSideBar.vue'
 import ConcreteModule from './ConcreteModule.vue'
 import CreateModule from './CreateModule.vue'
 
-const typeOfModuleState = ref('createModule')
+const props = defineProps({
+  typeOfModuleState: {
+    type: String,
+    default: ''
+  }
+})
 
 // Иконки
 </script>
@@ -30,6 +35,7 @@ const typeOfModuleState = ref('createModule')
   width: 100%;
   gap: 30px;
 }
+
 .module-sidebar {
   flex: 0.45;
 }

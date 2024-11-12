@@ -39,25 +39,15 @@
       <div v-if="moduleInfo.userId === userId" class="module-table-header">
         <h2>Термины в модуле</h2>
         <button class="add-table-btn" @click="AddElement">Добавить элемент</button>
-        <ElementModal
-          v-model:dialog="isDialogOpen"
-          :key-word="''"
-          :value-word="''"
-          @submit-form="addElement"
-        />
+        <ElementModal v-model:dialog="isDialogOpen" :key-word="''" :value-word="''" @submit-form="addElement" />
       </div>
       <div v-else class="module-table-header">
         <h2>Термины в модуле</h2>
       </div>
       <hr />
       <div class="module-table">
-        <Table
-          v-if="headersData && elements"
-          :headers="headersData"
-          :elements="elements"
-          @delete-item="deleteElement"
-          @edit-item="editElement"
-        >
+        <Table v-if="headersData && elements" :headers="headersData" :elements="elements" @delete-item="deleteElement"
+          @edit-item="editElement">
         </Table>
       </div>
     </div>
@@ -78,7 +68,7 @@ import { mdiFountainPenTip } from '@mdi/js'
 import { mdiSchool } from '@mdi/js'
 
 import SvgIcon from '@jamescoyle/vue-icon'
-import Button from '@/components/UI/Button.vue'
+import Button from '@/components/UI/Buttons/Button.vue'
 import Card from '@/components/Main/Card.vue'
 import Table from '@/components/UI/Table.vue'
 import ElementModal from '@/components/UI/Module/ElementModal.vue'

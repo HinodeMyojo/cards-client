@@ -30,17 +30,9 @@
                 <!-- Меню для кнопки добавить -->
                 <div>
                   <v-menu activator="#menu-activator" class="v-menu-header">
-                    <v-list
-                      class="v-list-header"
-                      style="background-color: transparent; min-width: 180px"
-                    >
-                      <v-list-item
-                        v-for="(item, index) in addButtonItems"
-                        :key="index"
-                        :value="index"
-                        class="v-item-header"
-                        @click="handleClick(item)"
-                      >
+                    <v-list class="v-list-header" style="background-color: transparent; min-width: 180px">
+                      <v-list-item v-for="(item, index) in addButtonItems" :key="index" :value="index"
+                        class="v-item-header" @click="handleClick(item)">
                         <v-list-item-title style="background-color: #272a2f; text-wrap: wrap">
                           {{ item.title }}
                         </v-list-item-title>
@@ -57,23 +49,12 @@
                         <UIIcon width="22px" height="22px" path="downArrowhead.svg" />
                       </div>
                     </template>
-                    <v-list
-                      class="v-list-header"
-                      style="border-radius: 10px; background: transparent; min-width: 200px"
-                    >
-                      <v-list-item
-                        v-for="(item, index) in items"
-                        :key="index"
-                        :value="index"
-                        class="v-item-header"
-                        :class="{ 'border-style': index === 3 }"
-                        style="overflow: hidden"
-                        @click="handleClick(item)"
-                      >
-                        <v-list-item-title
-                          :class="{ 'highlight-title': index === 3 }"
-                          style="background-color: #272a2f; text-wrap: wrap"
-                        >
+                    <v-list class="v-list-header"
+                      style="border-radius: 10px; background: transparent; min-width: 200px">
+                      <v-list-item v-for="(item, index) in items" :key="index" :value="index" class="v-item-header"
+                        :class="{ 'border-style': index === 3 }" style="overflow: hidden" @click="handleClick(item)">
+                        <v-list-item-title :class="{ 'highlight-title': index === 3 }"
+                          style="background-color: #272a2f; text-wrap: wrap">
                           {{ item.title }}
                         </v-list-item-title>
                       </v-list-item>
