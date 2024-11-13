@@ -18,14 +18,16 @@
             <div class="divider-main"></div>
             <div class="Input">
                 <div class="inner-input">
-                    <v-textarea variant="underlined" rows="1" maxlength="128" auto-grow counter></v-textarea>
+                    <v-textarea v-model="internalValue.key" @input="updateValue" variant="underlined" rows="1"
+                        maxlength="128" auto-grow counter></v-textarea>
                     <p>Термин</p>
                 </div>
             </div>
             <div class="divider-main"></div>
             <div class="Input">
                 <div class="inner-input">
-                    <v-textarea variant="underlined" rows="1" maxlength="128" auto-grow counter></v-textarea>
+                    <v-textarea v-model="internalValue.value" @input="updateValue" variant="underlined" rows="1"
+                        maxlength="128" auto-grow counter></v-textarea>
                     <p>Определение</p>
                 </div>
             </div>
@@ -38,11 +40,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, computed } from 'vue';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiTrashCanOutline } from '@mdi/js';
-import { mdiMenu } from '@mdi/js';
-import { mdiPaperclip } from '@mdi/js';
+import { mdiTrashCanOutline, mdiMenu, mdiPaperclip } from '@mdi/js';
 
 const pathMdiTrash = ref(mdiTrashCanOutline);
 const pathMdiMenu = ref(mdiMenu);
@@ -50,8 +50,25 @@ const pathMdiPaperclip = ref(mdiPaperclip);
 
 const props = defineProps({
     Id: Number,
+    modelValue: {
+        type: Object,
+        default: () => ({ key: '', value: '' })
+    }
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+const internalValue = ref({ ...props.modelValue });
+
+watch(internalValue, (newVal) => {
+    emit('update:modelValue', newVal);
+}, { deep: true });
+
+const updateValue = () => {
+    emit('update:modelValue', internalValue.value);
+};
 </script>
+
 
 <style scoped>
 .main {

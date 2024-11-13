@@ -7,5 +7,8 @@ export const moduleService = {
     },
     getHeaders(){
         return api.get("/module/header")
+    },
+    createModule(data){
+        api.post(`/module`, data) 
     }
 }

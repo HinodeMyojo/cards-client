@@ -38,24 +38,46 @@
       </div>
       <hr />
       <div v-for="i in slider" :key="i" class="module-create-elements">
-        <CreateElememtItem :Id="i" />
+        <CreateElememtItem v-model="itemsData[i - 1]" :Id="i" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import CreateElememtItem from '@/components/UI/Module/CreateElememtItem.vue';
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
+import { useModuleService } from '@/components/composables/useModuleService';
 
 const visibleStatus = ref("Публичная");
 const slider = ref(3);
+const { createModule } = useModuleService()
 
 const inputName = ref('');
 const inputDescription = ref('');
 
+// Массив для хранения данных каждого элемента
+const itemsData = ref(Array(slider.value).fill({ key: '', value: '', image: '' }));
+
+// Следим за изменением количества элементов и обновляем массив данных
+watch(slider, (newValue) => {
+  itemsData.value = Array(newValue).fill({ key: '', value: '', image: '' });
+});
+
+const onSubmit = () => {
+  const data = {
+    title: inputName.value,
+    description: inputDescription.value,
+    private: visibleStatus.value === "Приватная",
+    isDraft: false,
+    elements: itemsData.value,
+    createAt: new Date().toISOString()
+  };
+  createModule(data);
+};
 </script>
+
 
 <style scoped>
 .module-create {
