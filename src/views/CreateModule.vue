@@ -77,8 +77,12 @@
         </div>
       </div>
       <hr />
-      <div v-for="i in Number(slider)" :key="i" class="module-create-elements">
-        <CreateElememtItem v-model="itemsData[i - 1]" :Id="Number(i)" />
+      <div v-for="(i, index) in Number(slider)" :key="i" class="module-create-elements">
+        <CreateElememtItem
+          @delete-element="deleteElement"
+          v-model="itemsData[index]"
+          :Id="Number(index + 1)"
+        />
       </div>
     </div>
   </div>
@@ -100,14 +104,38 @@ const inputDescription = ref('')
 const NameValid = ref(true)
 const DesciptionValid = ref(true)
 
+const deleteElement = (abc) => {
+  console.log(itemsData)
+  itemsData.value.splice(abc - 1, 1)
+  slider.value = slider.value - 1
+  //
+}
+
 // Массив для хранения данных каждого элемента
-const itemsData = ref(Array(slider.value).fill({ key: '', value: '', image: '' }))
+const itemsData = ref([
+  { key: '', value: '', image: '' },
+  { key: '', value: '', image: '' },
+  { key: '', value: '', image: '' }
+])
+
 // Следим за изменением количества элементов и обновляем массив данных
 watch(slider, (newValue) => {
-  itemsData.value = Array(newValue).fill({ key: '', value: '', image: '' })
-})
-// Проверка заполненности полей
+  const currentLength = itemsData.value.length
 
+  // Если новое количество элементов больше текущего, добавляем новые пустые элементы
+  if (newValue > currentLength) {
+    for (let i = 0; i < newValue - currentLength; i++) {
+      itemsData.value.push({ key: '', value: '', image: '' })
+    }
+  }
+
+  // Если новое количество элементов меньше текущего, обрезаем массив
+  if (newValue < currentLength) {
+    itemsData.value.splice(newValue)
+  }
+})
+
+// Проверка заполненности полей
 const isNameValid = (value) => {
   NameValid.value = value.length > 0
 }
