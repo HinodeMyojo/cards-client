@@ -14,23 +14,63 @@
         <div class="module-create-setting-params">
           <div class="input">
             <p>Название:</p>
-            <input v-model="inputName" placeholder="Модуль по изучению звёздных скоплений" />
+            <input
+              v-if="NameValid"
+              v-model="inputName"
+              placeholder="Модуль по изучению звёздных скоплений"
+            />
+            <input
+              v-else
+              class="notValidInput"
+              v-model="inputName"
+              placeholder="Поле обязательно для заполнения!"
+            />
           </div>
+
           <div class="input">
             <p>Описание:</p>
-            <input v-model="inputDescription" placeholder="Звёздные скопления - это скопления из звёзд" />
+            <input
+              v-if="DesciptionValid"
+              v-model="inputDescription"
+              placeholder="Звёздные скопления - это скопления из звёзд"
+            />
+            <input
+              v-else
+              class="notValidInput"
+              v-model="inputDescription"
+              placeholder="Поле обязательно для заполнения!"
+            />
           </div>
           <div class="switch">
             <p>Доступ:</p>
-            <v-switch v-model="visibleStatus" :label="`${visibleStatus}`" color="red" false-value="Публичная"
-              true-value="Приватная" hide-details></v-switch>
+            <v-switch
+              v-model="visibleStatus"
+              :label="`${visibleStatus}`"
+              color="red"
+              false-value="Публичная"
+              true-value="Приватная"
+              hide-details
+            ></v-switch>
           </div>
           <div class="slider">
-            <p>Количество элементов: </p>
-            <v-slider v-model="slider" :max="30" :min="0" :step="1" class="align-center" hide-details>
+            <p>Количество элементов:</p>
+            <v-slider
+              v-model="slider"
+              :max="30"
+              :min="0"
+              :step="1"
+              class="align-center"
+              hide-details
+            >
               <template v-slot:append>
-                <v-text-field v-model="slider" density="compact" style="width: 70px" type="number" hide-details
-                  single-line></v-text-field>
+                <v-text-field
+                  v-model="slider"
+                  density="compact"
+                  style="width: 70px"
+                  type="number"
+                  hide-details
+                  single-line
+                ></v-text-field>
               </template>
             </v-slider>
           </div>
@@ -45,39 +85,59 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import CreateElememtItem from '@/components/UI/Module/CreateElememtItem.vue';
-import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
-import { useModuleService } from '@/components/composables/useModuleService';
+import { ref, watch } from 'vue'
+import CreateElememtItem from '@/components/UI/Module/CreateElememtItem.vue'
+import BaseButton from '@/components/UI/Buttons/BaseButton.vue'
+import { useModuleService } from '@/components/composables/useModuleService'
 
-const visibleStatus = ref("Публичная");
-const slider = ref(3);
+const visibleStatus = ref('Публичная')
+const slider = ref(3)
 const { createModule } = useModuleService()
 
-const inputName = ref('');
-const inputDescription = ref('');
+const inputName = ref('')
+const inputDescription = ref('')
+
+const NameValid = ref(true)
+const DesciptionValid = ref(true)
 
 // Массив для хранения данных каждого элемента
-const itemsData = ref(Array(slider.value).fill({ key: '', value: '', image: '' }));
+const itemsData = ref(Array(slider.value).fill({ key: '', value: '', image: '' }))
 
 // Следим за изменением количества элементов и обновляем массив данных
 watch(slider, (newValue) => {
-  itemsData.value = Array(newValue).fill({ key: '', value: '', image: '' });
-});
+  itemsData.value = Array(newValue).fill({ key: '', value: '', image: '' })
+})
+
+// Проверка заполненности полей
+const isNameValid = (value) => {
+  NameValid.value = value.length > 0
+}
+
+const isDescriptionValid = (value) => {
+  DesciptionValid.value = value.length > 0
+}
 
 const onSubmit = () => {
+  isNameValid(inputName.value)
+  isDescriptionValid(inputDescription.value)
+
+  console.log(NameValid.value, DesciptionValid.value)
+
+  if (!NameValid.value || !DesciptionValid.value) {
+    return
+  }
+
   const data = {
     title: inputName.value,
     description: inputDescription.value,
-    private: visibleStatus.value === "Приватная",
+    private: visibleStatus.value === 'Приватная',
     isDraft: false,
     elements: itemsData.value,
     createAt: new Date().toISOString()
-  };
-  createModule(data);
-};
+  }
+  createModule(data)
+}
 </script>
-
 
 <style scoped>
 .module-create {
@@ -155,6 +215,14 @@ h3 {
   flex-direction: row;
   align-items: center;
   gap: 15px;
+}
+
+.notValidInput {
+  border: 1px solid #df0000;
+}
+.notValidInput::placeholder {
+  color: #df0000; /* Цвет плейсхолдера */
+  opacity: 1; /* Делает плейсхолдер полностью непрозрачным */
 }
 
 .slider {
