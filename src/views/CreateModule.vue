@@ -77,8 +77,8 @@
         </div>
       </div>
       <hr />
-      <div v-for="i in slider" :key="i" class="module-create-elements">
-        <CreateElememtItem v-model="itemsData[i - 1]" :Id="i" />
+      <div v-for="i in Number(slider)" :key="i" class="module-create-elements">
+        <CreateElememtItem v-model="itemsData[i - 1]" :Id="Number(i)" />
       </div>
     </div>
   </div>
@@ -90,8 +90,8 @@ import CreateElememtItem from '@/components/UI/Module/CreateElememtItem.vue'
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue'
 import { useModuleService } from '@/components/composables/useModuleService'
 
+var slider = ref(3)
 const visibleStatus = ref('Публичная')
-const slider = ref(3)
 const { createModule } = useModuleService()
 
 const inputName = ref('')
@@ -102,13 +102,12 @@ const DesciptionValid = ref(true)
 
 // Массив для хранения данных каждого элемента
 const itemsData = ref(Array(slider.value).fill({ key: '', value: '', image: '' }))
-
 // Следим за изменением количества элементов и обновляем массив данных
 watch(slider, (newValue) => {
   itemsData.value = Array(newValue).fill({ key: '', value: '', image: '' })
 })
-
 // Проверка заполненности полей
+
 const isNameValid = (value) => {
   NameValid.value = value.length > 0
 }
