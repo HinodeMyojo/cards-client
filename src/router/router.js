@@ -30,10 +30,11 @@ export const moduleRoutes = [
     component: Module,
     props: { typeOfModuleState: "createModule" }
   },
-  {
-    path: '/module/edit',
-    component: Module
-  },
+  // {
+  //   path: '/profile/:id',
+  //   component: Module,
+  //   props: {typeOfModuleState: 'profile'}
+  // },
   {
     path: '/module/study',
     component: Module
@@ -44,6 +45,7 @@ export const moduleRoutes = [
     props: { typeOfModuleState: "concreteModule" }
   }
 ]
+
 
 export const profileRoutes = [
   {

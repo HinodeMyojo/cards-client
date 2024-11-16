@@ -1,6 +1,7 @@
 <template>
     <div class="search-autocomplete" style="border-radius: 10px;">
-        <input v-model="searchQuery" type="text" placeholder="Поиск..." @input="filterItems" style="outline: none" />
+        <input v-model="searchQuery" type="text" placeholder="Поиск..." @input="filterItems"
+            style="outline: none; background-color: #2b2c34;;" />
         <ul v-if="filteredItems.length && searchQuery">
             <li v-for="(item, index) in filteredItems" :key="index" @click="selectItem(item)">
                 {{ item }}
