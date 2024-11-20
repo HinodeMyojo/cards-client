@@ -3,8 +3,11 @@
         <div class="search-main">
             <h3>Быстрый поиск</h3>
             <SearchAutocomplete />
+            <button>Расширенный поиск</button>
         </div>
-        <div class="statistic-m*ain"></div>
+        <div class="statistic-main">
+            <ProgressContainer />
+        </div>
         <div class="last-activity-main"></div>
         <div class="trend-main"></div>
     </div>
@@ -12,10 +15,17 @@
 
 <script setup>
 import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
+import ProgressContainer from '@/components/UI/Progress/ProgressContainer.vue';
 
 </script>
 
 <style scoped>
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
 .profile-main {
     display: flex;
     flex: 1;
@@ -23,13 +33,23 @@ import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
 
 .search-main {
     width: 100%;
-    height: 150px;
+    height: 140px;
     background-color: #202127;
     border-radius: 15px;
     padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
+}
+
+.search-main button {
+    display: flex;
+    justify-content: end;
+}
+
+.search-main button:hover {
+    transition: all 0.3s ease-in-out;
+    color: white;
 }
 
 

@@ -9,9 +9,9 @@
     <div class="module-main" v-else-if="typeOfModuleState === 'createModule'">
       <CreateModule />
     </div>
-    <!-- <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
+    <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
       <Profile />
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -20,15 +20,15 @@ import { ref } from 'vue'
 import ProfileSideBar from '@/components/Main/ProfileSideBar.vue'
 import ConcreteModule from './ConcreteModule.vue'
 import CreateModule from './CreateModule.vue'
-// import Profile from './Profile.vue'
+import Profile from './Profile.vue'
 
-const props = defineProps({
-  typeOfModuleState: {
-    type: String,
-    default: ''
-  }
-})
-// const typeOfModuleState = 'profile'
+// const props = defineProps({
+//   typeOfModuleState: {
+//     type: String,
+//     default: ''
+//   }
+// })
+const typeOfModuleState = 'profile'
 
 // Иконки
 </script>

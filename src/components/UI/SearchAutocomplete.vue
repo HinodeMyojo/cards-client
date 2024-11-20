@@ -50,13 +50,13 @@ export default {
 .search-autocomplete {
     position: relative;
     width: 100%;
-    max-width: 300px;
-    /* background-color: #2B2C34; */
+    max-width: 100%;
 }
 
 input {
     width: 100%;
     padding: 8px;
+    border-radius: 5px;
 }
 
 ul {
