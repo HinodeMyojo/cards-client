@@ -23,7 +23,9 @@
                 <div class="days-of-week">
                     <p v-for="day in daysOfWeek" :key="day">{{ day }}</p>
                 </div>
-                <div class="data"></div>
+                <div class="data">
+                    <ProgressBlock :data="progressData.data" />
+                </div>
             </div>
         </div>
     </div>
@@ -31,6 +33,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { getYearStatistic } from '@/services/statisticService';
+import ProgressBlock from './ProgressBlock.vue';
 const countOfSubmissions = ref(123)
 const totalActiveDays = ref(104)
 const maxStreak = ref(16)
@@ -38,54 +42,14 @@ const daysOfWeek = ref(['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
 const progressData = ref([]);
 
 onMounted(() => {
-    generateProgressData(2024, {
-        months: 12, // Генерировать данные для всех месяцев
-        daysInMonth: 30, // Допустим, фиксированное количество дней
-        generateValue: (day, month) => day * month // Произвольная логика генерации значений
-    });
+    getYearStatistic().then((response) => {
+        progressData.value = response.data
+        console.log(response.data);
+    })
     console.log("Билиблоада");
     console.log(progressData.value);
 })
 
-// Метод для автоматической генерации данных
-function generateProgressData(year, options = {}) {
-    const {
-        months = 12, // Количество месяцев
-        generateDaysInMonth = () => Math.random() < 0.5 ? 30 : 31, // Рандомно выбирает 30 или 31
-        generateValue = () => Math.floor(Math.random() * 6), // Генерация значения от 0 до 5
-        generateDataCount = () => Math.floor(Math.random() * 6) // Количество объектов от 0 до 5
-    } = options;
-
-    // Новый объект года
-    const yearData = {
-        year: year,
-        data: []
-    };
-
-    for (let month = 1; month <= months; month++) {
-        const daysInMonth = generateDaysInMonth();
-        const monthData = {
-            month: month,
-            daysInMonth: daysInMonth,
-            data: []
-        };
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dataCount = generateDataCount(); // Количество объектов в `data`
-            const dayData = {
-                day: day,
-                data: Array.from({ length: dataCount }, () => ({ value: generateValue() })) // Генерация массива
-            };
-
-            monthData.data.push(dayData);
-        }
-
-        yearData.data.push(monthData);
-    }
-
-    // Добавляем сгенерированные данные в общий массив
-    progressData.value.push(yearData);
-}
 
 
 
@@ -147,6 +111,20 @@ function generateProgressData(year, options = {}) {
 
 .container-info {
     display: flex;
+    height: 100%;
+    width: 100%;
+    gap: 10px;
     flex-direction: row;
+}
+
+.days-of-week {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.data {
+    width: 100%;
 }
 </style>
