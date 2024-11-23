@@ -1,50 +1,101 @@
 <template>
     <div class="main">
         <div class="container">
-            <div v-for="item in data" :key="item.id" class="months">
-                <ProgressItem :data="item.data" />
-            </div>
+            <table>
+                <thead>
+                    <td v-for="(month, index) in months" :key="index" :colspan="getColspan(month)">
+                        {{ month }}
+                    </td>
+                </thead>
+                <tbody>
+                    <tr v-for="(row, rowIndex) in data" :key="rowIndex">
+                        <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell)">
+                            {{ cell.value }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>z
         </div>
     </div>
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
-import ProgressItem from './ProgressItem.vue';
+// import ProgressItem from './ProgressItem.vue';
 
 const props = defineProps({
     data: Array
 });
+
+const getColspan = (month) => {
+    if (month === 'Янв') {
+        return 5
+    } else if (month === 'Дек') {
+        return 5
+    } else {
+        return 4
+    }
+}
+
+
+const getCellStyle = (cell) => {
+    let backgroundColor = ''
+    if (cell === 0) {
+        backgroundColor = 'lightgray'
+    } else if (cell === 1) {
+        backgroundColor = 'lightgreen'
+    } else if (cell === 2) {
+        backgroundColor = 'lightblue'
+    }
+
+    return {
+        backgroundColor: backgroundColor
+    }
+}
+
+const months = [
+    'Янв',
+    'Фев',
+    'Март',
+    'Апр',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Авг',
+    'Сент',
+    'Окт',
+    'Ноя',
+    'Дек'
+]
+
 </script>
 
 <style scoped>
 .main {
     display: flex;
     width: 100%;
-    height: 100%;
-    background-color: rgb(225, 58, 58);
+    max-height: 100%;
+    align-items: center;
     justify-content: center;
-    align-items: flex-start;
 }
 
 .container {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
-    max-width: 100%;
-    justify-content: flex-start;
+    flex-direction: row;
+    min-width: 100%;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.months {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    gap: 3px;
-    width: 50px;
-    height: auto;
-    /* padding: 5px; */
-    box-sizing: border-box;
-    /* border: 1px solid #ccc; */
-    border-radius: 5px;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
 }
 </style>

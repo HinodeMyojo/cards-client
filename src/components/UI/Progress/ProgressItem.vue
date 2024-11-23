@@ -1,13 +1,25 @@
-<template>
-    <div v-for="day in data" :key="day" class="day">
-        <div v-if="day.data.length === 0" class="block-simple"></div>
-        <div v-else-if="day.data.length >= 1 && day.data.length <= 4" class="block-light-green"></div>
-        <div v-else class="block-green"></div>
+<!-- <template>
+    <div>
+        <table>
+            <thead>
+                <td v-for="(month, index) in months" :key="index" :colspan="getColspan(month)">
+                    {{ month }}
+                </td>
+            </thead>
+            <tbody>
+                <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
+                    <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell)">
+                        {{ cell }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     data: {
@@ -16,6 +28,24 @@ const props = defineProps({
         default: () => []
     }
 });
+
+
+const months = [
+    "Янв",
+    "Фев",
+    "Март",
+    "Апр",
+    "Май",
+    "Июнь",
+    "Июль",
+    "Авг",
+    "Сент",
+    "Окт",
+    "Ноя",
+    "Дек"
+];
+
+
 </script>
 
 <style scoped>
@@ -28,8 +58,8 @@ const props = defineProps({
 .block-simple,
 .block-light-green,
 .block-green {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
 }
 
 .block-simple {
@@ -43,4 +73,4 @@ const props = defineProps({
 .block-green {
     background-color: green;
 }
-</style>
+</style> -->

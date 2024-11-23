@@ -20,11 +20,11 @@
                 </div>
             </div>
             <div class="container-info">
-                <div class="days-of-week">
-                    <p v-for="day in daysOfWeek" :key="day">{{ day }}</p>
-                </div>
                 <div class="data">
-                    <ProgressBlock :data="progressData.data" />
+                    <!-- <div class="days-of-week">
+                        <p v-for="day in daysOfWeek" :key="day">{{ day }}</p>
+                    </div> -->
+                    <ProgressBlock :data="progressData" />
                 </div>
             </div>
         </div>
@@ -50,9 +50,6 @@ onMounted(() => {
     console.log(progressData.value);
 })
 
-
-
-
 </script>
 
 <style scoped>
@@ -70,6 +67,40 @@ onMounted(() => {
     width: 100%;
     margin: 15px;
     gap: 5px;
+}
+
+.info {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container-info {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    gap: 10px;
+    flex-direction: row;
+}
+
+
+.days-of-week {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.data {
+    width: 100%;
+    display: flex;
+}
+
+.other-info {
+    display: flex;
+    flex-direction: row;
 }
 
 .text-data {
@@ -93,38 +124,5 @@ onMounted(() => {
 
 .digit {
     font-weight: 500;
-}
-
-.info {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.other-info {
-    display: flex;
-    flex-direction: row;
-}
-
-
-.container-info {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    gap: 10px;
-    flex-direction: row;
-}
-
-.days-of-week {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
-}
-
-.data {
-    width: 100%;
 }
 </style>
