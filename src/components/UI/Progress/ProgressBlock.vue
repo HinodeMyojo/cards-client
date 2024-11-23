@@ -9,12 +9,14 @@
                 </thead>
                 <tbody>
                     <tr v-for="(row, rowIndex) in data" :key="rowIndex">
-                        <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell)">
-                            {{ cell.value }}
+                        <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell.value)"
+                            class="tooltip">
+                            <!-- {{ cell.value }} -->
+                            <span class="tooltip-text">{{ cell.date }}</span>
                         </td>
                     </tr>
                 </tbody>
-            </table>z
+            </table>
         </div>
     </div>
 </template>
@@ -41,11 +43,11 @@ const getColspan = (month) => {
 const getCellStyle = (cell) => {
     let backgroundColor = ''
     if (cell === 0) {
-        backgroundColor = 'lightgray'
+        backgroundColor = '#161B22'
     } else if (cell === 1) {
-        backgroundColor = 'lightgreen'
+        backgroundColor = '#0E4429'
     } else if (cell === 2) {
-        backgroundColor = 'lightblue'
+        backgroundColor = '#39D353'
     }
 
     return {
@@ -71,6 +73,32 @@ const months = [
 </script>
 
 <style scoped>
+.tooltip {
+    position: relative;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 150px;
+    background-color: #18181b;
+    text-align: center;
+    padding: 5px;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
 .main {
     display: flex;
     width: 100%;
@@ -95,7 +123,8 @@ table {
 }
 
 td {
-    border: 1px solid #ccc;
+    border: 2px solid #202127;
     padding: 8px;
+    border-radius: 8px;
 }
 </style>
