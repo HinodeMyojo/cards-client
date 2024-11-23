@@ -1,7 +1,7 @@
 <template>
-    <div class="main">
-        <div class="container">
-            <table>
+    <div class="main-block">
+        <div class="container-block">
+            <table class="progress-table">
                 <thead>
                     <td v-for="(month, index) in months" :key="index" :colspan="getColspan(month)">
                         {{ month }}
@@ -11,8 +11,7 @@
                     <tr v-for="(row, rowIndex) in data" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell.value)"
                             class="tooltip">
-                            <!-- {{ cell.value }} -->
-                            <span class="tooltip-text">{{ cell.date }}</span>
+                            <span class="tooltip-text">{{ cell.value }}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -80,7 +79,7 @@ const months = [
 
 .tooltip-text {
     visibility: hidden;
-    width: 150px;
+    width: 50px;
     background-color: #18181b;
     text-align: center;
     padding: 5px;
@@ -99,27 +98,26 @@ const months = [
     opacity: 1;
 }
 
-.main {
+.main-block {
     display: flex;
-    width: 100%;
-    max-height: 100%;
     align-items: center;
     justify-content: center;
 }
 
-.container {
+.container-block {
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
-    min-width: 100%;
     justify-content: space-between;
     align-items: center;
 }
 
-table {
-    width: 100%;
+.progress-table {
+    width: 740px;
     border-collapse: collapse;
     text-align: center;
+    table-layout: fixed;
+    border-radius: 8px;
+    /* overflow: hidden; */
 }
 
 td {

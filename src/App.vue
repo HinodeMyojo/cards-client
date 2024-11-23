@@ -2,13 +2,15 @@
   <div v-if="isAuthRoute" class="app-login">
     <router-view></router-view>
   </div>
-  <div v-else class="app">
-    <header>
-      <HeaderForm />
-    </header>
-    <div class="main-content">
-      <div class="main-wrapper">
-        <router-view></router-view>
+  <div v-else class="main-app">
+    <div class="app">
+      <header>
+        <HeaderForm />
+      </header>
+      <div class="main-content">
+        <div class="main-wrapper">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
@@ -54,28 +56,36 @@ a {
   text-decoration: none;
 }
 
-.app {
+.main-app {
   display: flex;
-  flex-direction: column;
+  width: 100%;
+  align-self: center;
+  justify-content: center;
   background-color: #1B1B1F;
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  width: 1140px;
+  display: flex;
+
+}
+
 .app-login {
-  /* Стили для страниц логина, регистрации и восстановления пароля */
   background-color: #242429;
-  /* Добавь другие специфические стили для логина здесь */
 }
 
 .main-content {
-  width: 100%;
   min-height: 100vh;
   margin-top: 25px;
+
 }
 
 .main-wrapper {
-  padding-left: 20%;
-  padding-right: 20%;
-  width: 100%;
+  /* padding-left: 20%;
+  padding-right: 20%; */
+
   min-height: 100vh;
 }
 </style>

@@ -1,12 +1,10 @@
 <template>
-    <div class="main">
+    <div class="main-progress">
         <div class="container">
             <div class="info">
                 <div class="text">
-                    <div class="text">
-                        <h3>{{ countOfSubmissions }}</h3>
-                        <p>действий в текущем году</p>
-                    </div>
+                    <h3>{{ countOfSubmissions }}</h3>
+                    <p>действий в текущем году</p>
                 </div>
                 <div class="text-data">
                     <div class="small-text">
@@ -17,13 +15,25 @@
                         <p>Максимальная серия:</p>
                         <p class="digit">{{ maxStreak }}</p>
                     </div>
+                    <div class="year-selector">
+                        <v-menu open-on-hover>
+                            <template v-slot:activator="{ props }">
+                                <v-btn color="primary" v-bind="props">
+                                    {{ selectedYear }}
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item v-for="(year, index) in availableYears.value" :key="index"
+                                    @click="updateYear(year)">
+                                    <v-list-item-title>{{ year }}</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    </div>
                 </div>
             </div>
             <div class="container-info">
                 <div class="data">
-                    <!-- <div class="days-of-week">
-                        <p v-for="day in daysOfWeek" :key="day">{{ day }}</p>
-                    </div> -->
                     <ProgressBlock :data="progressData" />
                 </div>
             </div>
@@ -33,27 +43,56 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getYearStatistic } from '@/services/statisticService';
+import { getYearStatistic, getAvailableYears } from '@/services/statisticService';
 import ProgressBlock from './ProgressBlock.vue';
-const countOfSubmissions = ref(123)
-const totalActiveDays = ref(104)
-const maxStreak = ref(16)
-const daysOfWeek = ref(['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
+
+// Статистика
+const countOfSubmissions = ref(123);
+const totalActiveDays = ref(104);
+const maxStreak = ref(16);
+
+// Прогресс и доступные года
 const progressData = ref([]);
+const availableYears = ref([]);
+const selectedYear = ref(new Date().getFullYear());
 
-onMounted(() => {
-    getYearStatistic().then((response) => {
-        progressData.value = response.data
-        console.log(response.data);
-    })
-    console.log("Билиблоада");
-    console.log(progressData.value);
-})
+// Загрузка данных
+const loadYearStatistic = async (year) => {
+    try {
+        const response = await getYearStatistic(year);
+        progressData.value = response.data;
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+};
 
+const loadAvailableYears = async () => {
+    try {
+        const response = await getAvailableYears();
+        availableYears.value = response.data;
+        // Устанавливаем последний доступный год, если выбранный не задан
+        if (!selectedYear.value) {
+            selectedYear.value = availableYears.value.at(-1);
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки списка годов:', error);
+    }
+};
+
+const updateYear = (year) => {
+    selectedYear.value = year;
+    loadYearStatistic(year);
+};
+
+// Инициализация при монтировании
+onMounted(async () => {
+    await loadAvailableYears();
+    await loadYearStatistic(selectedYear.value);
+});
 </script>
 
 <style scoped>
-.main {
+.main-progress {
     display: flex;
     border-radius: 25px;
     width: 100%;
@@ -65,7 +104,7 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 15px;
+    padding: 15px;
     gap: 5px;
 }
 
@@ -77,30 +116,26 @@ onMounted(() => {
     justify-content: space-between;
 }
 
+.bg-primary {
+    background-color: #2B2C34 !important;
+}
+
 .container-info {
     display: flex;
-    height: 100%;
     width: 100%;
     gap: 10px;
     flex-direction: row;
 }
 
-
-.days-of-week {
+.year-selector {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-size: 14px;
+    align-items: center;
+    justify-content: center;
 }
 
 .data {
     width: 100%;
     display: flex;
-}
-
-.other-info {
-    display: flex;
-    flex-direction: row;
 }
 
 .text-data {
