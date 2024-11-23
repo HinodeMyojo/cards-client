@@ -96,7 +96,7 @@ onMounted(async () => {
     display: flex;
     border-radius: 25px;
     width: 100%;
-    height: 250px;
+    height: 220px;
     background-color: #202127;
 }
 
@@ -105,7 +105,7 @@ onMounted(async () => {
     flex-direction: column;
     width: 100%;
     padding: 15px;
-    gap: 5px;
+    gap: 15px;
 }
 
 .info {

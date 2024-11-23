@@ -112,7 +112,9 @@ const months = [
 }
 
 .progress-table {
-    width: 740px;
+    /* width: 745px; */
+    width: 100%;
+    /* max-height: 150px; */
     border-collapse: collapse;
     text-align: center;
     table-layout: fixed;
@@ -122,7 +124,7 @@ const months = [
 
 td {
     border: 2px solid #202127;
-    padding: 8px;
+    height: 13.81px;
     border-radius: 8px;
 }
 </style>
