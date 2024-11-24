@@ -20,7 +20,7 @@
       <h2>В этом модуле пока нет элементов.</h2>
     </div>
     <div class="module-choice-button">
-      <button class="choice-button">
+      <button class="choice-button" @click="goToCardStudy">
         <svg-icon type="mdi" :path="pathMdiCards"></svg-icon>
         <p>Карточки</p>
       </button>
@@ -72,6 +72,7 @@ import Button from '@/components/UI/Buttons/Button.vue'
 import Card from '@/components/ModuleElements/Card.vue'
 import Table from '@/components/UI/Table.vue'
 import ElementModal from '@/components/UI/Module/ElementModal.vue'
+import router from '@/router/router'
 
 const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)
@@ -92,6 +93,11 @@ const addElement = async (data) => {
     await addElementToModule(model)
     await refreshTableData(moduleId)
   }
+}
+
+// Переход к обучению модуля
+const goToCardStudy = () => {
+  router.push(`/module/${moduleId}/study`)
 }
 
 // Секция таблицы

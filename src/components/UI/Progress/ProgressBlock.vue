@@ -11,7 +11,7 @@
                     <tr v-for="(row, rowIndex) in data" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell.value)"
                             class="tooltip">
-                            <span class="tooltip-text">{{ cell.date }}</span>
+                            <span class="tooltip-text">{{ cell.datenl }}</span>
                         </td>
                     </tr>
                 </tbody>
