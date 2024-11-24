@@ -16,7 +16,6 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-
 api.interceptors.response.use((response) => 
     response, 
     async (error) => {
@@ -31,6 +30,8 @@ api.interceptors.response.use((response) =>
             try{
                 // Пытаемся обновить токен
                 const newAccessToken = await authStore.refreshAccessToken();
+                console.log("Обноленный токен");
+                console.log(newAccessToken);
                 // Если обновление прошло успешно, то добавляем его в headers
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);

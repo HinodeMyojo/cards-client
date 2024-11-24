@@ -21,6 +21,7 @@
     "vue": "^3.4.29",
     "vue-inline-svg": "^3.1.4",
     "vue-router": "^4.3.3",
+    "vue3-detect-browser": "^0.1.2",
     "vuetify": "^3.7.3"
   },
   "devDependencies": {
