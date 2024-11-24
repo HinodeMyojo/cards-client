@@ -38,7 +38,7 @@ api.interceptors.response.use((response) =>
             catch(error){
                 // Если обновление не удалось, то очищаем токены и выходим на страницу входа
                 console.error(error);
-                authStore.cleanTokens();
+                authStore.cleanData();
                 router.push('/login')
             }
         }

@@ -24,11 +24,12 @@ export const useAuthStore = defineStore({
           localStorage.setItem("refreshToken", refresh);
           this.checkUserLogin();
       },
-      cleanTokens() {
+      cleanData() {
           this.accessToken = null;
           this.refreshToken = null;
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
+          localStorage.removeItem("userAvatar");
           this.checkUserLogin();
       },
       async refreshAccessToken(){
@@ -50,7 +51,7 @@ export const useAuthStore = defineStore({
         }
         catch (error)
         {
-          this.cleanTokens();
+          this.cleanData();
           console.log(this.isUserLogin);
           this.isUserLogin = false;
           throw error;

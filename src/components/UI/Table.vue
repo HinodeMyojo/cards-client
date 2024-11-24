@@ -8,16 +8,19 @@
                 <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
             </template>
             <template v-slot:no-data>
-                <v-btn color="primary" @click="initialize"> Reset </v-btn>
+                <h2>Тут пусто!</h2>
             </template>
         </v-data-table>
         <Modal :text="modalText" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
+        <ElementModal v-model:dialog="isElementModalOpen" :element-id="elementToEditId" :key-word="elementToEditKey"
+            :value-word="elementToEditValue" @submit-form="handleEditElement" />
     </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, defineProps, defineEmits } from 'vue'
 import Modal from './Modal.vue';
+import ElementModal from './Module/ElementModal.vue';
 const emit = defineEmits();
 
 // секция модалки
@@ -43,6 +46,30 @@ const handleAnswer = (answer) => {
     console.log("Типа нет")
 }
 // секция
+
+// Секция модалки редактирования
+const isElementModalOpen = ref(false)
+const elementToEditId = ref(0)
+const elementToEditKey = ref('')
+const elementToEditValue = ref('')
+const editItem = (item) => {
+    elementToEditId.value = item.id;
+    elementToEditKey.value = item.key;
+    elementToEditValue.value = item.value;
+    isElementModalOpen.value = true;
+};
+const handleEditElement = (data) => {
+    if (data) {
+        const model = {
+            key: data.key,
+            value: data.value,
+            elementId: data.elementId
+        }
+        emit('edit-item', model)
+    }
+}
+
+// Секция
 
 const { headers, elements } = defineProps({
     headers: {
@@ -108,11 +135,6 @@ const formTitle = computed(() =>
 const initialize = () => {
 }
 
-// TODO
-const editItem = (item) => {
-
-}
-
 
 const deleteItemConfirm = () => {
     desserts.value.splice(editedIndex.value, 1)
@@ -145,6 +167,10 @@ onMounted(initialize)
 <style scoped>
 :root .v-theme--dark {
     background-color: #2B2C34;
+}
+
+h2 {
+    font-weight: 400;
 }
 
 .table {
