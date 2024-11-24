@@ -14,63 +14,28 @@
         <div class="module-create-setting-params">
           <div class="input">
             <p>Название:</p>
-            <input
-              v-if="NameValid"
-              v-model="inputName"
-              placeholder="Модуль по изучению звёздных скоплений"
-            />
-            <input
-              v-else
-              class="notValidInput"
-              v-model="inputName"
-              placeholder="Поле обязательно для заполнения!"
-            />
+            <input v-if="NameValid" v-model="inputName" placeholder="Модуль по изучению звёздных скоплений" />
+            <input v-else class="notValidInput" v-model="inputName" placeholder="Поле обязательно для заполнения!" />
           </div>
 
           <div class="input">
             <p>Описание:</p>
-            <input
-              v-if="DesciptionValid"
-              v-model="inputDescription"
-              placeholder="Звёздные скопления - это скопления из звёзд"
-            />
-            <input
-              v-else
-              class="notValidInput"
-              v-model="inputDescription"
-              placeholder="Поле обязательно для заполнения!"
-            />
+            <input v-if="DesciptionValid" v-model="inputDescription"
+              placeholder="Звёздные скопления - это скопления из звёзд" />
+            <input v-else class="notValidInput" v-model="inputDescription"
+              placeholder="Поле обязательно для заполнения!" />
           </div>
           <div class="switch">
             <p>Доступ:</p>
-            <v-switch
-              v-model="visibleStatus"
-              :label="`${visibleStatus}`"
-              color="red"
-              false-value="Публичная"
-              true-value="Приватная"
-              hide-details
-            ></v-switch>
+            <v-switch v-model="visibleStatus" :label="`${visibleStatus}`" color="red" false-value="Публичная"
+              true-value="Приватная" hide-details></v-switch>
           </div>
           <div class="slider">
             <p>Количество элементов:</p>
-            <v-slider
-              v-model="slider"
-              :max="30"
-              :min="0"
-              :step="1"
-              class="align-center"
-              hide-details
-            >
+            <v-slider v-model="slider" :max="30" :min="0" :step="1" class="align-center" hide-details>
               <template v-slot:append>
-                <v-text-field
-                  v-model="slider"
-                  density="compact"
-                  style="width: 70px"
-                  type="number"
-                  hide-details
-                  single-line
-                ></v-text-field>
+                <v-text-field v-model="slider" density="compact" style="width: 70px" type="number" hide-details
+                  single-line></v-text-field>
               </template>
             </v-slider>
           </div>
@@ -78,11 +43,7 @@
       </div>
       <hr />
       <div v-for="(i, index) in Number(slider)" :key="i" class="module-create-elements">
-        <CreateElememtItem
-          @delete-element="deleteElement"
-          v-model="itemsData[index]"
-          :Id="Number(index + 1)"
-        />
+        <CreateElememtItem @delete-element="deleteElement" v-model="itemsData[index]" :Id="Number(index + 1)" />
       </div>
     </div>
   </div>
@@ -93,6 +54,7 @@ import { ref, watch } from 'vue'
 import CreateElememtItem from '@/components/UI/Module/CreateElememtItem.vue'
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue'
 import { useModuleService } from '@/components/composables/useModuleService'
+import { defineEmits } from 'vue'
 
 var slider = ref(3)
 const visibleStatus = ref('Публичная')
@@ -144,6 +106,8 @@ const isDescriptionValid = (value) => {
   DesciptionValid.value = value.length > 0
 }
 
+const emit = defineEmits(['refreshData'])
+
 const onSubmit = () => {
   isNameValid(inputName.value)
   isDescriptionValid(inputDescription.value)
@@ -163,6 +127,7 @@ const onSubmit = () => {
     createAt: new Date().toISOString()
   }
   createModule(data)
+  emit('refreshData')
 }
 </script>
 
@@ -247,9 +212,12 @@ h3 {
 .notValidInput {
   border: 1px solid #df0000;
 }
+
 .notValidInput::placeholder {
-  color: #df0000; /* Цвет плейсхолдера */
-  opacity: 1; /* Делает плейсхолдер полностью непрозрачным */
+  color: #df0000;
+  /* Цвет плейсхолдера */
+  opacity: 1;
+  /* Делает плейсхолдер полностью непрозрачным */
 }
 
 .slider {

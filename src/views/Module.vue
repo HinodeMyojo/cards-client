@@ -7,7 +7,7 @@
       <ConcreteModule />
     </div>
     <div class="module-main" v-else-if="typeOfModuleState === 'createModule'">
-      <CreateModule />
+      <CreateModule @refreshData="refreshData" />
     </div>
     <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
       <Profile />
@@ -16,19 +16,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import ProfileSideBar from '@/components/Main/ProfileSideBar.vue'
-import ConcreteModule from './ConcreteModule.vue'
-import CreateModule from './CreateModule.vue'
-import Profile from './Profile.vue'
+import { ref, nextTick } from 'vue'
+import ProfileSideBar from '@/components/ModuleElements/ProfileSideBar.vue'
+import ConcreteModule from '@/components/ModuleElements/ConcreteModule.vue'
+import CreateModule from '@/components/ModuleElements/CreateModule.vue'
+import Profile from '@/components/ModuleElements/Profile.vue'
 
-// const props = defineProps({
-//   typeOfModuleState: {
-//     type: String,
-//     default: ''
-//   }
-// })
-const typeOfModuleState = 'profile'
+const props = defineProps({
+  typeOfModuleState: {
+    type: String,
+    default: ''
+  }
+})
+
+// TODO сделать логику обновления сайд-бара
+const refreshStatus = ref(null);
+const refreshData = () => {
+  refreshStatus.value = true;
+};
 
 // Иконки
 </script>

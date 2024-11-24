@@ -99,7 +99,7 @@ onMounted(() => {
 })
 
 const logout = async () => {
-  await authStore.cleanTokens()
+  await authStore.cleanData()
   cleanLocalStorage()
   router.push('/')
 }

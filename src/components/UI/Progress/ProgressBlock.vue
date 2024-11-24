@@ -3,7 +3,7 @@
         <div class="container-block">
             <table class="progress-table">
                 <thead>
-                    <td v-for="(month, index) in months" :key="index" :colspan="getColspan(month)">
+                    <td v-for="(month, index) in months" :key="index" :colspan="getColspan(index)">
                         {{ month }}
                     </td>
                 </thead>
@@ -11,7 +11,7 @@
                     <tr v-for="(row, rowIndex) in data" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell.value)"
                             class="tooltip">
-                            <span class="tooltip-text">{{ cell.value }}</span>
+                            <span class="tooltip-text">{{ cell.date }}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -25,18 +25,17 @@ import { defineProps } from 'vue';
 // import ProgressItem from './ProgressItem.vue';
 
 const props = defineProps({
-    data: Array
+    data: Array,
+    colspanData: Array
 });
 
-const getColspan = (month) => {
-    if (month === 'Янв') {
-        return 5
-    } else if (month === 'Дек') {
-        return 5
-    } else {
-        return 4
+const getColspan = (index) => {
+    // Проверим, что colspanData доступна и является массивом
+    if (props.colspanData && Array.isArray(props.colspanData)) {
+        return props.colspanData[index] || 1;  // Возвращаем значение для месяца, если доступно, иначе по умолчанию 1
     }
-}
+    return 1;  // Если данных нет, возвращаем 1
+};
 
 
 const getCellStyle = (cell) => {

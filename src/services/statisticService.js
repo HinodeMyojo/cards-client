@@ -15,3 +15,11 @@ export function getAvailableYears(){
         console.error(error)   
     }
 }
+
+export function getLastActivity(){
+    try{
+        return api.get(`statistic/last-activity`)
+    } catch (error) {
+        console.error(error)   
+    }
+}

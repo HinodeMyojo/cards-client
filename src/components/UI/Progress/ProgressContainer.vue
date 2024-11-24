@@ -34,7 +34,7 @@
             </div>
             <div class="container-info">
                 <div class="data">
-                    <ProgressBlock :data="progressData" />
+                    <ProgressBlock :data="progressData.data" :colspanData="progressData.colspan" />
                 </div>
             </div>
         </div>
@@ -70,14 +70,15 @@ const loadAvailableYears = async () => {
     try {
         const response = await getAvailableYears();
         availableYears.value = response.data;
-        // Устанавливаем последний доступный год, если выбранный не задан
-        if (!selectedYear.value) {
+
+        if (!selectedYear.value && availableYears.value.length > 0) {
             selectedYear.value = availableYears.value.at(-1);
         }
     } catch (error) {
         console.error('Ошибка загрузки списка годов:', error);
     }
 };
+
 
 const updateYear = (year) => {
     selectedYear.value = year;

@@ -3,7 +3,7 @@
     <div class="container">
       <div class="profile">
         <div class="profile-image">
-          <div id="sideBarAvatar" class="sideBarAvatar">
+          <div id="sideBarAvatar" class="sideBarAvatar" @click="handleAvatarClick">
             <img v-if="avatarSrc" :src="avatarSrc" alt="User Avatar" />
             <p v-else>Загрузка аватара...</p>
           </div>
@@ -55,6 +55,10 @@ const items = ref([]);
 const handleSelect = item => {
   selectedItem.value = item;
 };
+const handleAvatarClick = () => {
+  router.push(`/${storedUserName.value}`)
+}
+
 
 const moduleClick = (id) => {
   router.push(`/module/${id}`)
@@ -153,6 +157,7 @@ hr {
   background-color: #202127;
   display: flex;
   justify-content: center;
+  cursor: pointer;
   align-items: center;
   min-height: 160px;
   min-width: 160px;

@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Auth from '@/views/Auth.vue'
 import Module from '@/views/Module.vue'
-import Profile from '@/views/Profile.vue'
+import Profile from '@/components/ModuleElements/Profile.vue'
 import HomePage from '@/views/HomePage.vue'
-import CreateModule from '@/views/CreateModule.vue'
+import CreateModule from '@/components/ModuleElements/CreateModule.vue'
 
 export const authRoutes = [
   {
@@ -50,8 +50,8 @@ export const moduleRoutes = [
 export const profileRoutes = [
   {
     path: '/:username',
-    component: Profile,
-    name: 'Profile'
+    component: Module,
+    props: {typeOfModuleState: 'profile'}
   }
 ]
 

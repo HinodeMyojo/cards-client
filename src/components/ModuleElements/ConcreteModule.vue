@@ -69,7 +69,7 @@ import { mdiSchool } from '@mdi/js'
 
 import SvgIcon from '@jamescoyle/vue-icon'
 import Button from '@/components/UI/Buttons/Button.vue'
-import Card from '@/components/Main/Card.vue'
+import Card from '@/components/ModuleElements/Card.vue'
 import Table from '@/components/UI/Table.vue'
 import ElementModal from '@/components/UI/Module/ElementModal.vue'
 
