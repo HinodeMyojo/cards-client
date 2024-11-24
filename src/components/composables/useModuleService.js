@@ -53,6 +53,21 @@ export function useModuleService() {
         }
     };
 
+    const createModule = async (data) => {
+        loading.value = true; // Устанавливаем статус загрузки в true
+        error.value = null; // Сбрасываем ошибки перед запросом
+
+        try {
+            // Выполняем запрос к API для получения модуля по ID
+            await moduleService.createModule(data);
+        } catch (err) {
+            // Если произошла ошибка, сохраняем её сообщение
+            error.value = err.message || 'Ошибка при загрузке модуля'; // Обработка ошибки
+        } finally {
+            loading.value = false; // Сбрасываем статус загрузки в false после завершения запроса
+        }
+    };
+
     // Возвращаем все реактивные переменные и функции для использования в компоненте
     return {
         modules, // Список модулей
@@ -61,7 +76,7 @@ export function useModuleService() {
         error, // Информация об ошибках
         getModules, // Функция для получения всех модулей
         getModuleById, // Функция для получения модуля по ID
-        // createModule, // Место для функции создания модуля
+        createModule, // Место для функции создания модуля
         // updateModule, // Место для функции обновления модуля
         headers,
         getHeaders,

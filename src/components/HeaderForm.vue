@@ -32,7 +32,7 @@
                   <v-menu activator="#menu-activator" class="v-menu-header">
                     <v-list class="v-list-header" style="background-color: transparent; min-width: 180px">
                       <v-list-item v-for="(item, index) in addButtonItems" :key="index" :value="index"
-                        class="v-item-header">
+                        class="v-item-header" @click="handleClick(item)">
                         <v-list-item-title style="background-color: #272a2f; text-wrap: wrap">
                           {{ item.title }}
                         </v-list-item-title>
@@ -99,7 +99,7 @@ onMounted(() => {
 })
 
 const logout = async () => {
-  await authStore.cleanTokens()
+  await authStore.cleanData()
   cleanLocalStorage()
   router.push('/')
 }
@@ -152,8 +152,8 @@ const items = computed(() => [
 ])
 
 const addButtonItems = [
-  { title: 'Добавить модуль', action: 'addModule' },
-  { title: 'Добавить папку', action: 'addFolder' }
+  { title: 'Создать модуль', action: 'createModule' },
+  { title: 'Создать папку', action: 'createFolder' }
 ]
 
 const LoadUserName = () => {
@@ -166,6 +166,12 @@ const handleClick = (item) => {
     case storedUserName.value:
       router.push(`/${storedUserName.value}`)
       break
+    case 'createModule':
+      router.push('/module/create')
+      break
+    case 'createFolder':
+      router.push('/folder/create')
+      break
     case 'achievements':
       router.push('/achievements')
       break
@@ -174,7 +180,6 @@ const handleClick = (item) => {
       break
     case 'logout':
       logout()
-
       router.push('/')
       break
     case 'privacy':
@@ -208,13 +213,8 @@ const cleanLocalStorage = () => {
   cursor: pointer;
 }
 
-/* .add-button:hover {
-  color: #b31275;
-} */
-
 .add-button svg-icon {
   fill: currentColor;
-  /* Позволяет иконке наследовать цвет от родителя */
 }
 
 .userProfile {
@@ -259,15 +259,13 @@ const cleanLocalStorage = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Центрирует .wrapper */
 }
 
 .wrapper {
-  width: 60%;
+  width: 100%;
   height: 100%;
   display: flex;
 }
-
 
 .login {
   cursor: pointer;
@@ -362,10 +360,6 @@ a:hover {
 .logo {
   cursor: pointer;
 }
-
-/* .switch-lang:hover{
-    
-} */
 
 .logo-text {
   font-weight: 700;

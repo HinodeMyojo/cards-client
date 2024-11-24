@@ -1,7 +1,7 @@
 <template>
   <div>
     <button @click="handleClick">
-        {{ text }}
+      {{ text }}
     </button>
   </div>
 </template>
@@ -10,11 +10,11 @@
 import { defineProps, toRefs } from 'vue';
 
 const props = defineProps({
-    text: {
-        type: String,
-        required: true
-    },
-    onClick: {
+  text: {
+    type: String,
+    required: true
+  },
+  onClick: {
     type: Function,
     required: true,
   },
@@ -22,15 +22,13 @@ const props = defineProps({
 
 const { text, onClick } = toRefs(props);
 
-const handleClick =  (event) => {
-    onClick.value(event);
+const handleClick = (event) => {
+  onClick.value(event);
 }
 
 </script>
 
 <style scoped>
-
-
 button {
   font-size: 16px;
   font-weight: 500;
