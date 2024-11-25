@@ -4,7 +4,7 @@
             <div class="swiper-custom-pagination"></div>
         </div>
         <div class="card-settings" :style="{ height: height, width: width }">
-            <swiper :slidesPerView="1" :spaceBetween="30" :keyboard="{
+            <swiper :slidesPerView="1" :spaceBetween="30" :effect="'cards'" :keyboard="{
                 enabled: true
             }" :pagination="{
                 el: '.swiper-custom-pagination',
@@ -39,19 +39,20 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch } from 'vue'
+import { ref, toRefs } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
+import 'swiper/css/effect-cards';
 
 // Import required modules
-import { Keyboard, Pagination, Navigation } from 'swiper/modules'
+import { Keyboard, Pagination, Navigation, EffectCards } from 'swiper/modules'
 
 // Declare the modules array to be used in the swiper
-const modules = [Keyboard, Pagination, Navigation]
+const modules = [Keyboard, Pagination, Navigation, EffectCards]
 
 
 
