@@ -32,8 +32,8 @@
             </swiper>
         </div>
         <div class="custom-buttons">
-            <button class="swiper-button-custom-next" @click="addAnswer(0)">Нет</button>
-            <button class="swiper-button-custom-next" @click="addAnswer(1)">Да</button>
+            <div class="button-no"><button class="swiper-button-custom-next" @click="addAnswer(0)">Нет</button></div>
+            <div class="button-yes"><button class="swiper-button-custom-next" @click="addAnswer(1)">Да</button></div>
         </div>
     </div>
 </template>
@@ -128,6 +128,48 @@ const changeSide = () => {
     bottom: 70px;
 }
 
+.swiper-button-custom-next {
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.swiper-button-custom-next:active {
+    transform: scale(0.9);
+}
+
+.button-no .swiper-button-custom-next {
+    background-color: #2B2C34;
+    border: 2px solid #F84545;
+}
+
+.button-yes .swiper-button-custom-next {
+    background-color: #2B2C34;
+    border: 2px solid #3f8139;
+}
+
+.custom-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 350px;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.button-no,
+.button-yes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+}
+
 
 .card-icon,
 .card-icon-90 {
@@ -147,13 +189,7 @@ svg {
     cursor: pointer;
 }
 
-.custom-buttons {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 350px;
-    justify-content: space-between;
-}
+
 
 .card-main {
     display: flex;
