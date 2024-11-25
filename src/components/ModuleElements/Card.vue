@@ -90,15 +90,7 @@ const changeSide = () => {
   state.value = !state.value
 }
 </script>
-<style>
-.swiper-pagination-fraction,
-.swiper-pagination-current,
-.swiper-pagination-total,
-.swiper-button-next,
-.swiper-button-prev {
-  background-color: transparent !important;
-}
-</style>
+
 <style scoped>
 .swiper {
   width: 100%;

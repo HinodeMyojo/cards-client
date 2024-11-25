@@ -3,13 +3,12 @@
         <div class="header">
             <div class="header-main">
                 <h3>{{ module.title }}</h3>
-                <h3>15/23</h3>
                 <BaseButton :label="`Параметры`" :color="`#272a2f`" :size="`medium`" />
             </div>
             <hr>
         </div>
         <div class="card">
-            <Card :wordsArray=elements :height="'400px'" :width="'700px'" />
+            <StudyCard :wordsArray=elements :height="'400px'" :width="'700px'" />
         </div>
         <div></div>
     </div>
@@ -21,7 +20,7 @@ import { useRoute } from 'vue-router';
 import { useModuleService } from '@/components/composables/useModuleService'
 const { getModuleById, currentModule } = useModuleService()
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
-import Card from '@/components/ModuleElements/Card.vue';
+import StudyCard from '@/components/ModuleElements/StudyCard.vue';
 
 const module = ref({})
 
