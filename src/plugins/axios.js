@@ -43,6 +43,11 @@ api.interceptors.response.use((response) =>
                 router.push('/login')
             }
         }
+        else{
+            console.error(error);
+            authStore.cleanData();
+            router.push('/login')
+        }
 
         throw error;
         

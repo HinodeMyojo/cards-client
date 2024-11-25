@@ -4,7 +4,9 @@
       <h2>{{ moduleInfo.title }}</h2>
       <div class="module-button">
         <Button text="Редактировать" :onClick="editModule" />
-        <h3 class="delete-module" @click="deleteModule">Удалить</h3>
+        <div class="delete-module">
+          <h3 @click="deleteModule">Удалить</h3>
+        </div>
       </div>
     </div>
     <hr />
@@ -119,6 +121,10 @@ const editElement = async (data) => {
   }
   await editElementById(model)
   await refreshTableData(moduleId)
+}
+
+const deleteModule = async () => {
+  console.log('Delete module')
 }
 
 // Обновление данных таблицы
@@ -308,9 +314,30 @@ h2 {
 }
 
 .delete-module {
+  width: 110px;
+  height: 50px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.delete-module h3 {
+  cursor: pointer;
   font-size: 16px;
   font-weight: 700;
   color: #f84545;
+}
+
+.delete-module:hover h3 {
+  transition: 0.3s ease;
+  color: #f36b6b;
+}
+
+.delete-module:active {
+  transition: 0.1s ease;
+  transform: scale(0.96);
 }
 
 .module-choice-button {

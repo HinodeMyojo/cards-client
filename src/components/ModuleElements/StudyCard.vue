@@ -134,7 +134,7 @@ const changeSide = () => {
     font-size: 16px;
     font-weight: bold;
     color: #fff;
-    padding: 10px 20px;
+    padding: 10px 30px;
     border-radius: 15px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
