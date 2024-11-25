@@ -22,21 +22,12 @@
                                     {{ selectedYear }}
                                 </v-btn>
                             </template>
-                            <div class="year-selector">
-                                <v-menu open-on-hover>
-                                    <template v-slot:activator="{ props }">
-                                        <v-btn color="primary" v-bind="props">
-                                            {{ selectedYear }}
-                                        </v-btn>
-                                    </template>
-                                    <v-list>
-                                        <v-list-item v-for="(year, index) in availableYears.value" :key="index"
-                                            @click="updateYear(year)">
-                                            <v-list-item-title>{{ year }}</v-list-item-title>
-                                        </v-list-item>
-                                    </v-list>
-                                </v-menu>
-                            </div>
+                            <v-list>
+                                <v-list-item v-for="(year, index) in availableYears.value" :key="index"
+                                    @click="updateYear(year)">
+                                    <v-list-item-title>{{ year }}</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
                         </v-menu>
                     </div>
                 </div>
