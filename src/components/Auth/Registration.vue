@@ -1,10 +1,24 @@
 <template>
   <h3>Регистрация</h3>
-  <form class="login-form" @submit.prevent="submitForm">
-    <label for="Email">Email</label>
-    <input v-model="data.email" type="email" id="Email" placeholder="AlphaCentauri@mail.ru" required>
-    <label for="Username">Username</label>
-    <input v-model="data.username" type="text" id="Username" placeholder="AlphaCentauri" required>
+  <form class="login-form" @submit.prevent="registerUser(data)">
+    <div v-if="errorState != 1" class="email-true-label">
+      <label for="Email">Email</label>
+      <input v-model="data.email" type="email" id="Email" placeholder="AlphaCentauri@mail.ru" required>
+    </div>
+    <div class="error-form" v-if="errorState == 1">
+      <label for="Email">Email</label>
+      <p>{{ errorMessage }}</p>
+      <input v-model="data.email" type="email" id="Email" placeholder="AlphaCentauri@mail.ru" required>
+    </div>
+    <div v-if="errorState != 2" class="email-true-label">
+      <label for="Username">Username</label>
+      <input v-model="data.username" type="text" id="Username" placeholder="AlphaCentauri" required>
+    </div>
+    <div class="error-form" v-if="errorState == 2">
+      <label for="Username">Username</label>
+      <p>{{ errorMessage }}</p>
+      <input v-model="data.username" type="text" id="Username" placeholder="AlphaCentauri" required>
+    </div>
     <label for="Password">Password</label>
     <input v-model="data.password" type="password" id="Password" placeholder="•••••••••••••••••" required>
     <div class="buttons">
@@ -19,7 +33,8 @@
 <script setup>
 import SocialButtons from '@/components/Auth/SocialButtons.vue';
 import router from '@/router/router';
-import { reactive } from 'vue';
+import axios from 'axios';
+import { reactive, ref } from 'vue';
 
 const data = reactive({
   email: '',
@@ -27,11 +42,43 @@ const data = reactive({
   password: ''
 });
 
-const emit = defineEmits(['submit-registration']);
+const errorState = ref(0)
+const errorMessage = ref('')
+const successMessage = ref('')
 
-const submitForm = () => {
-  emit('submit-registration', data);
-}
+// const emit = defineEmits(['submit-registration']);
+
+// const submitForm = () => {
+//   emit('submit-registration', data);
+//   loginUser()
+// }
+
+const registerUser = async (data) => {
+  try {
+    const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
+    const response = await axios.post(`${backendUrl}/auth/register`, data);
+    if (response.status === 200) {
+      successMessage.value = "Вы успешно зарегистрировались!"
+      router.push("/login")
+    }
+    // console.log(response.data.message);
+  } catch (error) {
+    // alert(error.message)
+    switch (error.response.data.message) {
+      case "Пользователь с таким Email уже зарегистрирован!":
+        errorMessage.value = error.response.data.message;
+        errorState.value = 1;
+        break;
+      case "Пользователь с таким Username уже зарегистрирован!":
+        errorMessage.value = error.response.data.message;
+        errorState.value = 2;
+        break;
+      default:
+        console.log("error")
+    }
+
+  }
+};
 
 const loginUser = () => {
   router.push('/login');

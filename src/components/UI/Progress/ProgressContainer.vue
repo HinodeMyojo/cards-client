@@ -33,8 +33,11 @@
                 </div>
             </div>
             <div class="container-info">
-                <div class="data">
+                <div v-if="!isLoading" class="data">
                     <ProgressBlock :data="progressData.data" :colspanData="progressData.colspan" />
+                </div>
+                <div v-else class="loading-indicator">
+                    <v-progress-circular color="green" indeterminate></v-progress-circular>
                 </div>
             </div>
         </div>
@@ -55,12 +58,15 @@ const maxStreak = ref(16);
 const progressData = ref([]);
 const availableYears = ref([]);
 const selectedYear = ref(new Date().getFullYear());
+const isLoading = ref(true);
 
 // Загрузка данных
 const loadYearStatistic = async (year) => {
     try {
+        isLoading.value = true;
         const response = await getYearStatistic(year);
         progressData.value = response.data;
+        isLoading.value = false;
     } catch (error) {
         console.error('Ошибка загрузки статистики:', error);
     }
@@ -70,7 +76,6 @@ const loadAvailableYears = async () => {
     try {
         const response = await getAvailableYears();
         availableYears.value = response.data;
-
         if (!selectedYear.value && availableYears.value.length > 0) {
             selectedYear.value = availableYears.value.at(-1);
         }
@@ -152,6 +157,14 @@ onMounted(async () => {
     align-items: center;
     flex-direction: row;
     gap: 5px;
+}
+
+.loading-indicator {
+    width: 100%;
+    height: 125px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .small-text {

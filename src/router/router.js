@@ -4,6 +4,7 @@ import Module from '@/views/Module.vue'
 import Profile from '@/components/ModuleElements/Profile.vue'
 import HomePage from '@/views/HomePage.vue'
 import CreateModule from '@/components/ModuleElements/CreateModule.vue'
+import StudyModule from '@/views/StudyModule.vue'
 
 export const authRoutes = [
   {
@@ -43,6 +44,10 @@ export const moduleRoutes = [
     path: '/module/:id',
     component: Module,
     props: { typeOfModuleState: "concreteModule" }
+  },
+  {
+    path: '/module/:id/study',
+    component: StudyModule
   }
 ]
 

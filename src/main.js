@@ -8,10 +8,8 @@ import vuetify from './plugins/vuetify';
 
 const app = createApp(App)
 
-app.use(createPinia())
+// Плагины
+app.use(createPinia());
+app.use(vuetify);
 
-app.use(vuetify)
-
-app
-    .use(router)
-    .mount('#app')
+app.use(router).mount('#app');
