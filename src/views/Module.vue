@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import ProfileSideBar from '@/components/ModuleElements/ProfileSideBar.vue'
 import ConcreteModule from '@/components/ModuleElements/ConcreteModule.vue'
 import CreateModule from '@/components/ModuleElements/CreateModule.vue'

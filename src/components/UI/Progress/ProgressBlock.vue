@@ -11,7 +11,7 @@
                     <tr v-for="(row, rowIndex) in data" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell.value)"
                             class="tooltip">
-                            <span class="tooltip-text">{{ cell.date }}</span>
+                            <span class="tooltip-text">{{ cell.datenl }}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -111,14 +111,11 @@ const months = [
 }
 
 .progress-table {
-    /* width: 745px; */
     width: 100%;
-    /* max-height: 150px; */
     border-collapse: collapse;
     text-align: center;
     table-layout: fixed;
     border-radius: 8px;
-    /* overflow: hidden; */
 }
 
 td {

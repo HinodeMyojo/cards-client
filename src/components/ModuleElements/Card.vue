@@ -1,6 +1,6 @@
 <template>
   <div class="card-main">
-    <div class="card-settings">
+    <div class="card-settings" :style="{ height: height, width: width }">
       <swiper :slidesPerView="1" :spaceBetween="30" :keyboard="{
         enabled: true
       }" :pagination="{
@@ -54,6 +54,14 @@ const props = defineProps({
   backgroundColor: {
     type: String,
     default: '#2B2C34'
+  },
+  height: {
+    type: String,
+    default: '290px'
+  },
+  width: {
+    type: String,
+    default: '570px'
   }
 })
 
@@ -82,23 +90,13 @@ const changeSide = () => {
   state.value = !state.value
 }
 </script>
-<style>
-.swiper-pagination-fraction,
-.swiper-pagination-current,
-.swiper-pagination-total,
-.swiper-button-next,
-.swiper-button-prev {
-  background-color: transparent !important;
-}
-</style>
+
 <style scoped>
 .swiper {
   width: 100%;
   height: 100%;
   background-color: transparent;
 }
-
-
 
 .swiper-slide {
   text-align: center;
@@ -140,12 +138,10 @@ svg {
   background-color: transparent;
   align-items: center;
   gap: 10px;
-  height: 290px;
-  width: 570px;
 }
 
 .card-container {
-  background-color: #202127;
+  /* background-color: #202127; */
   min-height: 100%;
   min-width: 100%;
   display: flex;
