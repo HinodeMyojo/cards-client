@@ -21,12 +21,10 @@
       <hr />
       <div class="tree">
         <div v-if="items.length > 0" class="moduleItems">
-          <div v-if="items.length > 0" class="moduleItems">
-            <ModuleItem v-for="item in items" :key="item.id" :title="item.title" :id="item.id"
-              @click="moduleClick(item.id)">
-              {{ item.title }}
-            </ModuleItem>
-          </div>
+          <ModuleItem v-for="item in items" :key="item.id" :title="item.title" :id="item.id"
+            @click="moduleClick(item.id)">
+            {{ item.title }}
+          </ModuleItem>
         </div>
         <div v-else class="moduleItems">
           <p>Тут пока ничего нет!</p>
@@ -114,7 +112,7 @@ onMounted(() => {
   display: flex;
   border-radius: 25px;
   width: 100%;
-  height: 700px;
+  height: 100%;
   background-color: #202127;
 }
 

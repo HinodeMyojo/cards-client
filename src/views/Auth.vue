@@ -9,7 +9,7 @@
       </div>
       <div class="login-form-container" v-if="register">
         <!-- Отображение формы регистрации или входа в зависимости от маршрута -->
-        <RegistrationForm @submit-registration="registerUser" />
+        <RegistrationForm />
       </div>
       <div class="login-form-container" v-else-if="login === true">
         <LoginForm @submit-login="loginUser" />
@@ -74,16 +74,6 @@ let responseErrorMessage = ref(null);
 const closeMenu = () => {
   router.push('/');
 }
-
-const registerUser = async (data) => {
-  try {
-    const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
-    const response = await axios.post(`${backendUrl}/auth/register`, data);
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 // Функция логина
 const loginUser = async (data) => {
@@ -277,6 +267,15 @@ const handlePasswordReset = async (data) => {
   background-color: #131316;
   border-radius: 10px;
   padding-left: 10px;
+}
+
+:deep(.error-form input) {
+  border: 3px solid #F84545;
+}
+
+:deep(.error-form p) {
+  font-size: small;
+  color: #F84545;
 }
 
 :deep(.login-form label) {
