@@ -1,28 +1,48 @@
 <template>
+    {{ props.wordsArray }}
+    {{ currentElementId }}
     <div class="card-main">
         <div class="pagination-wrapper">
             <div class="swiper-custom-pagination"></div>
         </div>
-        <div class="card-settings" :style="{ height: height, width: width }">
-            <swiper :slidesPerView="1" :spaceBetween="30" :effect="'cards'" :keyboard="{
-                enabled: true
-            }" :pagination="{
-                el: '.swiper-custom-pagination',
-                type: 'fraction'
-            }" :navigation="{
-                nextEl: '.swiper-button-custom-next',
-                // nextEl: '.swiper-button-custom-yes',
-            }" :modules="modules" class="mySwiper">
+        <div class="card-settings" 
+            :style="{ height: height, width: width }">
+            <swiper 
+                :slidesPerView="1" 
+                :spaceBetween="30" 
+                :effect="'cards'" 
+                :keyboard="true" 
+                :pagination="{
+                    el: '.swiper-custom-pagination',
+                    type: 'fraction'
+                }" 
+                :navigation="{
+                    nextEl: '.swiper-button-custom-next',
+                    nextEl: '.swiper-button-custom-next',
+                }"
+                @slideChangeTransitionEnd="onSlideChange"
+                :modules="modules" 
+                class="mySwiper">
                 <swiper-slide v-for="slide in props.wordsArray" :key="slide.key">
                     <div class="card-container">
                         <div class="card-inner">
-                            <div class="card-face-key" tabindex="0" :style="{ backgroundColor: backgroundColor }"
-                                :class="{ active: !state }" @click="changeSide" @keydown.enter="changeSide">
+                            <div 
+                                class="card-face-key" 
+                                tabindex="0" 
+                                :style="{ backgroundColor: backgroundColor }"
+                                :class="{ active: !state }" 
+                                @click="changeSide"
+                            >
                                 {{ slide.key }}
                                 <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
                             </div>
-                            <div class="card-face-value" tabindex="0" :style="{ backgroundColor: backgroundColor }"
-                                :class="{ active: state }" @click="changeSide" @keydown.enter="changeSide">
+                            <div 
+                                class="card-face-value" 
+                                tabindex="0" 
+                                :style="{ backgroundColor: backgroundColor }"
+                                :class="{ active: state }" 
+                                @click="changeSide"
+                            >
                                 {{ slide.value }}
                                 <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
                             </div>
@@ -32,8 +52,12 @@
             </swiper>
         </div>
         <div class="custom-buttons">
-            <div class="button-no"><button class="swiper-button-custom-next" @click="addAnswer(0)">Нет</button></div>
-            <div class="button-yes"><button class="swiper-button-custom-next" @click="addAnswer(1)">Да</button></div>
+            <div class="button-no">
+                <button class="swiper-button-custom-next" @click="addAnswer(false)">Нет</button>
+            </div>
+            <div class="button-yes">
+                <button class="swiper-button-custom-next" @click="addAnswer(true)">Да</button>
+            </div>
         </div>
     </div>
 </template>
@@ -53,8 +77,6 @@ import { Keyboard, Pagination, Navigation, EffectCards } from 'swiper/modules'
 
 // Declare the modules array to be used in the swiper
 const modules = [Keyboard, Pagination, Navigation, EffectCards]
-
-
 
 const props = defineProps({
     wordsArray: {
@@ -82,6 +104,12 @@ const state = ref(true)
 const wordsArrayAndEmptyElement = ref([])
 const answerCounter = ref([])
 
+const onSlideChange = (swiper) => {
+    currentElementId.value = swiper.realIndex
+    var biba = props.wordsArray[swiper.realIndex].id
+    {console.log('Смена слайда завершена!' + biba)}
+}
+
 // watch(
 //     () => props.wordsArray,
 //     (newVal) => {
@@ -93,10 +121,10 @@ const answerCounter = ref([])
 //     { immediate: true }
 // );
 
+const currentElementId = ref(0)
+
 const addAnswer = (answer) => {
-    console.log(wordsArrayAndEmptyElement.value)
-    answerCounter.value.push(answer)
-    console.log(answerCounter.value)
+    console.log(answer)
 }
 
 const { backgroundColor } = toRefs(props)
