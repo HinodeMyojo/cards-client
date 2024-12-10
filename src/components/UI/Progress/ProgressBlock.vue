@@ -11,7 +11,7 @@
                     <tr v-for="(row, rowIndex) in data" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell.value)"
                             class="tooltip">
-                            <span class="tooltip-text">{{ cell.datenl }}</span>
+                            <span class="tooltip-text">{{ new Date(cell.date).toLocaleDateString() }}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -78,7 +78,7 @@ const months = [
 
 .tooltip-text {
     visibility: hidden;
-    width: 50px;
+    width: auto;
     background-color: #18181b;
     text-align: center;
     padding: 5px;
