@@ -1,152 +1,84 @@
 <template>
     <div class="card-main">
-        <div class="pagination-wrapper">
-            <div class="swiper-custom-pagination"></div>
-        </div>
-        <div class="card-settings" 
-            :style="{ height: height, width: width }">
-            <swiper 
-                :slidesPerView="1" 
-                :spaceBetween="30" 
-                :keyboard="true" 
-                :simulateTouch="false"
-                :pagination="{
-                    el: '.swiper-custom-pagination',
-                    type: 'fraction'
-                }" 
-                :navigation="{
-                    nextEl: '.swiper-button-custom-next',
-                    nextEl: '.swiper-button-custom-next',
-                }"
-                :modules="modules" 
-                class="mySwiper">
-                <swiper-slide v-for="slide in props.wordsArray" :key="slide.key">
-                    <div class="card-container">
-                        <div class="card-inner">
-                            <div 
-                                class="card-face-key" 
-                                tabindex="0" 
-                                :style="{ backgroundColor: backgroundColor }"
-                                :class="{ active: !state }" 
-                                @click="changeSide"
-                            >
-                                {{ slide.key }}
-                                <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
-                            </div>
-                            <div 
-                                class="card-face-value" 
-                                tabindex="0" 
-                                :style="{ backgroundColor: backgroundColor }"
-                                :class="{ active: state }" 
-                                @click="changeSide"
-                            >
-                                {{ slide.value }}
-                                <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
-                            </div>
-                        </div>
-                    </div>
-                </swiper-slide>
-            </swiper>
-        </div>
-        <div class="custom-buttons">
-            <div class="button-no">
-                <button class="swiper-button-custom-next" @click="addAnswer(false)">Нет</button>
+      <div class="pagination-wrapper">
+        <div class="swiper-custom-pagination"></div>
+      </div>
+        <div class="card-settings" :style="{ height, width }">
+        <div class="card-container" v-for="slide in props.wordsArray" :key="slide.key" :style="{transform: `translateX(-${currentIndex * 105}%)`}">
+          <div class="card-inner">
+            <div
+              class="card-face-key"
+              tabindex="0"
+              :style="{ backgroundColor }"
+              :class="{ active: !state }"
+              @click="changeSide"
+              aria-label="Card front"
+            >
+              {{ slide.key }}
+              <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
             </div>
-            <div class="button-yes">
-                <button class="swiper-button-custom-next" @click="addAnswer(true)">Да</button>
+            <div
+              class="card-face-value"
+              tabindex="0"
+              :style="{ backgroundColor }"
+              :class="{ active: state }"
+              @click="changeSide"
+              aria-label="Card back"
+            >
+              {{ slide.value }}
+              <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
             </div>
+          </div>
         </div>
+      </div>
+      <div class="custom-buttons">
+        <div class="button-no">
+          <button class="swiper-button-custom-next" @click="addAnswer(false)">Нет</button>
+        </div>
+        <div class="button-yes">
+          <button class="swiper-button-custom-next" @click="addAnswer(true)">Да</button>
+        </div>
+      </div>
     </div>
-</template>
-
-<script setup>
-import { ref, toRefs } from 'vue'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-
-// Import Swiper styles
-import 'swiper/css'
-import 'swiper/css/pagination'
-import 'swiper/css/navigation'
-import 'swiper/css/effect-cards';
-
-// Import required modules
-import { Keyboard, Pagination, Navigation, EffectCards } from 'swiper/modules'
-
-// Declare the modules array to be used in the swiper
-const modules = [Keyboard, Pagination, Navigation, EffectCards]
-
-const props = defineProps({
+  </template>
+  
+  <script setup>
+  import { ref, toRefs } from 'vue'
+  
+  const props = defineProps({
     wordsArray: {
-        type: Array,
-        required: true
+      type: Array,
+      required: true
     },
     backgroundColor: {
-        type: String,
-        default: '#2B2C34'
+      type: String,
+      default: '#2B2C34'
     },
     height: {
-        type: String,
-        default: '290px'
+      type: String,
+      default: '290px'
     },
     width: {
-        type: String,
-        default: '570px'
+      type: String,
+      default: '570px'
     }
-})
+  })
+  
+  const state = ref(true)
+  
+  const currentIndex = ref(0)
 
-// Реактивные переменные
-const state = ref(true)
-
-//Счетчик ответов
-// const wordsArrayAndEmptyElement = ref([])
-// const answerCounter = ref([])
-
-// Считает каждое действие со слайдом
-// const onSlideChange = (swiper) => {
-//     currentElementId.value = swiper.realIndex
-//     var elementId = props.wordsArray[currentElementId.value].id
-//     {console.log('Смена слайда завершена!' + elementId)}
-// }
-
-// const onSlideYes = (swiper) => {
-//     currentElementId.value = swiper.realIndex
-//     var elementId = props.wordsArray[currentElementId.value].id
-//     {console.log('Смена туда завершена!' + elementId)}
-// }
-
-// const onSlideNo = (swiper) => {
-//     swiper.slideNext(0);
-//     swiper.slideNext(0);
-//     currentElementId.value = swiper.realIndex
-//     var elementId = props.wordsArray[currentElementId.value].id
-//     {console.log('Смена обратно завершена!' + elementId)}
-// }
-
-const addAnswer = (answer) => {
+  const addAnswer = (answer) => {
+    currentIndex.value ++
     console.log(answer)
-}
-
-// watch(
-//     () => props.wordsArray,
-//     (newVal) => {
-//         wordsArrayAndEmptyElement.value = [
-//             ...newVal,
-//             {}
-//         ];
-//     },
-//     { immediate: true }
-// );
-
-const currentElementId = ref(0)
-
-
-
-const { backgroundColor } = toRefs(props)
-
-const changeSide = () => {
+  }
+  
+  const { backgroundColor } = toRefs(props)
+  
+  const changeSide = () => {
     state.value = !state.value
-}
-</script>
+  }
+  </script>
 
 <style scoped>
 .swiper {
@@ -159,11 +91,14 @@ const changeSide = () => {
     text-align: center;
     font-size: 18px;
     background-color: transparent;
-
-    /* Center slide text vertically */
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.card-settings{
+    display: flex;
+    overflow: hidden;
 }
 
 .pagination-wrapper {
@@ -248,11 +183,12 @@ svg {
     flex-direction: row;
     background-color: transparent;
     align-items: center;
-    gap: 10px;
+    gap: 5%;
 }
 
 .card-container {
     /* background-color: #202127; */
+    transition: transform 0.3s ease;
     min-height: 100%;
     min-width: 100%;
     display: flex;
