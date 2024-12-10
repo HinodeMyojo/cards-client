@@ -1,6 +1,4 @@
 <template>
-    {{ props.wordsArray }}
-    {{ currentElementId }}
     <div class="card-main">
         <div class="pagination-wrapper">
             <div class="swiper-custom-pagination"></div>
@@ -10,8 +8,8 @@
             <swiper 
                 :slidesPerView="1" 
                 :spaceBetween="30" 
-                :effect="'cards'" 
                 :keyboard="true" 
+                :simulateTouch="false"
                 :pagination="{
                     el: '.swiper-custom-pagination',
                     type: 'fraction'
@@ -20,7 +18,6 @@
                     nextEl: '.swiper-button-custom-next',
                     nextEl: '.swiper-button-custom-next',
                 }"
-                @slideChangeTransitionEnd="onSlideChange"
                 :modules="modules" 
                 class="mySwiper">
                 <swiper-slide v-for="slide in props.wordsArray" :key="slide.key">
@@ -101,13 +98,32 @@ const props = defineProps({
 const state = ref(true)
 
 //Счетчик ответов
-const wordsArrayAndEmptyElement = ref([])
-const answerCounter = ref([])
+// const wordsArrayAndEmptyElement = ref([])
+// const answerCounter = ref([])
 
-const onSlideChange = (swiper) => {
-    currentElementId.value = swiper.realIndex
-    var biba = props.wordsArray[swiper.realIndex].id
-    {console.log('Смена слайда завершена!' + biba)}
+// Считает каждое действие со слайдом
+// const onSlideChange = (swiper) => {
+//     currentElementId.value = swiper.realIndex
+//     var elementId = props.wordsArray[currentElementId.value].id
+//     {console.log('Смена слайда завершена!' + elementId)}
+// }
+
+// const onSlideYes = (swiper) => {
+//     currentElementId.value = swiper.realIndex
+//     var elementId = props.wordsArray[currentElementId.value].id
+//     {console.log('Смена туда завершена!' + elementId)}
+// }
+
+// const onSlideNo = (swiper) => {
+//     swiper.slideNext(0);
+//     swiper.slideNext(0);
+//     currentElementId.value = swiper.realIndex
+//     var elementId = props.wordsArray[currentElementId.value].id
+//     {console.log('Смена обратно завершена!' + elementId)}
+// }
+
+const addAnswer = (answer) => {
+    console.log(answer)
 }
 
 // watch(
@@ -123,9 +139,7 @@ const onSlideChange = (swiper) => {
 
 const currentElementId = ref(0)
 
-const addAnswer = (answer) => {
-    console.log(answer)
-}
+
 
 const { backgroundColor } = toRefs(props)
 
