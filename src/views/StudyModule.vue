@@ -8,7 +8,7 @@
             <hr>
         </div>
         <div class="card">
-            <StudyCard :wordsArray=elements :height="'400px'" :width="'700px'" />
+            <StudyCard :wordsArray=elements :height="'400px'" :width="'700px'" @finish-study="sendStatistic" />
         </div>
         <div></div>
     </div>
@@ -22,12 +22,25 @@ const { getModuleById, currentModule } = useModuleService()
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
 import StudyCard from '@/components/ModuleElements/StudyCard.vue';
 
+import { saveStatistic } from '@/services/statisticService';
+
 const module = ref({})
 
 const elements = ref([])
 
 const route = useRoute()
 let moduleId = route.params.id
+
+const sendStatisticModel = ref({})
+
+const sendStatistic = async (elementsFromStudyCard) => {
+    sendStatisticModel.value = {
+        moduleId: moduleId,
+        elementStatistics: elementsFromStudyCard
+    }
+    var biba = await saveStatistic(sendStatisticModel.value)
+    console.log(biba)
+}
 
 const getModule = async (id) => {
     await getModuleById(id)

@@ -32,7 +32,7 @@ api.interceptors.response.use((response) =>
                 const newAccessToken = await authStore.refreshAccessToken();
                 console.log("Обноленный токен");
                 console.log(newAccessToken);
-                // Если обновление прошло успешно, то добавляем его в headers
+                // Если обновление прошло успешно, то добавляем его вs headers
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
             }

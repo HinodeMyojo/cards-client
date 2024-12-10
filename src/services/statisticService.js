@@ -8,6 +8,14 @@ export function getYearStatistic(year) {
     }
 }
 
+export function saveStatistic(data) {
+    try{
+        return api.post(`statistic`, data)
+    } catch (error) {
+        console.error(error)   
+    }
+}
+
 export function getAvailableYears(){
     try{
         return api.get(`statistic/available-years`)

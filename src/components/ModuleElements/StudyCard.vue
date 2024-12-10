@@ -1,110 +1,102 @@
 <template>
     <div class="card-main">
-        <div class="pagination-wrapper">
-            <div class="swiper-custom-pagination"></div>
+      <div class="pagination-wrapper">
+        <div class="swiper-custom-pagination"></div>
+      </div>
+        <div class="card-settings" :style="{ height, width }">
+        <div class="card-container" v-for="slide in props.wordsArray" :key="slide.key" :style="{transform: `translateX(-${currentIndex * 105}%)`}">
+          <div class="card-inner">
+            <div
+              class="card-face-key"
+              tabindex="0"
+              :style="{ backgroundColor }"
+              :class="{ active: !state }"
+              @click="changeSide"
+              aria-label="Card front"
+            >
+              {{ slide.key }}
+              <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
+            </div>
+            <div
+              class="card-face-value"
+              tabindex="0"
+              :style="{ backgroundColor }"
+              :class="{ active: state }"
+              @click="changeSide"
+              aria-label="Card back"
+            >
+              {{ slide.value }}
+              <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
+            </div>
+          </div>
         </div>
-        <div class="card-settings" :style="{ height: height, width: width }">
-            <swiper :slidesPerView="1" :spaceBetween="30" :effect="'cards'" :keyboard="{
-                enabled: true
-            }" :pagination="{
-                el: '.swiper-custom-pagination',
-                type: 'fraction'
-            }" :navigation="{
-                nextEl: '.swiper-button-custom-next',
-                // nextEl: '.swiper-button-custom-yes',
-            }" :modules="modules" class="mySwiper">
-                <swiper-slide v-for="slide in props.wordsArray" :key="slide.key">
-                    <div class="card-container">
-                        <div class="card-inner">
-                            <div class="card-face-key" tabindex="0" :style="{ backgroundColor: backgroundColor }"
-                                :class="{ active: !state }" @click="changeSide" @keydown.enter="changeSide">
-                                {{ slide.key }}
-                                <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
-                            </div>
-                            <div class="card-face-value" tabindex="0" :style="{ backgroundColor: backgroundColor }"
-                                :class="{ active: state }" @click="changeSide" @keydown.enter="changeSide">
-                                {{ slide.value }}
-                                <p class="helper">Нажмите на карточку, чтобы перевернуть ее</p>
-                            </div>
-                        </div>
-                    </div>
-                </swiper-slide>
-            </swiper>
+      </div>
+      <div class="custom-buttons">
+        <div class="button-no">
+          <button class="swiper-button-custom-next" @click="addAnswer(false)">Нет</button>
         </div>
-        <div class="custom-buttons">
-            <div class="button-no"><button class="swiper-button-custom-next" @click="addAnswer(0)">Нет</button></div>
-            <div class="button-yes"><button class="swiper-button-custom-next" @click="addAnswer(1)">Да</button></div>
+        <div class="button-yes">
+          <button class="swiper-button-custom-next" @click="addAnswer(true)">Да</button>
         </div>
+      </div>
     </div>
-</template>
-
-<script setup>
-import { ref, toRefs } from 'vue'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-
-// Import Swiper styles
-import 'swiper/css'
-import 'swiper/css/pagination'
-import 'swiper/css/navigation'
-import 'swiper/css/effect-cards';
-
-// Import required modules
-import { Keyboard, Pagination, Navigation, EffectCards } from 'swiper/modules'
-
-// Declare the modules array to be used in the swiper
-const modules = [Keyboard, Pagination, Navigation, EffectCards]
-
-
-
-const props = defineProps({
+  </template>
+  
+  <script setup>
+  import { ref, toRefs } from 'vue'
+  
+  const emit = defineEmits(['finish-study'])
+  
+  const props = defineProps({
     wordsArray: {
-        type: Array,
-        required: true
+      type: Array,
+      required: true
     },
     backgroundColor: {
-        type: String,
-        default: '#2B2C34'
+      type: String,
+      default: '#2B2C34'
     },
     height: {
-        type: String,
-        default: '290px'
+      type: String,
+      default: '290px'
     },
     width: {
-        type: String,
-        default: '570px'
+      type: String,
+      default: '570px'
     }
-})
+  })
+  
+  const state = ref(true)
+  
+  const currentIndex = ref(0)
 
-// Реактивные переменные
-const state = ref(true)
+  const elementAnswerData = ref([]);
 
-//Счетчик ответов
-const wordsArrayAndEmptyElement = ref([])
-const answerCounter = ref([])
+  const addAnswer = (answer) => {
 
-// watch(
-//     () => props.wordsArray,
-//     (newVal) => {
-//         wordsArrayAndEmptyElement.value = [
-//             ...newVal,
-//             {}
-//         ];
-//     },
-//     { immediate: true }
-// );
+    const elementId = props.wordsArray[currentIndex.value].id;
 
-const addAnswer = (answer) => {
-    console.log(wordsArrayAndEmptyElement.value)
-    answerCounter.value.push(answer)
-    console.log(answerCounter.value)
-}
-
-const { backgroundColor } = toRefs(props)
-
-const changeSide = () => {
+    console.log('Ответ:', answer);
+    console.log('ID элемента:', elementId);
+    elementAnswerData.value.push({
+      elementId,
+      answer,
+    });
+    if (currentIndex.value !== props.wordsArray.length - 1) {
+      currentIndex.value ++;
+    }
+    else {
+      emit('finish-study', elementAnswerData.value);
+      return;
+    }
+  };
+  
+  const { backgroundColor } = toRefs(props)
+  
+  const changeSide = () => {
     state.value = !state.value
-}
-</script>
+  }
+  </script>
 
 <style scoped>
 .swiper {
@@ -117,11 +109,14 @@ const changeSide = () => {
     text-align: center;
     font-size: 18px;
     background-color: transparent;
-
-    /* Center slide text vertically */
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.card-settings{
+    display: flex;
+    overflow: hidden;
 }
 
 .pagination-wrapper {
@@ -206,11 +201,12 @@ svg {
     flex-direction: row;
     background-color: transparent;
     align-items: center;
-    gap: 10px;
+    gap: 5%;
 }
 
 .card-container {
     /* background-color: #202127; */
+    transition: transform 0.3s ease;
     min-height: 100%;
     min-width: 100%;
     display: flex;
