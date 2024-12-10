@@ -11,7 +11,7 @@
                     <tr v-for="(row, rowIndex) in data" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex" :style="getCellStyle(cell.value)"
                             class="tooltip">
-                            <span class="tooltip-text">{{ cell.datenl }}</span>
+                            <span class="tooltip-text">{{ new Date(cell.date).toLocaleDateString() }}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -41,11 +41,21 @@ const getColspan = (index) => {
 const getCellStyle = (cell) => {
     let backgroundColor = ''
     if (cell === 0) {
-        backgroundColor = '#161B22'
+    backgroundColor = '#161B22'; // Тусклый темный зеленый
     } else if (cell === 1) {
-        backgroundColor = '#0E4429'
+        backgroundColor = '#0E4429'; // Темный зеленый
     } else if (cell === 2) {
-        backgroundColor = '#39D353'
+        backgroundColor = '#1e9258'; // Средне-зеленый
+    } else if (cell === 3) {
+        backgroundColor = '#26b66e'; // Яркий зеленый
+    } else if (cell === 4) {
+        backgroundColor = '#5ee1a0'; // Светлый зеленый
+    } else if (cell === 5) {
+        backgroundColor = '#c6ffe3'; // Очень светлый зеленый
+    } else if (cell >= 6) {
+        backgroundColor = '#8af1be'; // Почти белый зеленый
+    } else {
+        backgroundColor = 'transparent'; // Прозрачный, если cell не соответствует ни одному значению
     }
 
     return {
@@ -78,7 +88,7 @@ const months = [
 
 .tooltip-text {
     visibility: hidden;
-    width: 50px;
+    width: auto;
     background-color: #18181b;
     text-align: center;
     padding: 5px;
