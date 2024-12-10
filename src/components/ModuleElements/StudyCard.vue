@@ -45,6 +45,8 @@
   <script setup>
   import { ref, toRefs } from 'vue'
   
+  const emit = defineEmits(['finish-study'])
+  
   const props = defineProps({
     wordsArray: {
       type: Array,
@@ -68,10 +70,26 @@
   
   const currentIndex = ref(0)
 
+  const elementAnswerData = ref([]);
+
   const addAnswer = (answer) => {
-    currentIndex.value ++
-    console.log(answer)
-  }
+
+    const elementId = props.wordsArray[currentIndex.value].id;
+
+    console.log('Ответ:', answer);
+    console.log('ID элемента:', elementId);
+    elementAnswerData.value.push({
+      elementId,
+      answer,
+    });
+    if (currentIndex.value !== props.wordsArray.length - 1) {
+      currentIndex.value ++;
+    }
+    else {
+      emit('finish-study', elementAnswerData.value);
+      return;
+    }
+  };
   
   const { backgroundColor } = toRefs(props)
   
