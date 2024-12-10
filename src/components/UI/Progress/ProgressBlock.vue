@@ -40,13 +40,31 @@ const getColspan = (index) => {
 
 const getCellStyle = (cell) => {
     let backgroundColor = ''
-    if (cell === 0) {
-        backgroundColor = '#161B22'
-    } else if (cell === 1) {
-        backgroundColor = '#0E4429'
-    } else if (cell === 2) {
-        backgroundColor = '#39D353'
-    }
+    switch (cell) {
+    case 0:
+        backgroundColor = '#161B22';
+        break;
+    case 1:
+        backgroundColor = '#0E4429';
+        break;
+    case 2:
+        backgroundColor = '#1e9258';
+        break;
+    case 3:
+        backgroundColor = '#26b66e';
+        break;
+    case 4:
+        backgroundColor = '#5ee1a0';
+        break;
+    case 5:
+        backgroundColor = '#c6ffe3'; 
+        break;
+    case 6:
+    backgroundColor = '#8af1be'; 
+    break;
+    default:
+        backgroundColor = '#161B22';
+}
 
     return {
         backgroundColor: backgroundColor
