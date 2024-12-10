@@ -40,31 +40,23 @@ const getColspan = (index) => {
 
 const getCellStyle = (cell) => {
     let backgroundColor = ''
-    switch (cell) {
-    case 0:
-        backgroundColor = '#161B22';
-        break;
-    case 1:
-        backgroundColor = '#0E4429';
-        break;
-    case 2:
-        backgroundColor = '#1e9258';
-        break;
-    case 3:
-        backgroundColor = '#26b66e';
-        break;
-    case 4:
-        backgroundColor = '#5ee1a0';
-        break;
-    case 5:
-        backgroundColor = '#c6ffe3'; 
-        break;
-    case 6:
-    backgroundColor = '#8af1be'; 
-    break;
-    default:
-        backgroundColor = '#161B22';
-}
+    if (cell === 0) {
+    backgroundColor = '#161B22'; // Тусклый темный зеленый
+    } else if (cell === 1) {
+        backgroundColor = '#0E4429'; // Темный зеленый
+    } else if (cell === 2) {
+        backgroundColor = '#1e9258'; // Средне-зеленый
+    } else if (cell === 3) {
+        backgroundColor = '#26b66e'; // Яркий зеленый
+    } else if (cell === 4) {
+        backgroundColor = '#5ee1a0'; // Светлый зеленый
+    } else if (cell === 5) {
+        backgroundColor = '#c6ffe3'; // Очень светлый зеленый
+    } else if (cell >= 6) {
+        backgroundColor = '#8af1be'; // Почти белый зеленый
+    } else {
+        backgroundColor = 'transparent'; // Прозрачный, если cell не соответствует ни одному значению
+    }
 
     return {
         backgroundColor: backgroundColor
