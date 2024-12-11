@@ -5,8 +5,8 @@
                 <h2>{{ text }}</h2>
             </v-card-text>
             <v-card-actions class="buttons">
-                <v-btn class="yes" @click="$emit('answer', true)">Да</v-btn>
-                <v-btn class="no" @click="$emit('answer', false)">Нет</v-btn>
+                <v-btn class="yes" @click="$emit('answer', true, props.type)">Да</v-btn>
+                <v-btn class="no" @click="$emit('answer', false, props.type)">Нет</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -18,7 +18,11 @@ import { ref, watch, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
     text: String,
-    dialog: Boolean
+    dialog: Boolean,
+    type: {
+        type: String,
+        default: "default"
+    }
 })
 
 const emit = defineEmits(['update:dialog'])

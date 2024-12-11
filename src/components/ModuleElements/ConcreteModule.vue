@@ -5,12 +5,13 @@
       <div class="module-button">
         <Button text="Редактировать" :onClick="editModule" />
         <div class="delete-module">
+          <Modal :text="modalText" :type="modalType" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
           <v-menu :location="location">
             <template v-slot:activator="{ props }">
               <h3 v-bind="props">Удалить</h3>
             </template>
             <v-list class="custom-list">
-              <v-list-item v-for="(item, index) in items" :key="index" @click="handleItemClick(item)"
+              <v-list-item v-for="(item, index) in deleteVariants" :key="index" @click="openDeleteModal(item)"
                 class="custom-list-item">
                 <v-list-item-title class="custom-list-item-title">
                   {{ item.title }}
@@ -70,33 +71,35 @@
 
 <script setup>
 import { onMounted, ref, watch } from 'vue'
-// Компосаблы
-import { useModuleService } from '@/components/composables/useModuleService'
+import { moduleService } from '@/services/moduleService'
 import { useElementService } from '@/components/composables/useElementService'
-//
 import { useRoute } from 'vue-router'
 
-// Иконки
-import { mdiCards } from '@mdi/js'
-import { mdiFountainPenTip } from '@mdi/js'
-import { mdiSchool } from '@mdi/js'
-
+// Иконки для отображения в UI
+import { mdiCards, mdiFountainPenTip, mdiSchool } from '@mdi/js'
 import SvgIcon from '@jamescoyle/vue-icon'
 import Button from '@/components/UI/Buttons/Button.vue'
 import Card from '@/components/ModuleElements/Card.vue'
 import Table from '@/components/UI/Table.vue'
 import ElementModal from '@/components/UI/Module/ElementModal.vue'
 import router from '@/router/router'
+import Modal from '../UI/Modal.vue'
 
+// Переменные для иконок
 const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)
 const pathMdiSchool = ref(mdiSchool)
 
-const items = ref([
-  { title: "Убрать модуль из библиотеки", action: "removeFromLibrary" },
-  { title: "Удалить модуль", action: "deleteModule" }])
+// Модальное окно для удаления
+const modalText = ref()
+const isDialogOpen = ref(false)
 
-const handleItemClick = (item) => {
+// Переменные для работы с действиями
+const deleteVariants = ref(null)
+const userId = localStorage.getItem('userId')
+
+// Логика обработки нажатий на элементы
+const openDeleteModal = (item) => {
   switch (item.action) {
     case 'removeFromLibrary':
       removeFromLibrary();
@@ -108,20 +111,53 @@ const handleItemClick = (item) => {
       break;
   }
 }
+// Функции удаления модулей
+const modalType = ref("default")
 
 const removeFromLibrary = async () => {
   console.log('DeleteFromLibrary' + moduleId)
-}
-
-const deleteModule = async () => {
-  console.log('Delete module' + moduleId)
-}
-
-// Для модалки по добавлению
-const isDialogOpen = ref(false)
-const AddElement = () => {
+  modalText.value = "Вы уверены, что хотите удалить объект из своей библиотеки?"
+  modalType.value = "removeFromLibrary"
   isDialogOpen.value = true
 }
+const deleteModule = async () => {
+  console.log('Delete module' + moduleId)
+  modalText.value = "Вы уверены, что хотите удалить объект?"
+  modalType.value = "deleteModule"
+  isDialogOpen.value = true
+}
+
+const handleAnswer = async (answer, type) => {
+  if (!answer) {
+    console.log("Действие отменено");
+    isDialogOpen.value = false;
+    return;
+  }
+
+  try {
+    switch (type) {
+      case "removeFromLibrary":
+        await moduleService.deleteModuleFromLibrary(moduleId);
+        console.log("Модуль успешно удалён из библиотеки");
+        break;
+
+      case "deleteModule":
+        await moduleService.deleteModule(moduleId);
+        console.log("Модуль успешно удалён");
+        break;
+
+      default:
+        console.warn(`Неизвестный тип действия: ${type}`);
+    }
+  } catch (error) {
+    console.error("Ошибка при выполнении действия:", error);
+  } finally {
+    isDialogOpen.value = false;
+  }
+};
+
+
+// Логика добавления элемента
 const addElement = async (data) => {
   if (data) {
     const model = {
@@ -139,16 +175,15 @@ const goToCardStudy = () => {
   router.push(`/module/${moduleId}/study`)
 }
 
-// Секция таблицы
+// Данные модуля и элементы для таблицы
 const route = useRoute()
 let moduleId = route.params.id
-const { getModuleById, currentModule, getHeaders, headers } = useModuleService()
 const { deleteElementById, addElementToModule, editElementById } = useElementService()
 const moduleInfo = ref('')
 const elements = ref([])
 const headersData = ref(null)
 
-// Обновление данных (данные приходят из таблицы)
+// Функции для работы с элементами
 const editElement = async (data) => {
   const model = {
     key: data.key,
@@ -160,38 +195,43 @@ const editElement = async (data) => {
   await refreshTableData(moduleId)
 }
 
-
-// Обновление данных таблицы
-const refreshTableData = async (moduleId) => {
-  await getModuleById(moduleId)
-  moduleInfo.value = currentModule.value
-  elements.value = moduleInfo.value.elements || []
-}
-
 const deleteElement = async (id) => {
   await deleteElementById(id)
   console.log('Element was deleted')
   await refreshTableData(moduleId)
 }
 
+// Обновление данных таблицы
+const refreshTableData = async (moduleId) => {
+  moduleInfo.value = await (await moduleService.getModuleById(moduleId)).data
+  elements.value = moduleInfo.value.elements || []
+}
+
+// Хук mounted для загрузки данных
 onMounted(async () => {
   await refreshTableData(moduleId)
-  await getHeaders()
-  headersData.value = headers.value
+  headersData.value = await (await moduleService.getHeaders()).data
   console.log('Headers Data:', headersData.value)
   console.log('Elements:', elements.value)
+
+  deleteVariants.value = [{ title: "Убрать модуль из библиотеки", action: "removeFromLibrary" }]
+
+  if (moduleInfo.value.creatorId == userId) {
+    deleteVariants.value.push({ title: "Удалить модуль", action: "deleteModule" })
+  }
 })
 
 watch(
   () => route.params.id,
   async (newId) => {
     moduleId = newId
-    await getModuleById(newId)
-    moduleInfo.value = currentModule.value
+    moduleInfo.value = await (await moduleService.getModuleById(newId)).data
+    console.log(moduleInfo.value)
     elements.value = moduleInfo.value.elements || []
   }
 )
 </script>
+
 
 <style scoped>
 .custom-list {

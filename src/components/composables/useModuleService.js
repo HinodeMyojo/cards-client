@@ -1,7 +1,6 @@
 import { ref } from "vue"; // Импортируем ref из Vue для создания реактивных переменных
 import { moduleService } from '@/services/moduleService'; // Импортируем сервис для взаимодействия с API модулей
 
-// Функция useModuleService предоставляет методы и состояния для работы с модулями
 export function useModuleService() {
     // Реактивные переменные для хранения состояния
     const currentModule = ref(null); // Хранит данные текущего модуля
