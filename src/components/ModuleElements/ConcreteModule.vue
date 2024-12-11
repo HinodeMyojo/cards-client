@@ -5,7 +5,19 @@
       <div class="module-button">
         <Button text="Редактировать" :onClick="editModule" />
         <div class="delete-module">
-          <h3 @click="deleteModule">Удалить</h3>
+          <v-menu :location="location">
+            <template v-slot:activator="{ props }">
+              <h3 v-bind="props">Удалить</h3>
+            </template>
+            <v-list class="custom-list">
+              <v-list-item v-for="(item, index) in items" :key="index" @click="handleItemClick(item)"
+                class="custom-list-item">
+                <v-list-item-title class="custom-list-item-title">
+                  {{ item.title }}
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </div>
     </div>
@@ -80,6 +92,31 @@ const pathMdiCards = ref(mdiCards)
 const pathMdiFountainPenTip = ref(mdiFountainPenTip)
 const pathMdiSchool = ref(mdiSchool)
 
+const items = ref([
+  { title: "Убрать модуль из библиотеки", action: "removeFromLibrary" },
+  { title: "Удалить модуль", action: "deleteModule" }])
+
+const handleItemClick = (item) => {
+  switch (item.action) {
+    case 'removeFromLibrary':
+      removeFromLibrary();
+      break;
+    case 'deleteModule':
+      deleteModule();
+      break;
+    default:
+      break;
+  }
+}
+
+const removeFromLibrary = async () => {
+  console.log('DeleteFromLibrary' + moduleId)
+}
+
+const deleteModule = async () => {
+  console.log('Delete module' + moduleId)
+}
+
 // Для модалки по добавлению
 const isDialogOpen = ref(false)
 const AddElement = () => {
@@ -123,9 +160,6 @@ const editElement = async (data) => {
   await refreshTableData(moduleId)
 }
 
-const deleteModule = async () => {
-  console.log('Delete module')
-}
 
 // Обновление данных таблицы
 const refreshTableData = async (moduleId) => {
@@ -160,6 +194,21 @@ watch(
 </script>
 
 <style scoped>
+.custom-list {
+  border-radius: 10px !important;
+  background: transparent !important;
+  min-width: 200px !important;
+}
+
+.custom-list-item {
+  background-color: #272a2f;
+  overflow: hidden !important;
+}
+
+.custom-list-item-title {
+  background-color: #272a2f;
+}
+
 .module-table-header {
   display: flex;
   flex-direction: row;
