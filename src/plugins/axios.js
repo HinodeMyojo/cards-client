@@ -43,6 +43,9 @@ api.interceptors.response.use((response) =>
                 router.push('/login')
             }
         }
+        else if (error.response.status === 404) {
+            console.error(error);
+        }
         else{
             console.error(error);
             authStore.cleanData();
