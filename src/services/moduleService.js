@@ -27,7 +27,7 @@ export const moduleService = {
     },
     async deleteModule(id) {
         try {
-            return await api.delete(`/module`, { data: { id } });
+            return await api.delete(`/module?id=${id}`);
         } catch (error) {
             console.error("Ошибка при удалении модуля:", error);
             throw error;

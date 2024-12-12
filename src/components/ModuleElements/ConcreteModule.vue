@@ -127,6 +127,8 @@ const deleteModule = async () => {
   isDialogOpen.value = true
 }
 
+const userName = ref(localStorage.getItem('userName'));
+
 const handleAnswer = async (answer, type) => {
   if (!answer) {
     console.log("Действие отменено");
@@ -144,6 +146,7 @@ const handleAnswer = async (answer, type) => {
       case "deleteModule":
         await moduleService.deleteModule(moduleId);
         console.log("Модуль успешно удалён");
+        router.push(`$/{userName}`);
         break;
 
       default:
