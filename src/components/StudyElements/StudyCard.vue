@@ -69,6 +69,7 @@ const addAnswer = (answer) => {
   });
   if (currentIndex.value !== props.wordsArray.length - 1) {
     currentIndex.value++;
+
   }
   else {
     emit('finish-study', elementAnswerData.value);

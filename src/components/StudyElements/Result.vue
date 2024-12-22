@@ -46,7 +46,7 @@ const textSwitch = () => {
     isActiveSecret.value = false
     switch (true) {
         case props.percentSuccess == 0:
-            text.value = 'Есть к чему стремиться! 🫡'
+            text.value = 'Есть к чему стремиться! 😼'
             break;
         case props.percentSuccess > 0 && props.percentSuccess < 20:
             text.value = 'Вот это потенциалище! 🙈'
@@ -57,14 +57,14 @@ const textSwitch = () => {
         case props.percentSuccess == 50:
             text.value = 'Уже половина! 🤝🤝'
             break;
-        case props.percentSuccess > 50 && props.percentSuccess < 66:
+        case props.percentSuccess > 50 && props.percentSuccess < 60:
             text.value = 'Уже больше половины!!1 Давай поднажмём!! 🤩'
             break;
-        case props.percentSuccess == 66:
+        case props.percentSuccess >= 60 && props.percentSuccess <= 70:
             text.value = ''
             isActiveSecret.value = true
             break;
-        case props.percentSuccess > 66 && props.percentSuccess < 95:
+        case props.percentSuccess > 70 && props.percentSuccess < 95:
             text.value = 'Абалдеть.. Как ты это сделал? 😰'
             break;
         case props.percentSuccess == 100:
