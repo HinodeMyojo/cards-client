@@ -8,7 +8,12 @@
             <hr>
         </div>
         <div class="card">
-            <StudyCard :wordsArray=elements :height="'400px'" :width="'700px'" @finish-study="sendStatistic" />
+            <StudyCard :class="{ active: !isActive }" :wordsArray=elements :height="'400px'" :width="'700px'"
+                @finish-study="sendStatistic" />
+            <div :class="{ active: isActive }">
+                Вы молодец!
+                {{ percentSuccess }}
+            </div>
         </div>
         <div></div>
     </div>
@@ -20,9 +25,9 @@ import { useRoute } from 'vue-router';
 import { useModuleService } from '@/components/composables/useModuleService'
 const { getModuleById, currentModule } = useModuleService()
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
-import StudyCard from '@/components/ModuleElements/StudyCard.vue';
+import StudyCard from '@/components/StudyElements/StudyCard.vue';
 
-import { saveStatistic } from '@/services/statisticService';
+import { saveStatistic, getStatisticById } from '@/services/statisticService';
 
 const module = ref({})
 
@@ -33,13 +38,27 @@ let moduleId = route.params.id
 
 const sendStatisticModel = ref({})
 
+const isActive = ref(true)
+
+const percentSuccess = ref(0)
+const getStatistic = async (id) => {
+    var response = await getStatisticById(id)
+    percentSuccess.value = response.data.percentSuccess
+    console.log(response)
+    console.log(response.data)
+}
+
+const responseId = ref(0)
+
 const sendStatistic = async (elementsFromStudyCard) => {
     sendStatisticModel.value = {
         moduleId: moduleId,
         elementStatistics: elementsFromStudyCard
     }
-    var biba = await saveStatistic(sendStatisticModel.value)
-    console.log(biba)
+    var response = await saveStatistic(sendStatisticModel.value)
+    responseId.value = response.data.id
+    isActive.value = false
+    getStatistic(responseId.value)
 }
 
 const getModule = async (id) => {
@@ -55,6 +74,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.active {
+    display: none;
+}
+
 .main {
     display: flex;
     width: 100%;
