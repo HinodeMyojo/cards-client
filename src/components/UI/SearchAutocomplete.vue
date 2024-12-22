@@ -1,48 +1,33 @@
 <template>
     <div class="search-autocomplete" style="border-radius: 10px;">
-        <input v-model="searchQuery" type="text" placeholder="Поиск..." @input="filterItems"
-            style="outline: none; background-color: #2b2c34;;" />
-        <ul v-if="filteredItems.length && searchQuery">
-            <li v-for="(item, index) in filteredItems" :key="index" @click="selectItem(item)">
-                {{ item }}
-            </li>
-        </ul>
+        <input v-model="inputText" type="text" placeholder="Поиск..." @input="inputItems"
+            style="outline: none; background-color: #2b2c34;" />
     </div>
 </template>
 
-<script>
-import { ref } from 'vue';
+<script setup>
+import { ref, defineEmits } from 'vue';
 
-export default {
-    props: {
-        items: {
-            type: Array,
-            required: true
-        }
-    },
-    setup(props, { emit }) {
-        const searchQuery = ref('');
-        const filteredItems = ref([]);
 
-        const filterItems = () => {
-            filteredItems.value = props.items.filter(item =>
-                item.toLowerCase().includes(searchQuery.value.toLowerCase())
-            );
-        };
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        const selectItem = item => {
-            searchQuery.value = item;
-            filteredItems.value = [];
-            emit('select', item); // Emit событие для родительского компонента
-        };
+const emit = defineEmits(['input']);
 
-        return {
-            searchQuery,
-            filteredItems,
-            filterItems,
-            selectItem
-        };
+let debounceTimeout = null;
+
+const inputItems = async (event) => {
+    const currentValue = event.target.value;
+
+    console.log("Введённый текст:", currentValue);
+
+    if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
     }
+
+    debounceTimeout = setTimeout(() => {
+        console.log("Отправлено значение:", currentValue);
+        emit('input', currentValue); // Отправляем значение через emit
+    }, 500); // 500 мс ожидания
 };
 </script>
 
