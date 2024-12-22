@@ -8,12 +8,10 @@
             <hr>
         </div>
         <div class="card">
-            <StudyCard :class="{ active: !isActive }" :wordsArray=elements :height="'400px'" :width="'700px'"
-                @finish-study="sendStatistic" />
-            <div :class="{ active: isActive }">
-                Вы молодец!
-                {{ percentSuccess }}
-            </div>
+            <StudyCard ref="studyCard" :class="{ active: !isActive }" :wordsArray=elements :height="'400px'"
+                :width="'700px'" @finish-study="sendStatistic" />
+            <Result :class="{ active: isActive }" :percentSuccess="percentSuccess" @restart-study="restartStudy"
+                @finish-study="finishStudy" />
         </div>
         <div></div>
     </div>
@@ -26,8 +24,10 @@ import { useModuleService } from '@/components/composables/useModuleService'
 const { getModuleById, currentModule } = useModuleService()
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
 import StudyCard from '@/components/StudyElements/StudyCard.vue';
+import router from '@/router/router';
 
 import { saveStatistic, getStatisticById } from '@/services/statisticService';
+import Result from '@/components/StudyElements/Result.vue';
 
 const module = ref({})
 
@@ -67,6 +67,16 @@ const getModule = async (id) => {
     elements.value = currentModule.value.elements
 }
 
+const studyCard = ref(null); // Ссылка на компонент StudyCard
+const restartStudy = () => {
+    isActive.value = true
+    studyCard.value.reset();
+}
+const finishStudy = () => {
+    router.push('/module/' + moduleId)
+}
+
+
 onMounted(() => {
     getModule(moduleId)
 })
@@ -83,7 +93,7 @@ onMounted(() => {
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 60px;
 }
 
 .header-main {
