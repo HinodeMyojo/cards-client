@@ -20,7 +20,8 @@
         </div>
         <div class="buttons">
             <BaseButton :label="`Начать заново`" :size="`medium`" :color="`#272A2F`" @click="$emit('restart-study')" />
-            <BaseButton :label="`Закончить`" :size="`medium`" :color="`#7467B6`" @click="$emit('finish-study')" />
+            <BaseButton :label="`Закончить`" :size="`medium`" :color="`#7467B6`" @click="$emit('finish-study')"
+                :border-color="`transparent`" />
         </div>
     </div>
 </template>

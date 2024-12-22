@@ -18,18 +18,17 @@
       </div>
     </div>
     <div class="custom-buttons">
-      <div class="button-no">
-        <button class="swiper-button-custom-next" @click="addAnswer(false)">Нет</button>
-      </div>
-      <div class="button-yes">
-        <button class="swiper-button-custom-next" @click="addAnswer(true)">Да</button>
-      </div>
+      <BaseButton @click="addAnswer(false)" :label="`Нет`" :size="`medium`" :color="`#272A2F`" :border-color="`#f94144`"
+        :width="`100px`" />
+      <BaseButton @click="addAnswer(true)" :label="`Да`" :size="`medium`" :color="`#272A2F`" :border-color="`#90be6d`"
+        :width="`100px`" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, toRefs, defineExpose } from 'vue'
+import BaseButton from '../UI/Buttons/BaseButton.vue';
 
 const emit = defineEmits(['finish-study'])
 
@@ -148,8 +147,8 @@ defineExpose({
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 350px;
-  justify-content: space-between;
+  width: 450px;
+  justify-content: space-around;
   gap: 15px;
 }
 
