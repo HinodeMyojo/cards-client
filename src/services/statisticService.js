@@ -31,3 +31,11 @@ export function getLastActivity(){
         console.error(error)   
     }
 }
+
+export function getStatisticById(id){
+    try{
+        return api.get(`statistic/?id=${id}`)
+    } catch (error) {
+        console.error(error)   
+    }
+}
