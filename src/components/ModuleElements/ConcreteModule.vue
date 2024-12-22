@@ -127,7 +127,7 @@ const deleteModule = async () => {
   isDialogOpen.value = true
 }
 
-const userName = ref(localStorage.getItem('userName'));
+// const userName = ref(localStorage.getItem('userName'));
 
 const handleAnswer = async (answer, type) => {
   if (!answer) {
@@ -175,7 +175,12 @@ const addElement = async (data) => {
 
 // Переход к обучению модуля
 const goToCardStudy = () => {
-  router.push(`/module/${moduleId}/study`)
+  if (elements.value.length > 0) {
+    router.push(`/module/${moduleId}/study`)
+  }
+  else {
+    alert("Невозможно перейти в режим обучения с пустым модулем!")
+  }
 }
 
 // Данные модуля и элементы для таблицы
