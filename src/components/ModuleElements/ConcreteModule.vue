@@ -3,7 +3,7 @@
     <div class="module-title">
       <h2>{{ moduleInfo.title }}</h2>
       <div class="module-button">
-        <Button text="Редактировать" :onClick="editModule" />
+        <BaseButton label="Редактировать" color="#272A2F" size="medium" />
         <div class="delete-module">
           <Modal :text="modalText" :type="modalType" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
           <v-menu :location="location">
@@ -84,6 +84,7 @@ import Table from '@/components/UI/Table.vue'
 import ElementModal from '@/components/UI/Module/ElementModal.vue'
 import router from '@/router/router'
 import Modal from '../UI/Modal.vue'
+import BaseButton from '../UI/Buttons/BaseButton.vue'
 
 // Переменные для иконок
 const pathMdiCards = ref(mdiCards)
