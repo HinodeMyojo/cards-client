@@ -75,6 +75,16 @@ const textSwitch = () => {
 
 watch(() => props.percentSuccess, textSwitch, { immediate: true });
 
+const reset = () => {
+    isActiveSecret100.value = false
+    isActiveSecret.value = false
+    text.value = ''
+}
+
+defineExpose({
+    reset,
+});
+
 </script>
 
 <style scoped>

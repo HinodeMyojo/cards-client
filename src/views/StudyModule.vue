@@ -10,8 +10,8 @@
         <div class="card">
             <StudyCard ref="studyCard" :class="{ active: !isActive }" :wordsArray=elements :height="'400px'"
                 :width="'700px'" @finish-study="sendStatistic" />
-            <Result :class="{ active: isActive }" :percentSuccess="percentSuccess" @restart-study="restartStudy"
-                @finish-study="finishStudy" />
+            <Result ref="result" :class="{ active: isActive }" :percentSuccess="percentSuccess"
+                @restart-study="restartStudy" @finish-study="finishStudy" />
         </div>
         <div></div>
     </div>
@@ -68,9 +68,11 @@ const getModule = async (id) => {
 }
 
 const studyCard = ref(null); // Ссылка на компонент StudyCard
+const result = ref(null); // Ссылка на компонент Result
 const restartStudy = () => {
     isActive.value = true
     studyCard.value.reset();
+    result.value.reset();
 }
 const finishStudy = () => {
     router.push('/module/' + moduleId)
