@@ -14,9 +14,7 @@
       </div>
       <hr />
       <div class="search">
-        <SearchAutocomplete :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-          @select="handleSelect" />
-        <!-- <p>Вы выбрали: {{ selectedItem }}</p> -->
+        <SearchAutocomplete @input="LoadUserModules" />
       </div>
       <hr />
       <div class="tree">
@@ -46,13 +44,8 @@ import { HttpStatusCode } from 'axios';
 const storedUserName = ref('Пользователь');
 const avatarSrc = ref('');
 
-const selectedItem = ref('');
-
 const items = ref([]);
 
-const handleSelect = item => {
-  selectedItem.value = item;
-};
 const handleAvatarClick = () => {
   router.push(`/${storedUserName.value}`)
 }
@@ -83,9 +76,16 @@ const LoadUserData = async () => {
   }
 };
 
-const LoadUserModules = async () => {
+const LoadUserModules = async (searchText) => {
+  console.log(searchText);
+  items.value = [];
   try {
-    const response = await api.get(`/module/used-modules`);
+    const queryText = searchText?.trim() || null;
+    const response = await api.get('/module/used-modules', {
+      params: {
+        textSearch: queryText,
+      },
+    });
     console.log(response);
     if (response.status == HttpStatusCode.Ok) {
       console.log(response.data);

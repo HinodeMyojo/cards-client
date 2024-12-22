@@ -25,6 +25,23 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    width: {
+        type: String,
+        default: 'auto',
+    },
+    borderColor: {
+        type: String,
+        default: 'none',
+    },
+    borderWidth: {
+        type: String,
+        default: '1px',
+    },
+    hoverColor: {
+        type: String,
+        default: '#D459FF',
+    },
+
 });
 
 const emit = defineEmits(['click']);
@@ -36,6 +53,10 @@ const buttonClass = computed(() => {
 const buttonStyle = computed(() => {
     return {
         backgroundColor: props.color === 'primary' ? '#42b983' : props.color,
+        width: props.width,
+        borderColor: props.borderColor,
+        borderWidth: props.borderWidth,
+        '--hover-border-color': props.hoverColor,
     };
 });
 
@@ -64,7 +85,7 @@ const handleClick = (event) => {
 .btn:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
-    border: 1px solid #D459FF;
+    border: 1px solid var(--hover-border-color);
 }
 
 /* Active Effect */

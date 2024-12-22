@@ -120,6 +120,7 @@ const GetAvatar = async () => {
     SetAvatarToPage(base64Avatar)
     localStorage.setItem('userAvatar', base64Avatar)
     localStorage.setItem('userName', response.data.userName)
+    localStorage.setItem('userId', response.data.id)
   } catch (error) {
     console.error(error)
   }
@@ -205,6 +206,7 @@ const cleanLocalStorage = () => {
   localStorage.removeItem('userAvatar')
   localStorage.removeItem('userName')
   localStorage.removeItem('recoveryEmail')
+  localStorage.removeItem('userId')
 }
 </script>
 

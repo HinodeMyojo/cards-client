@@ -30,6 +30,7 @@ export const useAuthStore = defineStore({
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("userAvatar");
+          localStorage.removeItem("userId");
           this.checkUserLogin();
       },
       async refreshAccessToken(){

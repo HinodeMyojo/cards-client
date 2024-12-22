@@ -8,7 +8,10 @@
             <hr>
         </div>
         <div class="card">
-            <StudyCard :wordsArray=elements :height="'400px'" :width="'700px'" @finish-study="sendStatistic" />
+            <StudyCard ref="studyCard" :class="{ active: !isActive }" :wordsArray=elements :height="'400px'"
+                :width="'700px'" @finish-study="sendStatistic" />
+            <Result ref="result" :class="{ active: isActive }" :percentSuccess="percentSuccess"
+                @restart-study="restartStudy" @finish-study="finishStudy" />
         </div>
         <div></div>
     </div>
@@ -20,9 +23,11 @@ import { useRoute } from 'vue-router';
 import { useModuleService } from '@/components/composables/useModuleService'
 const { getModuleById, currentModule } = useModuleService()
 import BaseButton from '@/components/UI/Buttons/BaseButton.vue';
-import StudyCard from '@/components/ModuleElements/StudyCard.vue';
+import StudyCard from '@/components/StudyElements/StudyCard.vue';
+import router from '@/router/router';
 
-import { saveStatistic } from '@/services/statisticService';
+import { saveStatistic, getStatisticById } from '@/services/statisticService';
+import Result from '@/components/StudyElements/Result.vue';
 
 const module = ref({})
 
@@ -33,13 +38,27 @@ let moduleId = route.params.id
 
 const sendStatisticModel = ref({})
 
+const isActive = ref(true)
+
+const percentSuccess = ref(0)
+const getStatistic = async (id) => {
+    var response = await getStatisticById(id)
+    percentSuccess.value = response.data.percentSuccess
+    console.log(response)
+    console.log(response.data)
+}
+
+const responseId = ref(0)
+
 const sendStatistic = async (elementsFromStudyCard) => {
     sendStatisticModel.value = {
         moduleId: moduleId,
         elementStatistics: elementsFromStudyCard
     }
-    var biba = await saveStatistic(sendStatisticModel.value)
-    console.log(biba)
+    var response = await saveStatistic(sendStatisticModel.value)
+    responseId.value = response.data.id
+    isActive.value = false
+    getStatistic(responseId.value)
 }
 
 const getModule = async (id) => {
@@ -48,6 +67,18 @@ const getModule = async (id) => {
     elements.value = currentModule.value.elements
 }
 
+const studyCard = ref(null); // Ссылка на компонент StudyCard
+const result = ref(null); // Ссылка на компонент Result
+const restartStudy = () => {
+    isActive.value = true
+    studyCard.value.reset();
+    result.value.reset();
+}
+const finishStudy = () => {
+    router.push('/module/' + moduleId)
+}
+
+
 onMounted(() => {
     getModule(moduleId)
 })
@@ -55,12 +86,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.active {
+    display: none;
+}
+
 .main {
     display: flex;
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 60px;
 }
 
 .header-main {
