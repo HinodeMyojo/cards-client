@@ -53,6 +53,9 @@ const textSwitch = () => {
         case props.percentSuccess > 20 && props.percentSuccess < 50:
             text.value = 'Мощь, сила, ум! Всё при тебе! 💪🏻'
             break;
+        case props.percentSuccess == 50:
+            text.value = 'Уже половина! 🤝🤝'
+            break;
         case props.percentSuccess > 50 && props.percentSuccess < 66:
             text.value = 'Уже больше половины!!1 Давай поднажмём!! 🤩'
             break;
