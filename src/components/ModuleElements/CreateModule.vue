@@ -4,8 +4,8 @@
       <div class="module-create-header">
         <h2>Создание модуля</h2>
         <div class="module-create-header-buttons">
-          <BaseButton label="Создать" color="#272A2F" size="medium" @click="onSubmit" />
-          <button>Отмена</button>
+          <BaseButton label="Создать" color="#272A2F" size="medium" @click="onSubmit" :hover-color="`#3f8139`" />
+          <BaseButton label="Отменить" @click="onCancel" color="transparent" size="medium" :hover-color="`#F44336`" />
         </div>
       </div>
       <hr />
@@ -210,11 +210,11 @@ h3 {
 }
 
 .notValidInput {
-  border: 1px solid #df0000;
+  border: 1px solid #F44336;
 }
 
 .notValidInput::placeholder {
-  color: #df0000;
+  color: #F44336;
   /* Цвет плейсхолдера */
   opacity: 1;
   /* Делает плейсхолдер полностью непрозрачным */

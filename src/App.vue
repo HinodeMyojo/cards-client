@@ -68,6 +68,7 @@ a {
   display: flex;
   flex-direction: column;
   width: 1140px;
+  min-height: 100vh;
   display: flex;
 
 }
@@ -77,15 +78,7 @@ a {
 }
 
 .main-content {
-  min-height: 100vh;
   margin-top: 25px;
 
-}
-
-.main-wrapper {
-  /* padding-left: 20%;
-  padding-right: 20%; */
-
-  min-height: 100vh;
 }
 </style>
