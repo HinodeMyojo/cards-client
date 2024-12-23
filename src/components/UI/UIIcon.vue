@@ -9,23 +9,23 @@ const props = defineProps({
     path: {
         type: String,
         required: true,
-        },
+    },
     width: {
         type: String,
         default: '40px',
-        },
+    },
     height: {
         type: String,
         default: '40px',
-        },
+    },
     fill: {
         type: String,
         default: '#D9D9D9',
-        }
+    }
 })
 
 const icon = defineAsyncComponent(() =>
-    import(`/src/assets/icons/${props.path}`)
+    import(`/public/assets/icons/${props.path}`)
 );
 </script>
 
@@ -38,6 +38,7 @@ const icon = defineAsyncComponent(() =>
 
 svg {
     background-color: transparent;
-    fill: #D9D9D9; /* Значение по умолчанию для SVG */
+    fill: #D9D9D9;
+    /* Значение по умолчанию для SVG */
 }
 </style>

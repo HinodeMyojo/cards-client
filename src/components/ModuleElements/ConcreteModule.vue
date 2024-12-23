@@ -27,11 +27,11 @@
       <Card :wordsArray="elements" />
     </div>
     <div v-else-if="moduleInfo.userId === userId" class="module-nope">
-      <img src="@/assets/images/magnifier.png" alt="" />
+      <img src="./assets/images/magnifier.png" alt="" />
       <h2>В этом модуле пока нет элементов. Добавьте их, чтобы начать обучение!</h2>
     </div>
     <div v-else class="module-nope">
-      <img src="@/assets/images/magnifier.png" alt="" />
+      <img src="./assets/images/magnifier.png" alt="" />
       <h2>В этом модуле пока нет элементов.</h2>
     </div>
     <div class="module-choice-button">
@@ -78,7 +78,6 @@ import { useRoute } from 'vue-router'
 // Иконки для отображения в UI
 import { mdiCards, mdiFountainPenTip, mdiSchool } from '@mdi/js'
 import SvgIcon from '@jamescoyle/vue-icon'
-import Button from '@/components/UI/Buttons/Button.vue'
 import Card from '@/components/ModuleElements/Card.vue'
 import Table from '@/components/UI/Table.vue'
 import ElementModal from '@/components/UI/Module/ElementModal.vue'

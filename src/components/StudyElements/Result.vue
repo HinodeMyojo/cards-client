@@ -4,10 +4,10 @@
             <div class="text">
                 <h3>{{ text }}</h3>
                 <div :class="{ secret: !isActiveSecret }" class="secret-gif">
-                    <img src="@/assets/gifs/secret.gif" alt="">
+                    <img src="/public/assets/gifs/secret.gif" alt="">
                 </div>
                 <div :class="{ secret100: !isActiveSecret100 }" class="secret-gif">
-                    <img src="@/assets/gifs/100.gif" alt="">
+                    <img src="/public/assets/gifs/100.gif" alt="">
                 </div>
             </div>
             <div class="diagram">
