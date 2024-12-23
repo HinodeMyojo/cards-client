@@ -1,0 +1,38 @@
+name: Pleiades-client
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Клонирование репозитория на удаленный сервак
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            rm -rf /var/www/pleiades-client/*
+            cd /var/www/pleiades-client
+            git clone https://github.com/HinodeMyojo/cards-client.git
+
+  deply: 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Деплой клиента
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/pleiades-client/cards-client
+            docker compose up -d  
