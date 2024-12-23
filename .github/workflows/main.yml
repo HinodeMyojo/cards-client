@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,7 +24,7 @@ jobs:
             cd /var/www/pleiades-client
             git clone https://github.com/HinodeMyojo/cards-client.git
 
-  deply: 
+  deploy: 
     runs-on: ubuntu-latest
 
     steps:
