@@ -1,32 +1,32 @@
 <template>
-        <div class="social-buttons">
-            <a type="button" class="social">
-            <UIIcon path="google.svg" />
-            <span>Войти с помощью Google</span>
-        </a>
-        <a type="button" class="social">
-            <UIIcon path="apple.svg"/>
-            <span>Войти с помощью Apple</span>
-        </a>
-        <a type="button" class="social">
-            <UIIcon path="telegram.svg"/>
-            <span>Войти с помощью Telegram</span>
-        </a>
-        </div>
+  <div class="social-buttons">
+    <a type="button" class="social">
+      <UIIcon :icon="google.svg" />
+      <span>Войти с помощью Google</span>
+    </a>
+    <a type="button" class="social">
+      <UIIcon :icon="apple.svg" />
+      <span>Войти с помощью Apple</span>
+    </a>
+    <a type="button" class="social">
+      <UIIcon :icon="telegram.svg" />
+      <span>Войти с помощью Telegram</span>
+    </a>
+  </div>
 </template>
 
 <script>
-import UIIcon from '@/components/UI/UIIcon.vue';
-export default {
+  import UIIcon from '@/components/UI/UIIcon.vue';
+  export default {
     name: 'SocialButtons',
     components: {
-        UIIcon
-    }
-};
+      UIIcon,
+    },
+  };
 </script>
 
 <style scoped>
-.social-buttons {
+  .social-buttons {
     background-color: transparent;
     display: flex;
     flex-direction: column;
@@ -34,9 +34,9 @@ export default {
     align-items: center;
     justify-content: center;
     width: 100%; /* Растягиваем кнопки на всю ширину */
-}
+  }
 
-.social {
+  .social {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,24 +47,23 @@ export default {
     font-size: 18px; /* Увеличиваем размер текста */
     text-align: center;
     /* background-color: #616161; */
-    background-color: #272A2F;
-    border: 1px solid #3B4047;
+    background-color: #272a2f;
+    border: 1px solid #3b4047;
     color: white;
     border-radius: 15px; /* Закругляем углы */
     /* border: none; */
     cursor: pointer;
     transition: background-color 0.3s ease; /* Анимация смены фона */
-}
+  }
 
-.social:hover {
+  .social:hover {
     /* background-color: #424242;  */
-    border: 1px solid #D459FF;
+    border: 1px solid #d459ff;
     transition: 0.5s ease;
-}
+  }
 
-span {
+  span {
     font-weight: 500;
     background-color: transparent;
-}
+  }
 </style>
-
