@@ -18,7 +18,6 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useBrowserDetect } from 'vue3-detect-browser';
 import SocialButtons from '@/components/Auth/SocialButtons.vue';
 
 // Управление состоянием формы
