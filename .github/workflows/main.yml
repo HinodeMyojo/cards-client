@@ -43,4 +43,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /var/www/pleiades-client/cards-client
-            docker compose up -d  
+            docker compose up -d --build
