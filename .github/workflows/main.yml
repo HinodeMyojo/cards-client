@@ -31,8 +31,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            rm -rf /var/www/pleiades-client/*
-            cd /var/www/pleiades-client
+            sudo rm -rf /var/www/pleiades-client/
+            cd /var/www/pleiades-client/
             git clone https://github.com/HinodeMyojo/cards-client.git
             
       - name: Деплой клиента
