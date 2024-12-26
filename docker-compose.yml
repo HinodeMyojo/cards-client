@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  app:
+  client:
     networks:
         - cards-network
     build:
@@ -10,3 +10,6 @@ services:
     container_name: pleiades_client
     ports:
       - "1512:80"
+networks:
+  cards-network:
+    external: true
