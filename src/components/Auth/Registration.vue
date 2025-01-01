@@ -71,17 +71,15 @@ const registerUser = async (data) => {
     const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
     const response = await axios.post(`${backendUrl}/auth/register`, data);
     if (response.status === 200) {
-      helperText.value = "Вы успешно зарегистрировались! Вас перенаправят на страницу входа через 2 секунды!";
+      helperText.value = "Вы успешно зарегистрировались! Вас перенаправят на страницу входа через 3 секунды!";
       helperColor.value = "green";
       helperVisible.value = true;
       setTimeout(() => {
         loginUser();
       }, 2000);
     }
-    // console.log(response.data.message);
   } catch (error) {
-    // alert(error.message)
-    if (error.response.status === 400) {
+    if (error.response && error.response.status === 400) {
       switch (error.response.data.message) {
         case "Пользователь с таким Email уже зарегистрирован!":
           errorMessage.value = error.response.data.message;
@@ -92,18 +90,16 @@ const registerUser = async (data) => {
           errorState.value = 2;
           break;
         default:
-          console.log(error.response.data.errors)
+          console.log(error.response.data.errors);
           helperText.value = error.response.data.errors.Password[0];
           helperColor.value = "red";
           helperVisible.value = true;
       }
-    }
-    else {
+    } else {
       helperText.value = "Неизвестная ошибка. Повторите позже.";
       helperColor.value = "red";
       helperVisible.value = true;
     }
-
   }
 };
 
@@ -115,8 +111,9 @@ const loginUser = () => {
 .login-helper {
   position: absolute;
   top: 20px;
+  right: 125px;
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .login-helper.visible {
