@@ -2,6 +2,7 @@
   <div class="login-container">
     <div class="login-left"></div>
     <div class="login-right">
+      <LoginHelper class="login-helper" :class="{ visible: helperVisible }" :text="helperText" />
       <div class="close-menu">
         <div class="close-menu-icon">
           <UIIcon style="cursor: pointer" :icon="closeIcon" width="20px" height="20px" @click="closeMenu" />
@@ -57,8 +58,9 @@ import PasswordRecoveryResetPassword from '@/components/Auth/PasswordRecoveryRes
 import UIIcon from '@/components/UI/UIIcon.vue';
 import router from '@/router/router.js';
 import { useAuthStore } from '@/stores/authStore';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { closeIcon } from '@/assets/icons';
+import LoginHelper from '@/components/UI/LoginHelper.vue';
 
 //Props:
 const props = defineProps({
@@ -81,6 +83,15 @@ const closeMenu = () => {
   router.push('/');
 };
 
+// Помогалка
+const helperVisible = ref(false);
+const helperText = ref('');
+
+watch(helperVisible, () => {
+  setTimeout(() => {
+    helperVisible.value = false;
+  }, 2000);
+});
 // Функция логина
 const loginUser = async (data) => {
   try {
@@ -88,21 +99,30 @@ const loginUser = async (data) => {
     const response = await axios.post(`${backendUrl}/auth/login`, data);
 
     if (response.status === 200) {
-      // Переделать. Нужно принимать access и refresh токены
-      console.log(response.data);
+      // Обработка успешного ответа: установка access и refresh токенов
       authStore.setTokens({
         access: response.data.accessToken,
         refresh: response.data.refreshToken,
       });
-      router.push('/');
-      console.log(token);
+      router.push('/'); // Перенаправление на главную страницу
     }
-
-    console.log(response.data);
   } catch (error) {
-    console.error(error);
+    if (error.response) {
+      // Если сервер вернул ошибку
+      if (error.response.status === 400) {
+        // Извлечение сообщения из ответа сервера
+        helperText.value = error.response.data.message || "Что-то пошло не так, попробуйте позже.";
+      } else {
+        helperText.value = "Что-то пошло не так, попробуйте позже.";
+      }
+    } else {
+      // Если ошибка произошла на стороне клиента (например, сеть недоступна)
+      helperText.value = "Не удалось подключиться к серверу. Проверьте соединение.";
+    }
+    helperVisible.value = true;
   }
 };
+
 
 const handleEmailSubmission = async (data) => {
   window.localStorage.setItem(
@@ -227,6 +247,18 @@ const handlePasswordReset = async (data) => {
   /* Небольшая тень для визуального отделения */
   flex-direction: column;
 }
+
+.login-helper {
+  position: absolute;
+  top: 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.login-helper.visible {
+  opacity: 1;
+}
+
 
 .close-menu {
   background-color: transparent;
