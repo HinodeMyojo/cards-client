@@ -4,8 +4,8 @@
     <div class="login-right">
       <LoginHelper class="login-helper" :class="{ visible: helperVisible }" :text="helperText" />
       <div class="close-menu">
-        <div class="close-menu-icon">
-          <UIIcon style="cursor: pointer" :icon="closeIcon" width="20px" height="20px" @click="closeMenu" />
+        <div class="close-menu-icon" @click="closeMenu">
+          <svg-icon type="mdi" :path="mdiClose" :size="30"></svg-icon>
         </div>
       </div>
       <div class="login-form-container" v-if="register">
@@ -55,13 +55,12 @@ import LoginForm from '@/components/Auth/Login.vue';
 import PasswordRecoverySendEmail from '@/components/Auth/PasswordRecoverySendEmail.vue';
 import PasswordRecoveryCheckCode from '@/components/Auth/PasswordRecoveryCheckCode.vue';
 import PasswordRecoveryResetPassword from '@/components/Auth/PasswordRecoveryResetPassword.vue';
-import UIIcon from '@/components/UI/UIIcon.vue';
 import router from '@/router/router.js';
 import { useAuthStore } from '@/stores/authStore';
 import { ref, watch } from 'vue';
-import { closeIcon } from '@/assets/icons';
 import LoginHelper from '@/components/UI/LoginHelper.vue';
-
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiClose } from '@mdi/js';
 //Props:
 const props = defineProps({
   register: Boolean,
