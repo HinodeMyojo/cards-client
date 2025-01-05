@@ -52,9 +52,9 @@
 import axios from 'axios';
 import RegistrationForm from '@/components/Auth/Registration.vue';
 import LoginForm from '@/components/Auth/Login.vue';
-import PasswordRecoverySendEmail from '@/components/Auth/PasswordRecoverySendEmail.vue';
-import PasswordRecoveryCheckCode from '@/components/Auth/PasswordRecoveryCheckCode.vue';
-import PasswordRecoveryResetPassword from '@/components/Auth/PasswordRecoveryResetPassword.vue';
+import PasswordRecoverySendEmail from '@/components/Auth/PasswordRecovery/SendEmail.vue';
+import PasswordRecoveryCheckCode from '@/components/Auth/PasswordRecovery/CheckCode.vue';
+import PasswordRecoveryResetPassword from '@/components/Auth/PasswordRecovery/ResetPassword.vue';
 import router from '@/router/router.js';
 import { useAuthStore } from '@/stores/authStore';
 import { ref, watch } from 'vue';

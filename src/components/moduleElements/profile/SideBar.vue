@@ -38,7 +38,7 @@ import { ref, onMounted } from 'vue';
 import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
 import api from '@/plugins/axios';
 import router from '@/router/router.js';
-import ModuleItem from '../UI/ModuleItem.vue';
+import ModuleItem from '@/components/UI/ModuleItem.vue';
 import { HttpStatusCode } from 'axios';
 
 const storedUserName = ref('Пользователь');

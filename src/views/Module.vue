@@ -17,10 +17,10 @@
 
 <script setup>
 import { ref } from 'vue'
-import ProfileSideBar from '@/components/ModuleElements/ProfileSideBar.vue'
-import ConcreteModule from '@/components/ModuleElements/ConcreteModule.vue'
-import CreateModule from '@/components/ModuleElements/CreateModule.vue'
-import Profile from '@/components/ModuleElements/Profile.vue'
+import ProfileSideBar from '@/components/moduleElements/profile/SideBar.vue'
+import ConcreteModule from '@/components/moduleElements/ConcreteModule.vue'
+import CreateModule from '@/components/moduleElements/CreateModule.vue'
+import Profile from '@/components/moduleElements/profile/Profile.vue'
 
 const props = defineProps({
   typeOfModuleState: {
