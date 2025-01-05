@@ -49,6 +49,9 @@ api.interceptors.response.use((response) =>
         else if (error.response.status === 400) {
             console.error(error);
         }
+        else if (error.response.status === 500) {
+            router.push('/500')
+        }        
         else{
             console.error(error);
             authStore.cleanData();

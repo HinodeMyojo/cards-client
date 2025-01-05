@@ -58,6 +58,13 @@ export const profileRoutes = [
   }
 ]
 
+export const errors = [
+  {
+    path: '/500',
+    component: () => import('@/components/error/500.vue')
+  }
+]
+
 const routes = [
   {
     path: '/',
@@ -68,6 +75,7 @@ const routes = [
 allRoutersToRoutes(authRoutes)
 allRoutersToRoutes(moduleRoutes)
 allRoutersToRoutes(profileRoutes)
+allRoutersToRoutes(errors)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL || '/'), // Используем VITE_BASE_URL
