@@ -12,12 +12,18 @@
           <div id="userName" class="userName">{{ storedUserName }}</div>
         </div>
       </div>
-      <hr />
-      <div class="search">
-        <SearchAutocomplete @input="LoadUserModules" />
+      <div v-if="isAuth" class="extra-buttons">
+        <BaseButton :label="`Редактировать`" :width="`100%`" :size="`medium`" :color="`#272A2F`" />
+      </div>
+      <div v-else class="extra-buttons">
+        <BaseButton :label="`Подписаться`" :width="`100%`" :size="`medium`" :color="`#272A2F`" />
       </div>
       <hr />
-      <div class="tree">
+      <div v-if="isAuth" class="search">
+        <SearchAutocomplete @input="LoadUserModules" />
+      </div>
+      <hr v-if="isAuth" />
+      <div class="tree" v-if="isAuth">
         <div v-if="items.length > 0" class="moduleItems">
           <ModuleItem v-for="item in items" :key="item.id" :title="item.title" :id="item.id"
             @click="moduleClick(item.id)">
@@ -34,12 +40,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
 import api from '@/plugins/axios';
 import router from '@/router/router.js';
 import ModuleItem from '@/components/UI/ModuleItem.vue';
 import { HttpStatusCode } from 'axios';
+import BaseButton from '@/components/UI/buttons/BaseButton.vue';
 
 const storedUserName = ref('Пользователь');
 const avatarSrc = ref('');
@@ -119,8 +126,10 @@ onMounted(() => {
     LoadUserModules();
   }
   else {
-    storedUserName.value = props.userName;
-    avatarSrc.value = props.userAvatar;
+    watchEffect(() => {
+      storedUserName.value = props.userName;
+      avatarSrc.value = props.userAvatar;
+    });
   }
 
 });
@@ -155,6 +164,12 @@ hr {
 
 .moduleItems p {
   background-color: #202127;
+}
+
+.extra-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
 }
 
 .container {
