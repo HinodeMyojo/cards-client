@@ -44,7 +44,7 @@ api.interceptors.response.use((response) =>
             }
         }
         else if (error.response.status === 404) {
-            console.error(error);
+            router.push('/404')
         }
         else if (error.response.status === 400) {
             console.error(error);

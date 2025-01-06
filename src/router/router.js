@@ -57,6 +57,10 @@ export const errors = [
   {
     path: '/500',
     component: () => import('@/components/error/500.vue')
+  },
+  {
+    path: '/404',
+    component: () => import('@/components/error/404.vue')
   }
 ]
 

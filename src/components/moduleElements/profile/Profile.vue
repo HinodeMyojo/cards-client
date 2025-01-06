@@ -40,6 +40,13 @@ const props = defineProps({
     isAuth: {
         type: Boolean,
         default: false
+    },
+    userId: {
+        type: Number
+    },
+    isEmailConfirmed: {
+        type: Boolean,
+        default: false
     }
 })
 

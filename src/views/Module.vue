@@ -10,7 +10,7 @@
       <CreateModule @refreshData="refreshData" />
     </div>
     <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
-      <Profile :isAuth="isUserProfile" />
+      <Profile :isAuth="isUserProfile" :userId="userId" :isEmailConfirmed="isEmailConfirmed" />
     </div>
   </div>
 </template>
@@ -22,6 +22,7 @@ import ConcreteModule from '@/components/moduleElements/ConcreteModule.vue'
 import CreateModule from '@/components/moduleElements/CreateModule.vue'
 import Profile from '@/components/moduleElements/profile/Profile.vue'
 import { useRoute } from 'vue-router';
+import { getUserByUserName } from '@/services/profileService.js'
 
 const props = defineProps({
   typeOfModuleState: {
@@ -40,12 +41,17 @@ const refreshData = () => {
 const isUserProfile = ref(false);
 const route = useRoute();
 const userNameFromUrlRoute = route.params.username;
+const userId = ref(0);
+const isEmailConfirmed = ref(false);
 
-const checkUserProfileLoginOrExist = (usernameFromRequest) => {
+// Проверка что это вообще за пользак
+const checkUserProfileLoginOrExist = async (usernameFromRequest) => {
   if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
-    const usernameFromLocalStorage = localStorage.getItem('userName');
-    isUserProfile.value = (usernameFromLocalStorage === usernameFromRequest);
+    const response = await getUserByUserName(usernameFromRequest);
 
+    isUserProfile.value = response.isUserProfile;
+    userId.value = response.id;
+    isEmailConfirmed.value = response.isEmailConfirmed;
   }
 }
 
