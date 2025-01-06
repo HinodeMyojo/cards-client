@@ -3,8 +3,8 @@
         <div class="statistic-main">
             <ProgressContainer />
         </div>
-        <div v-if="isAuth">Билибоба</div>
-        <div v-else>Чумба-юмба</div>
+        <!-- <div v-if="isAuth">Билибоба</div>
+        <div v-else>Чумба-юмба</div> -->
         <!-- <div class="search-main">
             <h3>Быстрый поиск</h3>
             <SearchAutocomplete />

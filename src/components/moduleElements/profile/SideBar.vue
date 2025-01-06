@@ -97,9 +97,32 @@ const LoadUserModules = async (searchText) => {
   }
 }
 
+// Upd 01.06.2025
+const props = defineProps({
+  isAuth: {
+    type: Boolean,
+    default: false
+  },
+  userName: {
+    type: String
+  },
+  userAvatar: {
+    type: String
+  }
+})
+
+
 onMounted(() => {
-  LoadUserData();
-  LoadUserModules();
+  console.log(props.isAuth);
+  if (props.isAuth) {
+    LoadUserData();
+    LoadUserModules();
+  }
+  else {
+    storedUserName.value = props.userName;
+    avatarSrc.value = props.userAvatar;
+  }
+
 });
 </script>
 

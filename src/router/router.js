@@ -46,7 +46,7 @@ export const moduleRoutes = [
 
 export const profileRoutes = [
   {
-    path: '/user/:username',
+    path: '/:username',
     component: Module,
     props: { typeOfModuleState: 'profile'}, 
   }
