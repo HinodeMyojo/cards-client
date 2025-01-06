@@ -29,11 +29,6 @@ export const moduleRoutes = [
     component: Module,
     props: { typeOfModuleState: "createModule" }
   },
-  // {
-  //   path: '/profile/:id',
-  //   component: Module,
-  //   props: {typeOfModuleState: 'profile'}
-  // },
   {
     path: '/module/study',
     component: Module
@@ -41,7 +36,7 @@ export const moduleRoutes = [
   {
     path: '/module/:id',
     component: Module,
-    props: { typeOfModuleState: "concreteModule" }
+    props: { typeOfModuleState: "concreteModule", }
   },
   {
     path: '/module/:id/study',
@@ -49,12 +44,23 @@ export const moduleRoutes = [
   }
 ]
 
-
 export const profileRoutes = [
   {
     path: '/:username',
     component: Module,
-    props: {typeOfModuleState: 'profile'}
+    props: { typeOfModuleState: 'profile'}, 
+  }
+];
+
+
+export const errors = [
+  {
+    path: '/500',
+    component: () => import('@/components/error/500.vue')
+  },
+  {
+    path: '/404',
+    component: () => import('@/components/error/404.vue')
   }
 ]
 
@@ -68,6 +74,7 @@ const routes = [
 allRoutersToRoutes(authRoutes)
 allRoutersToRoutes(moduleRoutes)
 allRoutersToRoutes(profileRoutes)
+allRoutersToRoutes(errors)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL || '/'), // Используем VITE_BASE_URL
@@ -79,6 +86,5 @@ function allRoutersToRoutes(routers) {
     routes.push(router)
   })
 }
-// Создаем правила рефреша для ВСЕГО!
 
 export default router

@@ -47,7 +47,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { getYearStatistic, getAvailableYears } from '@/services/statisticService';
-import ProgressBlock from './ProgressBlock.vue';
+import ProgressBlock from '@/components/UI/progress/ProgressBlock.vue';
 
 // Статистика
 const countOfSubmissions = ref(123);

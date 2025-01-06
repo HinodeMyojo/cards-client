@@ -1,5 +1,4 @@
 export { default as appleIcon } from './apple.svg'
-export { default as closeIcon } from './close.svg'
 export { default as downArrowheadIcon } from './downArrowhead.svg'
 export { default as googleIcon } from './google.svg'
 export { default as languageIcon } from './language.svg'

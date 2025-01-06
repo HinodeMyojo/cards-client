@@ -1,5 +1,6 @@
 <template>
   <h3>Регистрация</h3>
+  <LoginHelper class="login-helper" :class="{ visible: helperVisible }" :text="helperText" :color="helperColor" />
   <form class="login-form" @submit.prevent="registerUser(data)">
     <div v-if="errorState != 1" class="email-true-label">
       <label for="Email">Email</label>
@@ -34,7 +35,8 @@
 import SocialButtons from '@/components/Auth/SocialButtons.vue';
 import router from '@/router/router';
 import axios from 'axios';
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
+import LoginHelper from '../UI/LoginHelper.vue';
 
 const data = reactive({
   email: '',
@@ -45,6 +47,17 @@ const data = reactive({
 const errorState = ref(0)
 const errorMessage = ref('')
 const successMessage = ref('')
+
+// Помогалка
+const helperText = ref('')
+const helperColor = ref('')
+const helperVisible = ref(false)
+
+watch(helperVisible, () => {
+  setTimeout(() => {
+    helperVisible.value = false;
+  }, 2000);
+});
 
 // const emit = defineEmits(['submit-registration']);
 
@@ -58,25 +71,35 @@ const registerUser = async (data) => {
     const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
     const response = await axios.post(`${backendUrl}/auth/register`, data);
     if (response.status === 200) {
-      successMessage.value = "Вы успешно зарегистрировались!"
-      router.push("/login")
+      helperText.value = "Вы успешно зарегистрировались! Вас перенаправят на страницу входа через 3 секунды!";
+      helperColor.value = "green";
+      helperVisible.value = true;
+      setTimeout(() => {
+        loginUser();
+      }, 2000);
     }
-    // console.log(response.data.message);
   } catch (error) {
-    // alert(error.message)
-    switch (error.response.data.message) {
-      case "Пользователь с таким Email уже зарегистрирован!":
-        errorMessage.value = error.response.data.message;
-        errorState.value = 1;
-        break;
-      case "Пользователь с таким Username уже зарегистрирован!":
-        errorMessage.value = error.response.data.message;
-        errorState.value = 2;
-        break;
-      default:
-        console.log("error")
+    if (error.response && error.response.status === 400) {
+      switch (error.response.data.message) {
+        case "Пользователь с таким Email уже зарегистрирован!":
+          errorMessage.value = error.response.data.message;
+          errorState.value = 1;
+          break;
+        case "Пользователь с таким Username уже зарегистрирован!":
+          errorMessage.value = error.response.data.message;
+          errorState.value = 2;
+          break;
+        default:
+          console.log(error.response.data.errors);
+          helperText.value = error.response.data.errors.Password[0];
+          helperColor.value = "red";
+          helperVisible.value = true;
+      }
+    } else {
+      helperText.value = "Неизвестная ошибка. Повторите позже.";
+      helperColor.value = "red";
+      helperVisible.value = true;
     }
-
   }
 };
 
@@ -84,3 +107,16 @@ const loginUser = () => {
   router.push('/login');
 }
 </script>
+<style scoped>
+.login-helper {
+  position: absolute;
+  top: 20px;
+  right: 125px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.login-helper.visible {
+  opacity: 1;
+}
+</style>

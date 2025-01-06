@@ -99,8 +99,10 @@ const isUserLogin = computed(() => authStore.isUserLogin);
 const path = ref(mdiPlusCircleOutline);
 
 onMounted(() => {
-  LoadAvatar();
-  LoadUserName();
+  if (isUserLogin.value) {
+    LoadAvatar();
+    LoadUserName();
+  }
 });
 
 const logout = async () => {
