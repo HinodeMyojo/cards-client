@@ -39,29 +39,23 @@ const refreshData = () => {
 // Проверка логина юзера
 const isUserProfile = ref(false);
 const route = useRoute();
+const userNameFromUrlRoute = route.params.username;
 
-const checkUserProfileLogin = (usernameFromRequest) => {
-  const usernameFromLocalStorage = localStorage.getItem('userName');
-  if (
-    usernameFromLocalStorage === usernameFromRequest) {
-    isUserProfile.value = true;
+const checkUserProfileLoginOrExist = (usernameFromRequest) => {
+  if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
+    const usernameFromLocalStorage = localStorage.getItem('userName');
+    isUserProfile.value = (usernameFromLocalStorage === usernameFromRequest);
+
   }
-  else {
-    isUserProfile.value = false;
-  }
-  console.log(isUserProfile.value);
 }
 
 onMounted(() => {
-  const userNameFromUrlRoute = route.params.username;
-  if (props.typeOfModuleState === 'profile' && userNameFromUrlRoute != '') {
-    checkUserProfileLogin(userNameFromUrlRoute);
-  }
+  checkUserProfileLoginOrExist(userNameFromUrlRoute);
 })
 
 // Отслеживаем изменение роута (чтобы при изменении ника - обновлялась страница)
 watch(() => route.params.username, (newUsername) => {
-  checkUserProfileLogin(newUsername);
+  checkUserProfileLoginOrExist(newUsername);
 });
 
 </script>

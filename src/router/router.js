@@ -44,7 +44,6 @@ export const moduleRoutes = [
   }
 ]
 
-
 export const profileRoutes = [
   {
     path: '/user/:username',
