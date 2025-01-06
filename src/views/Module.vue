@@ -10,17 +10,18 @@
       <CreateModule @refreshData="refreshData" />
     </div>
     <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
-      <Profile />
+      <Profile :isAuth="isUserProfile" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import ProfileSideBar from '@/components/moduleElements/profile/SideBar.vue'
 import ConcreteModule from '@/components/moduleElements/ConcreteModule.vue'
 import CreateModule from '@/components/moduleElements/CreateModule.vue'
 import Profile from '@/components/moduleElements/profile/Profile.vue'
+import { useRoute } from 'vue-router';
 
 const props = defineProps({
   typeOfModuleState: {
@@ -35,7 +36,34 @@ const refreshData = () => {
   refreshStatus.value = true;
 };
 
-// Иконки
+// Проверка логина юзера
+const isUserProfile = ref(false);
+const route = useRoute();
+
+const checkUserProfileLogin = (usernameFromRequest) => {
+  const usernameFromLocalStorage = localStorage.getItem('userName');
+  if (
+    usernameFromLocalStorage === usernameFromRequest) {
+    isUserProfile.value = true;
+  }
+  else {
+    isUserProfile.value = false;
+  }
+  console.log(isUserProfile.value);
+}
+
+onMounted(() => {
+  const userNameFromUrlRoute = route.params.username;
+  if (props.typeOfModuleState === 'profile' && userNameFromUrlRoute != '') {
+    checkUserProfileLogin(userNameFromUrlRoute);
+  }
+})
+
+// Отслеживаем изменение роута (чтобы при изменении ника - обновлялась страница)
+watch(() => route.params.username, (newUsername) => {
+  checkUserProfileLogin(newUsername);
+});
+
 </script>
 
 <style scoped>

@@ -3,6 +3,8 @@
         <div class="statistic-main">
             <ProgressContainer />
         </div>
+        <div v-if="isAuth">Билибоба</div>
+        <div v-else>Чумба-юмба</div>
         <!-- <div class="search-main">
             <h3>Быстрый поиск</h3>
             <SearchAutocomplete />
@@ -26,13 +28,20 @@
 </template>
 
 <script setup>
-import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
-import ProgressContainer from '@/components/UI/Progress/ProgressContainer.vue';
+import ProgressContainer from '@/components/UI/progress/ProgressContainer.vue';
 import { onMounted, ref } from 'vue';
 import { getLastActivity } from '@/services/statisticService';
 import router from '@/router/router.js';
 
 const lastActivityModules = ref([]);
+
+// Определяем пропсы для определения принадлежности профиля - зарегестрированному пользователю
+const props = defineProps({
+    isAuth: {
+        type: Boolean,
+        default: false
+    }
+})
 
 onMounted(() => {
     getLastActivity().then((res) => {

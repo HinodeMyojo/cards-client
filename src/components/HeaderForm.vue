@@ -175,7 +175,8 @@ const LoadUserName = () => {
 const handleClick = (item) => {
   switch (item.action) {
     case storedUserName.value:
-      router.push(`/${storedUserName.value}`);
+      console.log("Билибоба ", storedUserName.value);
+      router.push(`/user/${storedUserName.value}`);
       break;
     case 'createModule':
       router.push('/module/create');

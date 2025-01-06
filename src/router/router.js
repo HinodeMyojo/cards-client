@@ -29,11 +29,6 @@ export const moduleRoutes = [
     component: Module,
     props: { typeOfModuleState: "createModule" }
   },
-  // {
-  //   path: '/profile/:id',
-  //   component: Module,
-  //   props: {typeOfModuleState: 'profile'}
-  // },
   {
     path: '/module/study',
     component: Module
@@ -41,7 +36,7 @@ export const moduleRoutes = [
   {
     path: '/module/:id',
     component: Module,
-    props: { typeOfModuleState: "concreteModule" }
+    props: { typeOfModuleState: "concreteModule", }
   },
   {
     path: '/module/:id/study',
@@ -52,11 +47,12 @@ export const moduleRoutes = [
 
 export const profileRoutes = [
   {
-    path: '/:username',
+    path: '/user/:username',
     component: Module,
-    props: {typeOfModuleState: 'profile'}
+    props: { typeOfModuleState: 'profile'}, 
   }
-]
+];
+
 
 export const errors = [
   {
@@ -87,6 +83,5 @@ function allRoutersToRoutes(routers) {
     routes.push(router)
   })
 }
-// Создаем правила рефреша для ВСЕГО!
 
 export default router
