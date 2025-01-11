@@ -73,6 +73,9 @@ const checkUserProfileAccess = async (usernameFromRequest) => {
     isEmailConfirmed.value = response.isEmailConfirmed;
     userAvatar.value = `data:image/png;base64,${response.avatar}`;
   }
+  if (props.typeOfModuleState == 'createModule' || props.typeOfModuleState == 'concreteModule') {
+    isUserProfile.value = true;
+  }
 }
 
 onMounted(() => {
