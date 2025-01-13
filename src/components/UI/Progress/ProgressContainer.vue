@@ -60,11 +60,18 @@ const availableYears = ref([]);
 const selectedYear = ref(new Date().getFullYear());
 const isLoading = ref(true);
 
+// Загрузка данных по пользователям
+const props = defineProps({
+    userId: {
+        type: Number
+    }
+})
+
 // Загрузка данных
-const loadYearStatistic = async (year) => {
+const loadYearStatistic = async (year, userId) => {
     try {
         isLoading.value = true;
-        const response = await getYearStatistic(year);
+        const response = await getYearStatistic(userId, year);
         progressData.value = response.data;
         isLoading.value = false;
     } catch (error) {
@@ -93,7 +100,7 @@ const updateYear = (year) => {
 // Инициализация при монтировании
 onMounted(async () => {
     await loadAvailableYears();
-    await loadYearStatistic(selectedYear.value);
+    await loadYearStatistic(selectedYear.value, props.userId);
 });
 </script>
 
