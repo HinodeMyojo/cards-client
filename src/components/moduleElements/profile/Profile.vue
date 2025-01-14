@@ -1,28 +1,29 @@
 <template>
     <div class="profile-container">
-        <div class="statistic-main">
-            <ProgressContainer />
-        </div>
-        <!-- <div v-if="isAuth">Билибоба</div>
-        <div v-else>Чумба-юмба</div> -->
-        <!-- <div class="search-main">
-            <h3>Быстрый поиск</h3>
-            <SearchAutocomplete />
-            <button>Расширенный поиск</button>
-        </div> -->
-        <div class="last-activity-main">
-            <div class="last-activity">
-                <h3>Последние действия</h3>
-                <div class="last-activity-items">
-                    <div v-for="module in lastActivityModules.activityList" :key="module" @click="goToModule(module.id)"
-                        class="last-activity-modules">
-                        <div class="last-activity-module">{{ module.name }}</div>
+        <div v-if="canViewProfile" class="profile-inner">
+            <div class="statistic-main">
+                <ProgressContainer :user-id="userId" />
+            </div>
+            <div class="last-activity-main">
+                <div class="last-activity">
+                    <h3>Последние действия</h3>
+                    <div class="last-activity-items">
+                        <div v-for="module in lastActivityModules.activityList" :key="module"
+                            @click="goToModule(module.id)" class="last-activity-modules">
+                            <div class="last-activity-module">{{ module.name }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="trend-main">
+                Пока тут ничего нет. Но это пока!
+            </div>
         </div>
-        <div class="trend-main">
-            Пока тут ничего нет. Но это пока!
+        <div v-else class="profile-inner">
+            <div class="lock-profile">
+                <svg-icon type="mdi" :size="100" :path="path"></svg-icon>
+                <h3>Пользователь закрыл профиль для общего доступа</h3>
+            </div>
         </div>
     </div>
 </template>
@@ -32,12 +33,20 @@ import ProgressContainer from '@/components/UI/progress/ProgressContainer.vue';
 import { onMounted, ref } from 'vue';
 import { getLastActivity } from '@/services/statisticService';
 import router from '@/router/router.js';
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiLockOffOutline } from '@mdi/js';
 
 const lastActivityModules = ref([]);
 
+const path = ref(mdiLockOffOutline);
+
 // Определяем пропсы для определения принадлежности профиля - зарегестрированному пользователю
 const props = defineProps({
-    isAuth: {
+    isUserProfile: {
+        type: Boolean,
+        default: false
+    },
+    canViewProfile: {
         type: Boolean,
         default: false
     },
@@ -63,7 +72,8 @@ const goToModule = (moduleId) => {
 </script>
 
 <style scoped>
-.profile-container {
+.profile-container,
+.profile-inner {
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -77,8 +87,25 @@ const goToModule = (moduleId) => {
 .search-main,
 .statistic-main,
 .last-activity-main,
-.trend-main {
+.trend-main,
+.lock-profile {
     border-radius: 15px;
+}
+
+.lock-profile {
+    width: 100%;
+    height: 400px;
+    background-color: #202127;
+    display: flex;
+    padding: 15px;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.lock-profile h3 {
+    font-weight: 700;
 }
 
 .search-main {

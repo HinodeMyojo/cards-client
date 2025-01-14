@@ -10,3 +10,15 @@ export async function getUserByUserName(username) {
         // axios ловит ошбику
     }
 }
+
+
+export async function getProfileAccess(username) {
+    try {
+        // Делаем асинхронный запрос
+        const response = await api.get(`profile/access?userName=${username}`);
+        return response.data;
+    } catch (error) {
+        // axios ловит ошбику
+    }
+}
+

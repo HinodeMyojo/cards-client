@@ -100,8 +100,7 @@ const path = ref(mdiPlusCircleOutline);
 
 onMounted(() => {
   if (isUserLogin.value) {
-    LoadAvatar();
-    LoadUserName();
+    LoadUser();
   }
 });
 
@@ -111,27 +110,44 @@ const logout = async () => {
   router.push('/');
 };
 
-const LoadAvatar = () => {
-  const storedAvatar = localStorage.getItem('userAvatar');
-  if (storedAvatar) {
-    SetAvatarToPage(storedAvatar);
-  } else {
-    GetAvatar();
+const LoadUser = async () => {
+  try {
+    const storedAvatar = localStorage.getItem('userAvatar');
+    const storedUserName = localStorage.getItem('userName');
+
+    if (storedAvatar && storedUserName) {
+      SetAvatarToPage(storedAvatar);
+      SetUserNameToPage(storedUserName);
+    } else {
+      const response = await api.get(`/user/whoami`);
+      if (response?.data) {
+        await ProcessUserData(response.data);
+      } else {
+        console.error('Invalid response from server');
+      }
+    }
+  } catch (error) {
+    console.error('Error loading user:', error);
   }
 };
 
-const GetAvatar = async () => {
+const ProcessUserData = async (data) => {
   try {
-    const response = await api.get(`/user/whoami`);
-    const base64Avatar = `data:image/png;base64,${response.data.avatar}`;
-    SetAvatarToPage(base64Avatar);
+    const base64Avatar = `data:image/png;base64,${data.avatar}`;
     localStorage.setItem('userAvatar', base64Avatar);
-    localStorage.setItem('userName', response.data.userName);
-    localStorage.setItem('userId', response.data.id);
+    localStorage.setItem('userName', data.userName);
+    localStorage.setItem('userId', data.id);
+
+    SetAvatarToPage(base64Avatar);
+    SetUserNameToPage(data.userName);
   } catch (error) {
-    console.error(error);
+    console.error('Error processing user data:', error);
   }
 };
+
+const SetUserNameToPage = (userName) => {
+  storedUserName.value = userName;
+}
 
 const SetAvatarToPage = (base64Avatar, width = 40, height = 40) => {
   const avatarImage = document.createElement('img');
@@ -167,10 +183,7 @@ const addButtonItems = [
   { title: 'Создать папку', action: 'createFolder' },
 ];
 
-const LoadUserName = () => {
-  const userName = localStorage.getItem('userName');
-  storedUserName.value = userName || 'Пользователь';
-};
+
 
 const handleClick = (item) => {
   switch (item.action) {

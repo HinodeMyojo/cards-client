@@ -13,7 +13,8 @@
       <CreateModule @refreshData="refreshData" />
     </div>
     <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
-      <Profile :isAuth="isUserProfile" :userId="userId" :isEmailConfirmed="isEmailConfirmed" />
+      <Profile :is-user-profile="isUserProfile" :can-view-profile="canViewProfile" :userId="userId"
+        :isEmailConfirmed="isEmailConfirmed" />
     </div>
   </div>
 </template>
@@ -25,7 +26,7 @@ import ConcreteModule from '@/components/moduleElements/ConcreteModule.vue'
 import CreateModule from '@/components/moduleElements/CreateModule.vue'
 import Profile from '@/components/moduleElements/profile/Profile.vue'
 import { useRoute } from 'vue-router';
-import { getUserByUserName } from '@/services/profileService.js'
+import { getProfileAccess } from '@/services/profileService.js'
 
 const props = defineProps({
   typeOfModuleState: {
@@ -40,8 +41,14 @@ const refreshData = () => {
   refreshStatus.value = true;
 };
 
-// Проверка логина юзера
+// Флаги доступа
 const isUserProfile = ref(null);
+const canBlockUser = ref(null);
+const canViewProfile = ref(null);
+const canDeleteUser = ref(null);
+const canEditUser = ref(null);
+
+
 const route = useRoute();
 const userNameFromUrlRoute = route.params.username;
 const userId = ref(0);
@@ -49,26 +56,35 @@ const isEmailConfirmed = ref(false);
 const userAvatar = ref('');
 
 // Проверка что это вообще за пользак
-const checkUserProfileLoginOrExist = async (usernameFromRequest) => {
+const checkUserProfileAccess = async (usernameFromRequest) => {
   if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
-    const response = await getUserByUserName(usernameFromRequest);
+    const response = await getProfileAccess(usernameFromRequest);
 
     console.log(response);
 
+    // Выставляем флаги
     isUserProfile.value = response.isUserProfile;
+    canBlockUser.value = response.canBlockUser;
+    canViewProfile.value = response.canViewProfile;
+    canDeleteUser.value = response.canDeleteUser;
+    canEditUser.value = response.canEditUser;
+
     userId.value = response.id;
     isEmailConfirmed.value = response.isEmailConfirmed;
     userAvatar.value = `data:image/png;base64,${response.avatar}`;
   }
+  if (props.typeOfModuleState == 'createModule' || props.typeOfModuleState == 'concreteModule') {
+    isUserProfile.value = true;
+  }
 }
 
 onMounted(() => {
-  checkUserProfileLoginOrExist(userNameFromUrlRoute);
+  checkUserProfileAccess(userNameFromUrlRoute);
 })
 
 // Отслеживаем изменение роута (чтобы при изменении ника - обновлялась страница)
 watch(() => route.params.username, (newUsername) => {
-  checkUserProfileLoginOrExist(newUsername);
+  checkUserProfileAccess(newUsername);
 });
 </script>
 
