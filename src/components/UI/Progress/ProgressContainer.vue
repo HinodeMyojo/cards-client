@@ -3,17 +3,17 @@
         <div class="container">
             <div class="info">
                 <div class="text">
-                    <h3>{{ countOfSubmissions }}</h3>
+                    <h3>{{ numberOfActions }}</h3>
                     <p>действий в текущем году</p>
                 </div>
                 <div class="text-data">
                     <div class="small-text">
                         <p>Активных дней:</p>
-                        <p class="digit">{{ totalActiveDays }}</p>
+                        <p class="digit">{{ activeDays }}</p>
                     </div>
                     <div class="small-text">
                         <p>Максимальная серия:</p>
-                        <p class="digit">{{ maxStreak }}</p>
+                        <p class="digit">{{ maximumSeries }}</p>
                     </div>
                     <div class="year-selector">
                         <v-menu open-on-hover>
@@ -50,9 +50,9 @@ import { getYearStatistic, getAvailableYears } from '@/services/statisticService
 import ProgressBlock from '@/components/UI/progress/ProgressBlock.vue';
 
 // Статистика
-const countOfSubmissions = ref(123);
-const totalActiveDays = ref(104);
-const maxStreak = ref(16);
+const numberOfActions = ref(0);
+const activeDays = ref(0);
+const maximumSeries = ref(0);
 
 // Прогресс и доступные года
 const progressData = ref([]);
@@ -73,6 +73,9 @@ const loadYearStatistic = async (year, userId) => {
         isLoading.value = true;
         const response = await getYearStatistic(userId, year);
         progressData.value = response.data;
+        numberOfActions.value = response.data.numberOfActions;
+        activeDays.value = response.data.activeDays;
+        maximumSeries.value = response.data.maximumSeries;
         isLoading.value = false;
     } catch (error) {
         console.error('Ошибка загрузки статистики:', error);
