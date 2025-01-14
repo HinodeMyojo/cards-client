@@ -2,7 +2,7 @@
     <div class="profile-container">
         <div v-if="canViewProfile" class="profile-inner">
             <div class="statistic-main">
-                <ProgressContainer />
+                <ProgressContainer :user-id="userId" />
             </div>
             <div class="last-activity-main">
                 <div class="last-activity">

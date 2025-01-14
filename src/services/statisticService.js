@@ -1,8 +1,8 @@
 import api from "@/plugins/axios";
 
-export function getYearStatistic(year) {
+export function getYearStatistic(userId, year) {
     try{
-        return api.get(`statistic/year?year=${year}`)
+        return api.get(`statistic/year?userId=${userId}&year=${year}`)
     } catch (error) {
         console.error(error)   
     }
