@@ -38,6 +38,8 @@ const initScore = ref(0);
 const score = async (value) => {
     initScore.value = initScore.value + value;
 
+
+
     if (initScore.value == 1) {
         dislikeColor.value = '#2B2C34';
         likeColor.value = '#04de008c';
@@ -45,6 +47,14 @@ const score = async (value) => {
     else if (initScore.value == -1) {
         likeColor.value = '#2B2C34';
         dislikeColor.value = '#FF4B4B';
+    }
+    else if (initScore.value == 0 && value == -1) {
+        likeColor.value = '#2B2C34';
+        dislikeColor.value = '#FF4B4B';
+    }
+    else if (initScore.value == 0 && value == 1) {
+        dislikeColor.value = '#2B2C34';
+        likeColor.value = '#04de008c';
     }
     else {
         likeColor.value = '#2B2C34';
@@ -84,9 +94,17 @@ const score = async (value) => {
     transform: scale(1.1);
 }
 
+.like:hover~.dislike {
+    transform: scale(1);
+}
+
 .dislike:hover {
     background-color: #FF4B4B;
     transform: scale(1.1);
+}
+
+.dislike:hover~.like {
+    transform: scale(1);
 }
 
 .like::after {
