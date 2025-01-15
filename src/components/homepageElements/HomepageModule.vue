@@ -90,6 +90,7 @@ onMounted(() => {
   background-color: #202127;
   border-radius: 30px;
   border: 1px #32333D solid;
+  transition: border 0.4s ease-in-out;
   padding-top: 25px;
   padding-bottom: 25px;
   padding-left: 15px;
@@ -99,6 +100,11 @@ onMounted(() => {
   gap: 15px;
   font-weight: 600;
   color: #6d6f83;
+}
+
+.main:hover {
+  border: 1px #D459FF solid;
+  transition: 0.4s ease-in-out;
 }
 
 .user-container {
@@ -132,6 +138,7 @@ onMounted(() => {
   display: flex;
   padding: 10px;
   background-color: #191A1F;
+  transition: 0.3s ease;
   border-radius: 15px;
   align-items: center;
   justify-content: center;
@@ -147,6 +154,7 @@ onMounted(() => {
 .tag {
   width: 70px;
   border: 1px solid #57596A;
+  transition: 0.3s ease;
   color: #57596A;
   border-radius: 10px;
   overflow: hidden;
@@ -164,6 +172,7 @@ onMounted(() => {
 .username {
   color: #57596A;
   font-size: 18px;
+  transition: 0.3s ease;
 }
 
 .username:hover {
@@ -180,6 +189,7 @@ onMounted(() => {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  transition: 0.3s ease;
   cursor: pointer;
 }
 </style>
