@@ -189,7 +189,7 @@ onMounted(() => {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  transition: 0.3s ease;
+  transition: 0.2s ease;
   cursor: pointer;
 }
 </style>
