@@ -4,16 +4,12 @@
         <div v-if="!props.isLoaded" class="loading">
             <v-progress-circular indeterminate></v-progress-circular>
         </div>
-
-        <!-- Показать график, если есть хотя бы одно значение в series, отличное от 0 -->
-        <apexchart v-else-if="props.series.some(item => item !== 0)" :width="'100%'" :height="'100%'" type="donut"
-            :options="options" :series="props.series" :labels="labels" :colors="colors">
-        </apexchart>
-
-        <!-- Показать текст (TODO переделать на гиф etc), если все значения в series равны 0 -->
-        <div v-else>
+        <div v-else-if="!props.series.some(item => item !== 0)">
             <p>Нет данных</p>
         </div>
+        <apexchart v-else :width="'100%'" :height="'100%'" type="donut" :options="options" :series="props.series"
+            :labels="labels" :colors="colors">
+        </apexchart>
     </div>
 </template>
 
@@ -39,6 +35,7 @@ const props = defineProps({
     }
 })
 
+console.log(props.series)
 
 // Chart options and series data
 const options = ref({
@@ -54,11 +51,6 @@ const options = ref({
     redrawOnParentResize: false,
     labels: ['Более 80%', 'Более 30%', 'Более 0%', 'Есть к чему стремиться!'],
     colors: ['#00EC93', '#FF9700', '#EDC60D', '#f1f1f1'],
-    dataLabels: {
-        style: {
-            colors: ['#2b2b2b', '#2b2b2b', '#2b2b2b', '#2b2b2b']
-        }
-    },
     legend: {
         show: false,
         position: 'right',
@@ -85,10 +77,7 @@ const options = ref({
         offsetX: 0,
         offsetY: 0,
         style: {
-            fontSize: '14px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 'bold',
-            colors: undefined
+            colors: ['#00EC93', '#FF9700', '#EDC60D', '#f1f1f1']
         },
         background: {
             enabled: true,

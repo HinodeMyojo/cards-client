@@ -42,7 +42,7 @@ const score = async (value) => {
 
     if (initScore.value == 1) {
         dislikeColor.value = '#2B2C34';
-        likeColor.value = '#04de008c';
+        likeColor.value = '#04DE00';
     }
     else if (initScore.value == -1) {
         likeColor.value = '#2B2C34';
@@ -54,7 +54,7 @@ const score = async (value) => {
     }
     else if (initScore.value == 0 && value == 1) {
         dislikeColor.value = '#2B2C34';
-        likeColor.value = '#04de008c';
+        likeColor.value = '#04DE00';
     }
     else {
         likeColor.value = '#2B2C34';

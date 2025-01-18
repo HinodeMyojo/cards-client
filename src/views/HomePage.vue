@@ -2,7 +2,7 @@
     <div class="main-homepage">
         <div v-if="isAuth" class="main-block">
             <div class="radius">
-                <h3 class="gradient-border-mask-1">Ваша статистика</h3>
+                <h3 class="gradient-border-mask-1">Ваша статистика ✨</h3>
             </div>
             <div class="homepage-statistic">
                 <div class="left-statistic-block">
@@ -37,25 +37,26 @@
         </div>
         <div class="main-block">
             <div class="radius">
-                <h3 class="gradient-border-mask-1">Модули других пользователей</h3>
+                <h3 class="gradient-border-mask-1">Модули других пользователей 💫</h3>
             </div>
             <div class="homepage-modules">
                 <div class="drop-down">
                     <DropDown :data="listOfvalueForDrowDown" />
                 </div>
+                <div class="modules">
+                    <div v-for="item in listOfModules" :key="item">
+                        <HomepageModule :dislikeCount="item.dislikeCount" :likeCount="item.likeCount" :body="item.body"
+                            :tags="item.tags" :userId="item.userId" :userName="item.userName" :moduleId="item.idModule"
+                            :title="item.title" />
+                    </div>
+                </div>
+            </div>
+            <div class="main-block">
+                <div class="radius">
+                    <h3 class="gradient-border-mask-1">Новости 🛸</h3>
+                </div>
             </div>
         </div>
-        <div class="main-block">
-            <div class="radius">
-                <h3 class="gradient-border-mask-1">Новости</h3>
-            </div>
-        </div>
-
-        <!-- <HomepageModule /> -->
-        <!-- <HomepageNews /> -->
-        <!-- <HomepageChart /> -->
-        <!-- <DropDown /> -->
-        <!-- <HomePage /> -->
     </div>
 </template>
 
@@ -113,7 +114,7 @@ const oldStatisticContainer = ref([
 
 
 // Для графика активности: (TODO запрос)
-const series = ref([0, 1, 0, 2])
+const series = ref([4, 1, 6, 2])
 
 // За два дня (пока последние три)
 // [{
@@ -129,12 +130,135 @@ const listOfvalueForDrowDown = ref([
     { title: "Новые", action: "segoda" },
 ])
 
+// Для модулей
+//#region 
+const listOfModules = ref([
+    {
+        userName: "John Doe",
+        userId: 1,
+        avatar: "https://example.com/avatar1.jpg",
+        tags: ["Vue", "JavaScript", "Frontend"],
+        body: "This is a module description for John.",
+        moduleId: 101,
+        likeCount: 34,
+        dislikeCount: 2,
+        likeType: 1
+    },
+    {
+        userName: "Jane Smith",
+        userId: 2,
+        avatar: "https://example.com/avatar2.jpg",
+        tags: ["React", "Frontend"],
+        body: "This is a module description for Jane. Igjnrmhoijrtiohmpreloyhiujertiokbfdhjgkrejhmirtkejhtr",
+        moduleId: 102,
+        likeCount: 45,
+        dislikeCount: 1,
+        likeType: 1
+    },
+    {
+        userName: "Alice Johnson",
+        userId: 3,
+        avatar: "https://example.com/avatar3.jpg",
+        tags: ["Vue", "Design"],
+        body: "This is a module description for Alice.",
+        moduleId: 103,
+        likeCount: 12,
+        dislikeCount: 3,
+        likeType: 2
+    },
+    {
+        userName: "Bob Brown",
+        userId: 4,
+        avatar: "https://example.com/avatar4.jpg",
+        tags: ["Node.js", "Backend"],
+        body: "This is a module description for Bob.",
+        moduleId: 104,
+        likeCount: 50,
+        dislikeCount: 0,
+        likeType: 1
+    },
+    {
+        userName: "Charlie Green",
+        userId: 5,
+        avatar: "https://example.com/avatar5.jpg",
+        tags: ["React", "JavaScript"],
+        body: "This is a module description for Charlie.",
+        moduleId: 105,
+        likeCount: 20,
+        dislikeCount: 5,
+        likeType: 2
+    },
+    {
+        userName: "David White",
+        userId: 6,
+        avatar: "https://example.com/avatar6.jpg",
+        tags: ["Vue", "Backend"],
+        body: "This is a module description for David.",
+        moduleId: 106,
+        likeCount: 15,
+        dislikeCount: 2,
+        likeType: 1
+    },
+    {
+        userName: "Eve Black",
+        userId: 7,
+        avatar: "https://example.com/avatar7.jpg",
+        tags: ["Angular", "Frontend"],
+        body: "This is a module description for Eve.",
+        moduleId: 107,
+        likeCount: 60,
+        dislikeCount: 1,
+        likeType: 1
+    },
+    {
+        userName: "Frank Blue",
+        userId: 8,
+        avatar: "https://example.com/avatar8.jpg",
+        tags: ["Node.js", "JavaScript"],
+        body: "This is a module description for Frank.",
+        moduleId: 108,
+        likeCount: 35,
+        dislikeCount: 0,
+        likeType: 1
+    },
+    {
+        userName: "Grace Pink",
+        userId: 9,
+        avatar: "https://example.com/avatar9.jpg",
+        tags: ["Vue", "UI/UX"],
+        body: "This is a module description for Grace.",
+        moduleId: 109,
+        likeCount: 42,
+        dislikeCount: 3,
+        likeType: 2
+    },
+    {
+        userName: "Henry Yellow",
+        userId: 10,
+        avatar: "https://example.com/avatar10.jpg",
+        tags: ["React", "Design"],
+        body: "This is a module description for Henry.",
+        moduleId: 110,
+        likeCount: 8,
+        dislikeCount: 7,
+        likeType: 2
+    }
+]);
+//#endregion
+
 
 </script>
 
 <style scoped>
 p {
     font-weight: 500;
+}
+
+.modules {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .main-homepage {
@@ -148,7 +272,7 @@ p {
 .main-block {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 
@@ -156,6 +280,12 @@ p {
     position: relative;
     border: 1px solid #D9D9D9;
     border-radius: 20px;
+}
+
+.homepage-modules {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .drop-down {
