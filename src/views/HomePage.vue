@@ -113,7 +113,7 @@ const oldStatisticContainer = ref([
 
 
 // Для графика активности: (TODO запрос)
-const series = ref([1, 0, 2, 0])
+const series = ref([0, 1, 0, 2])
 
 // За два дня (пока последние три)
 // [{

@@ -1,11 +1,19 @@
 <template>
     <div :style="{ width: width, height: height, backgroundColor: 'transparent' }">
+        <!-- Показать прогресс-бар, если данные еще не загружены -->
         <div v-if="!props.isLoaded" class="loading">
             <v-progress-circular indeterminate></v-progress-circular>
         </div>
-        <apexchart v-else :width="'100%'" :height="'100%'" type="donut" :options="options" :series="props.series"
-            :labels="labels" :colors="colors">
+
+        <!-- Показать график, если есть хотя бы одно значение в series, отличное от 0 -->
+        <apexchart v-else-if="props.series.some(item => item !== 0)" :width="'100%'" :height="'100%'" type="donut"
+            :options="options" :series="props.series" :labels="labels" :colors="colors">
         </apexchart>
+
+        <!-- Показать текст (TODO переделать на гиф etc), если все значения в series равны 0 -->
+        <div v-else>
+            <p>Нет данных</p>
+        </div>
     </div>
 </template>
 
