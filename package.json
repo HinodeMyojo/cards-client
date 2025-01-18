@@ -13,6 +13,7 @@
   "dependencies": {
     "@jamescoyle/vue-icon": "^0.1.2",
     "@mdi/js": "^7.4.47",
+    "apexcharts": "^4.3.0",
     "axios": "^1.7.7",
     "pinia": "^2.1.7",
     "swiper": "^11.1.14",
@@ -21,6 +22,7 @@
     "vue": "^3.4.29",
     "vue-inline-svg": "^3.1.4",
     "vue-router": "^4.3.3",
+    "vue3-apexcharts": "^1.8.0",
     "vue3-detect-browser": "^0.1.2",
     "vuetify": "^3.7.3"
   },
