@@ -1,6 +1,9 @@
 <template>
-    <div :style="{ width: props.width, height: props.height }">
-        <apexchart :width="'100%'" :height="'100%'" type="donut" :options="options" :series="props.series"
+    <div :style="{ width: width, height: height, backgroundColor: 'transparent' }">
+        <div v-if="!props.isLoaded" class="loading">
+            <v-progress-circular indeterminate></v-progress-circular>
+        </div>
+        <apexchart v-else :width="'100%'" :height="'100%'" type="donut" :options="options" :series="props.series"
             :labels="labels" :colors="colors">
         </apexchart>
     </div>
@@ -21,6 +24,10 @@ const props = defineProps({
     height: {
         type: String,
         default: '100%'
+    },
+    isLoaded: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -38,7 +45,7 @@ const options = ref({
     },
     redrawOnParentResize: false,
     labels: ['Более 80%', 'Более 30%', 'Более 0%', 'Есть к чему стремиться!'],
-    colors: ['#00EC93', '#6dea98', '#a1ecbb', '#f1f1f1'],
+    colors: ['#00EC93', '#FF9700', '#EDC60D', '#f1f1f1'],
     dataLabels: {
         style: {
             colors: ['#2b2b2b', '#2b2b2b', '#2b2b2b', '#2b2b2b']
@@ -65,9 +72,6 @@ const options = ref({
     dataLabels: {
         enabled: true,
         enabledOnSeries: undefined,
-        formatter: function (val) {
-            return val
-        },
         textAnchor: 'middle',
         distributed: false,
         offsetX: 0,
@@ -107,6 +111,7 @@ const options = ref({
     tooltip: {
         enabled: true,
         shared: true,
+        hideEmptySeries: false,
         style: {
             fontSize: '14px',
             color: '#2b2b2b'
@@ -134,6 +139,14 @@ const options = ref({
 
 </script>
 <style>
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
 .apexcharts-tooltip {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;

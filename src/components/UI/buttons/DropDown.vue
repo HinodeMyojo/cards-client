@@ -2,16 +2,16 @@
     <div class="text-center">
         <v-menu :location="location">
             <template v-slot:activator="{ props }">
-                <v-btn :color="buttonColor" :dark="isDark" :style="{ fontSize: buttonSize + 'px', width: width }"
-                    ref="buttonRef" v-bind="props">
-                    {{ title }}
+                <v-btn style="text-transform: none;" :color="buttonColor" :dark="isDark"
+                    :style="{ fontSize: buttonSize + 'px', width: width }" ref="buttonRef" v-bind="props">
+                    {{ nowTitle }}
                     <svg-icon :type="'mdi'" :path="path" :size="iconSize" />
                 </v-btn>
             </template>
 
             <!-- Меню с динамической шириной -->
             <v-list :style="{ width: width }">
-                <v-list-item v-for="(item, index) in items" :key="index" @click="item.action">
+                <v-list-item v-for="(item, index) in items" :key="index" @click="dropDownAction(item)">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
@@ -61,6 +61,12 @@ const props = defineProps({
     },
 });
 
+const nowTitle = ref(props.data[0].title);
+const dropDownAction = (item) => {
+    nowTitle.value = item.title;
+    item.action;
+}
+
 const state = reactive({
     location: 'bottom',
 });
@@ -80,11 +86,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.v-menu .v-list-item-title {
+    text-transform: lowercase !important;
+}
+
 .v-list-item-title {
     font-size: medium !important;
 }
 
 button {
-    background-color: #202127 !important;
+    background-color: #25262C !important;
+    border-radius: 10px !important;
 }
 </style>

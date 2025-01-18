@@ -29,7 +29,7 @@
                     <div class="statistic-chart">
                         <p>График активности за сегодня:</p>
                         <div class="chart">
-                            <HomepageChart />
+                            <HomepageChart :is-loaded="true" :series="series" />
                         </div>
                     </div>
                 </div>
@@ -38,6 +38,11 @@
         <div class="main-block">
             <div class="radius">
                 <h3 class="gradient-border-mask-1">Модули других пользователей</h3>
+            </div>
+            <div class="homepage-modules">
+                <div class="drop-down">
+                    <DropDown :data="listOfvalueForDrowDown" />
+                </div>
             </div>
         </div>
         <div class="main-block">
@@ -63,7 +68,7 @@ import DropDown from '@/components/UI/buttons/DropDown.vue'
 
 const isAuth = ref(true);
 
-// временно заполним
+// Для данных статистики (временно заполним)
 const currentStatisticContainer = ref([
     {
         idModule: 1,
@@ -107,6 +112,9 @@ const oldStatisticContainer = ref([
 ]);
 
 
+// Для графика активности: (TODO запрос)
+const series = ref([1, 0, 2, 0])
+
 // За два дня (пока последние три)
 // [{
 //  idModule: 1, 
@@ -114,6 +122,12 @@ const oldStatisticContainer = ref([
 //  typeTime: 1, (1 - сейчас (просрочк), 2 - 3 часа, 3 - завтра, 4 - пройдено)
 //  text: "название модуля" 
 // }]
+
+// Для дропдауна TODO фильтры сортировки
+const listOfvalueForDrowDown = ref([
+    { title: "Популярные", action: "zavtra" },
+    { title: "Новые", action: "segoda" },
+])
 
 
 </script>
@@ -142,6 +156,11 @@ p {
     position: relative;
     border: 1px solid #D9D9D9;
     border-radius: 20px;
+}
+
+.drop-down {
+    display: flex;
+    align-items: baseline;
 }
 
 .homepage-statistic {
@@ -220,7 +239,7 @@ p {
 .gradient-border-mask-1 {
     display: flow-root;
     position: relative;
-    padding: 0.5rem;
+    padding: 0.45rem;
 }
 
 .gradient-border-mask-1::before {
@@ -231,8 +250,8 @@ p {
     right: 0;
     bottom: 0;
     border-radius: 15px;
-    border: 3px solid transparent;
-    background: linear-gradient(45deg, rgb(91, 21, 145), rgba(255, 166, 0, 0)) border-box;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, rgb(185, 185, 185), rgba(255, 166, 0, 0)) border-box;
     -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
