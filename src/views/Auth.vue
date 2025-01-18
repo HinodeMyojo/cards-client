@@ -5,7 +5,7 @@
       <LoginHelper class="login-helper" :class="{ visible: helperVisible }" :text="helperText" />
       <div class="close-menu">
         <div class="close-menu-icon" @click="closeMenu">
-          <svg-icon type="mdi" :path="mdiClose" :size="30"></svg-icon>
+          <svg-icon :style="{ cursor: 'pointer' }" type="mdi" :path="mdiClose" :size="30"></svg-icon>
         </div>
       </div>
       <div class="login-form-container" v-if="register">

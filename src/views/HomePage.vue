@@ -89,8 +89,11 @@ import DropDown from '@/components/UI/buttons/DropDown.vue'
 import BaseButton from '@/components/UI/buttons/BaseButton.vue';
 import HomepageSlider from '@/components/homepageElements/HomepageSlider.vue';
 import router from '@/router/router';
+import { useAuthStore } from '@/stores/authStore';
 
-const isAuth = ref(false);
+const authStore = useAuthStore();
+const isAuth = authStore.isUserLogin;
+console.log(isAuth);
 
 // Для данных статистики (временно заполним)
 const currentStatisticContainer = ref([
