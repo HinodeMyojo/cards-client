@@ -35,6 +35,12 @@
                 </div>
             </div>
         </div>
+        <div v-else class="main-block">
+            <h2>Изучайте, создавайте, улучшайте навыки!</h2>
+            <HomepageSlider />
+            <BaseButton @click="router.push('/register')" :border-color="'#D459FF'" :color="'#272A2F'"
+                :label="'Зарегистрироваться'" :size="'medium'" />
+        </div>
         <div class="main-block">
             <div class="radius">
                 <h3 class="gradient-border-mask-1">Модули других пользователей 💫</h3>
@@ -45,18 +51,31 @@
                     <DropDown :data="listOfvalueForDrowDownExtension" />
                 </div>
                 <div class="modules">
-                    <div v-for="item in listOfModules" :key="item">
+                    <div v-for="item in listOfVisibleModules" :key="item">
                         <HomepageModule :dislikeCount="item.dislikeCount" :likeCount="item.likeCount" :body="item.body"
                             :tags="item.tags" :userId="item.userId" :userName="item.userName" :moduleId="item.idModule"
-                            :title="item.title" />
+                            :title="item.title" :commentCount="item.commentCount" />
+                    </div>
+                    <div v-if="!isModulesExpanded">
+                        <BaseButton :label="'Показать ещё'" :size="'medium'" @click="isModulesExpanded = true" />
+                    </div>
+                    <div v-if="isModulesExpanded" class="expanded-modules">
+                        <div class="modules">
+                            <div v-for="item in listOfShowMoreModules" :key="item">
+                                <HomepageModule :dislikeCount="item.dislikeCount" :likeCount="item.likeCount"
+                                    :body="item.body" :tags="item.tags" :userId="item.userId" :userName="item.userName"
+                                    :moduleId="item.idModule" :title="item.title" :commentCount="item.commentCount" />
+                            </div>
+                        </div>
+                        <BaseButton :label="'Скрыть'" :size="'medium'" @click="isModulesExpanded = false" />
                     </div>
                 </div>
             </div>
-            <div class="main-block">
+            <!-- <div class="main-block">
                 <div class="radius">
                     <h3 class="gradient-border-mask-1">Новости 🛸</h3>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -67,8 +86,11 @@ import HomepageModule from '@/components/homepageElements/HomepageModule.vue'
 import HomepageStatistic from '@/components/homepageElements/HomepageStatistic.vue'
 import HomepageChart from '@/components/homepageElements/HomepageChart.vue'
 import DropDown from '@/components/UI/buttons/DropDown.vue'
+import BaseButton from '@/components/UI/buttons/BaseButton.vue';
+import HomepageSlider from '@/components/homepageElements/HomepageSlider.vue';
+import router from '@/router/router';
 
-const isAuth = ref(true);
+const isAuth = ref(false);
 
 // Для данных статистики (временно заполним)
 const currentStatisticContainer = ref([
@@ -151,7 +173,8 @@ const listOfModules = ref([
         moduleId: 101,
         likeCount: 34,
         dislikeCount: 2,
-        likeType: 1
+        likeType: 1,
+        commentCount: 0
     },
     {
         userName: "Jane Smith",
@@ -162,7 +185,8 @@ const listOfModules = ref([
         moduleId: 102,
         likeCount: 45,
         dislikeCount: 1,
-        likeType: 1
+        likeType: 1,
+        commentCount: 2
     },
     {
         userName: "Alice Johnson",
@@ -173,7 +197,8 @@ const listOfModules = ref([
         moduleId: 103,
         likeCount: 12,
         dislikeCount: 3,
-        likeType: 2
+        likeType: 2,
+        commentCount: 12
     },
     {
         userName: "Bob Brown",
@@ -184,7 +209,8 @@ const listOfModules = ref([
         moduleId: 104,
         likeCount: 50,
         dislikeCount: 0,
-        likeType: 1
+        likeType: 1,
+        commentCount: 0
     },
     {
         userName: "Charlie Green",
@@ -195,7 +221,8 @@ const listOfModules = ref([
         moduleId: 105,
         likeCount: 202,
         dislikeCount: 5,
-        likeType: 2
+        likeType: 2,
+        commentCount: 1
     },
     {
         userName: "David White",
@@ -206,7 +233,8 @@ const listOfModules = ref([
         moduleId: 106,
         likeCount: 15,
         dislikeCount: 2,
-        likeType: 1
+        likeType: 1,
+        commentCount: 5
     },
     {
         userName: "Eve Black",
@@ -217,7 +245,8 @@ const listOfModules = ref([
         moduleId: 107,
         likeCount: 60,
         dislikeCount: 1,
-        likeType: 1
+        likeType: 1,
+        commentCount: 1
     },
     {
         userName: "Frank Blue",
@@ -228,7 +257,8 @@ const listOfModules = ref([
         moduleId: 108,
         likeCount: 35,
         dislikeCount: 0,
-        likeType: 1
+        likeType: 1,
+        commentCount: 7
     },
     {
         userName: "Grace Pink",
@@ -239,7 +269,8 @@ const listOfModules = ref([
         moduleId: 109,
         likeCount: 42,
         dislikeCount: 3,
-        likeType: 2
+        likeType: 2,
+        commentCount: 1
     },
     {
         userName: "Henry Yellow",
@@ -250,10 +281,16 @@ const listOfModules = ref([
         moduleId: 110,
         likeCount: 8,
         dislikeCount: 7,
-        likeType: 2
+        likeType: 2,
+        commentCount: 1
     }
 ]);
 //#endregion
+
+const isModulesExpanded = ref(false);
+
+const listOfVisibleModules = listOfModules.value.slice(0, 4);
+const listOfShowMoreModules = listOfModules.value.slice(4);
 
 
 </script>
@@ -270,12 +307,20 @@ p {
     gap: 20px;
 }
 
+.expanded-modules {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
 .main-homepage {
     height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    scroll-behavior: smooth;
 }
 
 .main-block {
