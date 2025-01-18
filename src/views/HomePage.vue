@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="block-items">
-                        <p>Успешно пройденные модули:</p>
+                        <p>Пройденные модули:</p>
                         <div class="items">
                             <div v-for="item in oldStatisticContainer" :key="item">
                                 <HomepageStatistic :idModule="item.idModule" :time="item.time" :typeTime="item.typeTime"
@@ -42,6 +42,7 @@
             <div class="homepage-modules">
                 <div class="drop-down">
                     <DropDown :data="listOfvalueForDrowDown" />
+                    <DropDown :data="listOfvalueForDrowDownExtension" />
                 </div>
                 <div class="modules">
                     <div v-for="item in listOfModules" :key="item">
@@ -130,6 +131,14 @@ const listOfvalueForDrowDown = ref([
     { title: "Новые", action: "segoda" },
 ])
 
+const listOfvalueForDrowDownExtension = ref([
+    { title: "За день", action: "zavtra" },
+    { title: "За неделю", action: "segoda" },
+    { title: "За месяц", action: "segoda" },
+    { title: "За год", action: "segoda" },
+    { title: "За все время", action: "segoda" },
+])
+
 // Для модулей
 //#region 
 const listOfModules = ref([
@@ -184,7 +193,7 @@ const listOfModules = ref([
         tags: ["React", "JavaScript"],
         body: "This is a module description for Charlie.",
         moduleId: 105,
-        likeCount: 20,
+        likeCount: 202,
         dislikeCount: 5,
         likeType: 2
     },
@@ -291,6 +300,7 @@ p {
 .drop-down {
     display: flex;
     align-items: baseline;
+    gap: 10px
 }
 
 .homepage-statistic {

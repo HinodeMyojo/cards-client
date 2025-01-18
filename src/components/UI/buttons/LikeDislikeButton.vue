@@ -9,7 +9,7 @@
         <button class="dislike" @click="score(-1)" :style="{ backgroundColor: dislikeColor }">
             <div class="dislike-icon">
                 <svg-icon type="mdi" :path="path"></svg-icon>
-                <h3>{{ likeCount }}</h3>
+                <h3>{{ dislikeCount }}</h3>
             </div>
         </button>
     </div>
@@ -42,7 +42,7 @@ const score = async (value) => {
 
     if (initScore.value == 1) {
         dislikeColor.value = '#2B2C34';
-        likeColor.value = '#04DE00';
+        likeColor.value = '#53d351';
     }
     else if (initScore.value == -1) {
         likeColor.value = '#2B2C34';
@@ -54,7 +54,7 @@ const score = async (value) => {
     }
     else if (initScore.value == 0 && value == 1) {
         dislikeColor.value = '#2B2C34';
-        likeColor.value = '#04DE00';
+        likeColor.value = '#53d351';
     }
     else {
         likeColor.value = '#2B2C34';
