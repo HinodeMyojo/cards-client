@@ -257,6 +257,7 @@ const handlePasswordReset = async (data) => {
 }
 
 .login-helper.visible {
+  display: none;
   opacity: 1;
 }
 
