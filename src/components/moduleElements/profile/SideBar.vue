@@ -3,7 +3,11 @@
     <div class="container">
       <div class="profile">
         <div class="profile-image">
-          <div id="sideBarAvatar" class="sideBarAvatar" @click="handleAvatarClick">
+          <div
+            id="sideBarAvatar"
+            class="sideBarAvatar"
+            @click="handleAvatarClick"
+          >
             <img v-if="avatarSrc" :src="avatarSrc" alt="User Avatar" />
             <p v-else>Загрузка аватара...</p>
           </div>
@@ -13,10 +17,20 @@
         </div>
       </div>
       <div v-if="isAuth" class="extra-buttons">
-        <BaseButton :label="`Редактировать`" :width="`100%`" :size="`medium`" :color="`#272A2F`" />
+        <BaseButton
+          :label="`Редактировать`"
+          :width="`100%`"
+          :size="`medium`"
+          :color="`#272A2F`"
+        />
       </div>
       <div v-else class="extra-buttons">
-        <BaseButton :label="`Подписаться`" :width="`100%`" :size="`medium`" :color="`#272A2F`" />
+        <BaseButton
+          :label="`Подписаться`"
+          :width="`100%`"
+          :size="`medium`"
+          :color="`#272A2F`"
+        />
       </div>
       <hr />
       <div v-if="isAuth" class="search">
@@ -25,8 +39,13 @@
       <hr v-if="isAuth" />
       <div class="tree" v-if="isAuth">
         <div v-if="items.length > 0" class="moduleItems">
-          <ModuleItem v-for="item in items" :key="item.id" :title="item.title" :id="item.id"
-            @click="moduleClick(item.id)">
+          <ModuleItem
+            v-for="item in items"
+            :key="item.id"
+            :title="item.title"
+            :id="item.id"
+            @click="moduleClick(item.id)"
+          >
             {{ item.title }}
           </ModuleItem>
         </div>
@@ -40,187 +59,182 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue';
-import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
-import api from '@/plugins/axios';
-import router from '@/router/router.js';
-import ModuleItem from '@/components/UI/ModuleItem.vue';
-import { HttpStatusCode } from 'axios';
-import BaseButton from '@/components/UI/buttons/BaseButton.vue';
+  import { ref, onMounted, watchEffect } from 'vue';
+  import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
+  import api from '@/plugins/axios';
+  import router from '@/router/router.js';
+  import ModuleItem from '@/components/UI/ModuleItem.vue';
+  import { HttpStatusCode } from 'axios';
+  import BaseButton from '@/components/UI/buttons/BaseButton.vue';
 
-const storedUserName = ref('Пользователь');
-const avatarSrc = ref('');
+  const storedUserName = ref('Пользователь');
+  const avatarSrc = ref('');
 
-const items = ref([]);
+  const items = ref([]);
 
-const handleAvatarClick = () => {
-  router.push(`/${storedUserName.value}`)
-}
+  const handleAvatarClick = () => {
+    router.push(`/${storedUserName.value}`);
+  };
 
+  const moduleClick = (id) => {
+    router.push(`/module/${id}`);
+  };
 
-const moduleClick = (id) => {
-  router.push(`/module/${id}`)
-}
+  const LoadUserData = async () => {
+    const userName = localStorage.getItem('userName');
+    const storedAvatar = localStorage.getItem('userAvatar');
 
-const LoadUserData = async () => {
-  const userName = localStorage.getItem('userName');
-  const storedAvatar = localStorage.getItem('userAvatar');
+    if (userName) storedUserName.value = userName;
+    if (storedAvatar) {
+      avatarSrc.value = storedAvatar;
+    } else {
+      try {
+        const response = await api.get(`/user/whoami`);
+        const base64Avatar = `data:image/png;base64,${response.data.avatar}`;
+        avatarSrc.value = base64Avatar;
+        storedUserName.value = response.data.userName;
+        localStorage.setItem('userAvatar', base64Avatar);
+        localStorage.setItem('userName', response.data.userName);
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    }
+  };
 
-  if (userName) storedUserName.value = userName;
-  if (storedAvatar) {
-    avatarSrc.value = storedAvatar;
-  } else {
+  const LoadUserModules = async (searchText) => {
+    console.log(searchText);
+    items.value = [];
     try {
-      const response = await api.get(`/user/whoami`);
-      const base64Avatar = `data:image/png;base64,${response.data.avatar}`;
-      avatarSrc.value = base64Avatar;
-      storedUserName.value = response.data.userName;
-      localStorage.setItem('userAvatar', base64Avatar);
-      localStorage.setItem('userName', response.data.userName);
+      const queryText = searchText?.trim() || null;
+      const response = await api.get('/module/used-modules', {
+        params: {
+          textSearch: queryText,
+        },
+      });
+      console.log(response);
+      if (response.status == HttpStatusCode.Ok) {
+        console.log(response.data);
+        items.value.push(...response.data);
+      }
     } catch (error) {
       console.error('Error loading user data:', error);
     }
-  }
-};
+  };
 
-const LoadUserModules = async (searchText) => {
-  console.log(searchText);
-  items.value = [];
-  try {
-    const queryText = searchText?.trim() || null;
-    const response = await api.get('/module/used-modules', {
-      params: {
-        textSearch: queryText,
-      },
-    });
-    console.log(response);
-    if (response.status == HttpStatusCode.Ok) {
-      console.log(response.data);
-      items.value.push(...response.data);
+  // Upd 01.06.2025
+  const props = defineProps({
+    isAuth: {
+      type: Boolean,
+      default: false,
+    },
+    userName: {
+      type: String,
+    },
+    userAvatar: {
+      type: String,
+    },
+  });
+
+  onMounted(() => {
+    console.log(props.isAuth);
+    if (props.isAuth) {
+      LoadUserData();
+      LoadUserModules();
+    } else {
+      watchEffect(() => {
+        storedUserName.value = props.userName;
+        avatarSrc.value = props.userAvatar;
+      });
     }
-  }
-  catch (error) {
-    console.error('Error loading user data:', error);
-  }
-}
-
-// Upd 01.06.2025
-const props = defineProps({
-  isAuth: {
-    type: Boolean,
-    default: false
-  },
-  userName: {
-    type: String
-  },
-  userAvatar: {
-    type: String
-  }
-})
-
-
-onMounted(() => {
-  console.log(props.isAuth);
-  if (props.isAuth) {
-    LoadUserData();
-    LoadUserModules();
-  }
-  else {
-    watchEffect(() => {
-      storedUserName.value = props.userName;
-      avatarSrc.value = props.userAvatar;
-    });
-  }
-
-});
+  });
 </script>
 
 <style scoped>
-.search {
-  border-radius: 10px;
-}
+  .search {
+    border-radius: 10px;
+  }
 
-.main {
-  display: flex;
-  border-radius: 25px;
-  width: 100%;
-  min-height: 400px;
-  background-color: #202127;
-}
+  .main {
+    display: flex;
+    border-radius: 25px;
+    width: 100%;
+    min-height: 400px;
+    background-color: #202127;
+  }
 
-hr {
-  height: 2px;
-  background-color: #272A2F;
-  border: none;
-  margin: 10px 0;
-}
+  hr {
+    height: 2px;
+    background-color: #272a2f;
+    border: none;
+    margin: 10px 0;
+  }
 
-.moduleItems {
-  background-color: #202127;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+  .moduleItems {
+    background-color: #202127;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
 
-.moduleItems p {
-  background-color: #202127;
-}
+  .moduleItems p {
+    background-color: #202127;
+  }
 
-.extra-buttons {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
-}
+  .extra-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
 
-.container {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  margin: 15px;
-  background-color: #202127;
-}
+  .container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 15px;
+    background-color: #202127;
+  }
 
-.profile {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  margin-bottom: 5px;
-  background-color: transparent;
-}
+  .profile {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-bottom: 5px;
+    background-color: transparent;
+  }
 
-.sideBarAvatar {
-  background-color: #202127;
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-  align-items: center;
-  min-height: 160px;
-  min-width: 160px;
-}
+  .sideBarAvatar {
+    background-color: #202127;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    align-items: center;
+    min-height: 160px;
+    min-width: 160px;
+  }
 
-.sideBarAvatar img {
-  border-radius: 100%;
-  width: 160px;
-  height: 160px;
-  object-fit: cover;
-  border: 4px solid #808080;
-}
+  .sideBarAvatar img {
+    border-radius: 100%;
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border: 4px solid #808080;
+  }
 
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  font-size: large;
-  background-color: transparent;
-}
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: large;
+    background-color: transparent;
+  }
 
-.userName {
-  font-weight: 500;
-  background-color: transparent;
-}
+  .userName {
+    font-weight: 500;
+    background-color: transparent;
+  }
 </style>
