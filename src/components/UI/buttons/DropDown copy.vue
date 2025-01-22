@@ -1,11 +1,23 @@
-<template>
-    <button :class="buttonClass" :style="buttonStyle" @click="handleClick" :disabled="disabled">
-        <slot>{{ label }}</slot>
-    </button>
+<!-- <template>
+    <div class="dropdown">
+        <button :class="buttonClass" class="base" :style="buttonStyle" @click="handleClick" :disabled="disabled">
+            <slot>{{ label }}</slot>
+            <svg-icon type="mdi" :path="path"></svg-icon>
+        </button>
+        <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiChevronDown } from '@mdi/js';
+
+const path = ref(mdiChevronDown);
 
 const props = defineProps({
     label: {
@@ -14,7 +26,7 @@ const props = defineProps({
     },
     color: {
         type: String,
-        default: '#25262C',
+        default: 'primary',
     },
     size: {
         type: String,
@@ -26,7 +38,11 @@ const props = defineProps({
     },
     width: {
         type: String,
-        default: 'auto',
+        default: '120px',
+    },
+    height: {
+        type: String,
+        default: '30px',
     },
     borderColor: {
         type: String,
@@ -38,7 +54,7 @@ const props = defineProps({
     },
     hoverColor: {
         type: String,
-        default: '#D459FF',
+        default: 'transparent',
     },
 
 });
@@ -51,8 +67,9 @@ const buttonClass = computed(() => {
 
 const buttonStyle = computed(() => {
     return {
-        backgroundColor: props.color === 'primary' ? '#42b983' : props.color,
+        backgroundColor: props.color === 'primary' ? '#202127' : props.color,
         width: props.width,
+        height: props.height,
         borderColor: props.borderColor,
         borderWidth: props.borderWidth,
         '--hover-border-color': props.hoverColor,
@@ -69,22 +86,59 @@ const handleClick = (event) => {
 <style scoped>
 .btn {
     padding: 10px 20px;
-    /* Добавлена обводка */
-    border-radius: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: space-around;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
     border: 1px solid transparent;
+    transition: 0.3s ease;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 /* Hover Effect */
 .btn:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
     border: 1px solid var(--hover-border-color);
+    transition: 0.3s ease;
 }
 
 /* Active Effect */
@@ -141,4 +195,4 @@ const handleClick = (event) => {
 .small {
     font-size: 12px;
 }
-</style>
+</style> -->
