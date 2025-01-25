@@ -51,24 +51,33 @@
                     <DropDown :data="listOfvalueForDrowDownExtension" />
                 </div>
                 <div class="modules">
-                    <div v-for="item in listOfVisibleModules" :key="item">
-                        <HomepageModule :dislikeCount="item.dislikeCount" :likeCount="item.likeCount" :body="item.body"
-                            :tags="item.tags" :userId="item.userId" :userName="item.userName" :moduleId="item.idModule"
-                            :title="item.title" :commentCount="item.commentCount" />
-                    </div>
-                    <div v-if="!isModulesExpanded">
-                        <BaseButton :label="'Показать ещё'" :size="'medium'" @click="isModulesExpanded = true" />
+                    <div v-for="item in listOfVisibleModules" :key="item.id">
+                    <HomepageModule
+                        :dislikeCount="item.dislikeCount"
+                        :likeCount="item.likeCount"
+                        :body="item.title"
+                        :tags="['Пока мокаем', 'Vue', 'Frontend']"
+                        :userId="item.creatorId"
+                        :userName="item.creatorUserName"
+                        :moduleId="item.id"
+                        :title="item.title"
+                        :commentCount="item.commentCount"
+                        :avatar ="item.avatar"
+                    />
                     </div>
                     <div v-if="isModulesExpanded" class="expanded-modules">
                         <div class="modules">
                             <div v-for="item in listOfShowMoreModules" :key="item">
                                 <HomepageModule :dislikeCount="item.dislikeCount" :likeCount="item.likeCount"
-                                    :body="item.body" :tags="item.tags" :userId="item.userId" :userName="item.userName"
-                                    :moduleId="item.idModule" :title="item.title" :commentCount="item.commentCount" />
+                                    :body="item.description" :tags="['Vue', 'Frontend']" :userId="item.creatorId" :userName="item.creatorUserName"
+                                    :moduleId="item.id" :title="item.title" :commentCount="item.commentCount" :avatar ="item.avatar" />
                             </div>
                         </div>
-                        <BaseButton :label="'Скрыть'" :size="'medium'" @click="isModulesExpanded = false" />
+                        <BaseButton :style="{ width: '100%' }" :label="'Скрыть'" :size="'medium'" @click="isModulesExpanded = false" />
                     </div>
+                </div>
+                <div v-if="!isModulesExpanded && listOfShowMoreModules.length > 0" >
+                        <BaseButton :label="'Показать ещё'" :size="'medium'" @click="isModulesExpanded = true" />
                 </div>
             </div>
             <!-- <div class="main-block">
@@ -81,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import HomepageModule from '@/components/homepageElements/HomepageModule.vue'
 import HomepageStatistic from '@/components/homepageElements/HomepageStatistic.vue'
 import HomepageChart from '@/components/homepageElements/HomepageChart.vue'
@@ -90,6 +99,7 @@ import BaseButton from '@/components/UI/buttons/BaseButton.vue';
 import HomepageSlider from '@/components/homepageElements/HomepageSlider.vue';
 import router from '@/router/router';
 import { useAuthStore } from '@/stores/authStore';
+import { moduleService } from '@/services/moduleService';
 
 const authStore = useAuthStore();
 const isAuth = authStore.isUserLogin;
@@ -164,137 +174,38 @@ const listOfvalueForDrowDownExtension = ref([
     { title: "За все время", action: "segoda" },
 ])
 
+
 // Для модулей
 //#region 
-const listOfModules = ref([
-    {
-        userName: "John Doe",
-        userId: 1,
-        avatar: "https://example.com/avatar1.jpg",
-        tags: ["Vue", "JavaScript", "Frontend"],
-        body: "This is a module description for John.",
-        moduleId: 101,
-        likeCount: 34,
-        dislikeCount: 2,
-        likeType: 1,
-        commentCount: 0
-    },
-    {
-        userName: "Jane Smith",
-        userId: 2,
-        avatar: "https://example.com/avatar2.jpg",
-        tags: ["React", "Frontend"],
-        body: "This is a module description for Jane. Igjnrmhoijrtiohmpreloyhiujertiokbfdhjgkrejhmirtkejhtr",
-        moduleId: 102,
-        likeCount: 45,
-        dislikeCount: 1,
-        likeType: 1,
-        commentCount: 2
-    },
-    {
-        userName: "Alice Johnson",
-        userId: 3,
-        avatar: "https://example.com/avatar3.jpg",
-        tags: ["Vue", "Design"],
-        body: "This is a module description for Alice.",
-        moduleId: 103,
-        likeCount: 12,
-        dislikeCount: 3,
-        likeType: 2,
-        commentCount: 12
-    },
-    {
-        userName: "Bob Brown",
-        userId: 4,
-        avatar: "https://example.com/avatar4.jpg",
-        tags: ["Node.js", "Backend"],
-        body: "This is a module description for Bob.",
-        moduleId: 104,
-        likeCount: 50,
-        dislikeCount: 0,
-        likeType: 1,
-        commentCount: 0
-    },
-    {
-        userName: "Charlie Green",
-        userId: 5,
-        avatar: "https://example.com/avatar5.jpg",
-        tags: ["React", "JavaScript"],
-        body: "This is a module description for Charlie.",
-        moduleId: 105,
-        likeCount: 202,
-        dislikeCount: 5,
-        likeType: 2,
-        commentCount: 1
-    },
-    {
-        userName: "David White",
-        userId: 6,
-        avatar: "https://example.com/avatar6.jpg",
-        tags: ["Vue", "Backend"],
-        body: "This is a module description for David.",
-        moduleId: 106,
-        likeCount: 15,
-        dislikeCount: 2,
-        likeType: 1,
-        commentCount: 5
-    },
-    {
-        userName: "Eve Black",
-        userId: 7,
-        avatar: "https://example.com/avatar7.jpg",
-        tags: ["Angular", "Frontend"],
-        body: "This is a module description for Eve.",
-        moduleId: 107,
-        likeCount: 60,
-        dislikeCount: 1,
-        likeType: 1,
-        commentCount: 1
-    },
-    {
-        userName: "Frank Blue",
-        userId: 8,
-        avatar: "https://example.com/avatar8.jpg",
-        tags: ["Node.js", "JavaScript"],
-        body: "This is a module description for Frank.",
-        moduleId: 108,
-        likeCount: 35,
-        dislikeCount: 0,
-        likeType: 1,
-        commentCount: 7
-    },
-    {
-        userName: "Grace Pink",
-        userId: 9,
-        avatar: "https://example.com/avatar9.jpg",
-        tags: ["Vue", "UI/UX"],
-        body: "This is a module description for Grace.",
-        moduleId: 109,
-        likeCount: 42,
-        dislikeCount: 3,
-        likeType: 2,
-        commentCount: 1
-    },
-    {
-        userName: "Henry Yellow",
-        userId: 10,
-        avatar: "https://example.com/avatar10.jpg",
-        tags: ["React", "Design"],
-        body: "This is a module description for Henry.",
-        moduleId: 110,
-        likeCount: 8,
-        dislikeCount: 7,
-        likeType: 2,
-        commentCount: 1
-    }
-]);
-//#endregion
+const listOfModules = ref([]);
 
+// Флаг для отображения всех модулей
 const isModulesExpanded = ref(false);
 
-const listOfVisibleModules = listOfModules.value.slice(0, 4);
-const listOfShowMoreModules = listOfModules.value.slice(4);
+const listOfVisibleModules = computed(() => {
+  return listOfModules.value.slice(0, 4);
+});
 
+const listOfShowMoreModules = computed(() => {
+  return listOfModules.value.slice(4);
+});
+
+const getListModules = async () => {
+  try {
+    const response = await moduleService.getModules(true, true, 5);
+    listOfModules.value = response.data;
+  } catch (error) {
+    console.error('Ошибка при загрузке модулей:', error);
+  }
+};
+
+const expandModules = () => {
+  isModulesExpanded.value = true;
+};
+
+onMounted(async () => {
+  await getListModules();
+});
 
 </script>
 
@@ -311,6 +222,7 @@ p {
 }
 
 .expanded-modules {
+    width: 100%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
