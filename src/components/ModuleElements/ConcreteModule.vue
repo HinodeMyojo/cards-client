@@ -82,7 +82,6 @@ import { useRoute } from 'vue-router';
 // Иконки для отображения в UI
 import { mdiCards, mdiFountainPenTip, mdiSchool } from '@mdi/js';
 import SvgIcon from '@jamescoyle/vue-icon';
-import Card from './Card.vue';
 import InfoCard from './InfoCard.vue';
 import Table from '@/components/UI/Table.vue';
 import ElementModal from '@/components/UI/module/ElementModal.vue';

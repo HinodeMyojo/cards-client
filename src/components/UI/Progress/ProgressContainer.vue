@@ -67,6 +67,7 @@ const props = defineProps({
     }
 })
 
+
 // Загрузка данных
 const loadYearStatistic = async (year, userId) => {
     try {
