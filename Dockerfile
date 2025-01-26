@@ -12,9 +12,9 @@ RUN npm run build
 
 # Stage 2: Сервер для обслуживания
 FROM nginx:alpine
-COPY ./dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
