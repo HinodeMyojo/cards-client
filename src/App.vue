@@ -16,11 +16,13 @@
   </div>
 </template>
 
+
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { authRoutes } from './router/router'
 import HeaderForm from './components/HeaderForm.vue'
+
 
 const route = useRoute()
 
@@ -70,6 +72,7 @@ a {
   width: 1140px;
   min-height: 100vh;
   display: flex;
+  margin-bottom: 20px;
 
 }
 

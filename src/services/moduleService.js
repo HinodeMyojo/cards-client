@@ -40,5 +40,13 @@ export const moduleService = {
             console.error("Ошибка при удалении модуля из библиотеки:", error);
             throw error;
         }
-    }
+    },
+    async getModules(addAvatar, addUserName, sortTime) {
+        try {
+            return await api.get(`/modules?AddCreatorAvatar=${addAvatar}&AddCreatorUserName=${addUserName}&SortTime=${sortTime}`);
+        } catch (error) {
+            console.error("Ошибка получения модулей:", error);
+            throw error;
+        }
+    },
 };

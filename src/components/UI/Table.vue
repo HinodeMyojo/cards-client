@@ -90,7 +90,7 @@
   };
 
   // Секция
-
+  // TODO добавить НЕВОЗМОЖНОСТЬ удаления модуля чужими пользователями (кроме админа)
   const { headers, elements } = defineProps({
     headers: {
       type: Array,
@@ -99,7 +99,7 @@
     elements: {
       type: Array,
       required: true,
-    },
+    }
   });
 
   const headersWithActions = ref([...headers]);
