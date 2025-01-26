@@ -15,7 +15,7 @@
       <swiper-slide>
         <div class="image-slider">
           <h3>Легко осваивайте новую информацию с помощью карточек</h3>
-          <img src="@/assets/images/slider1.png" alt="" />
+          <img src="@/assets/images/slider1.png" alt="" class="tinted-image" />
         </div>
       </swiper-slide>
       <swiper-slide>
@@ -70,5 +70,9 @@
     object-fit: cover;
     /* width: 100%; */
     height: 100%;
+  }
+
+  .tinted-image {
+    filter: brightness(0.8); /* Уменьшает яркость на 20% */
   }
 </style>
