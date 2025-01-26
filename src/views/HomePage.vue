@@ -203,10 +203,9 @@ const expandModules = () => {
   isModulesExpanded.value = true;
 };
 
+
 onMounted(async () => {
-  if (isAuth) {
     await getListModules();
-  }
 });
 
 </script>

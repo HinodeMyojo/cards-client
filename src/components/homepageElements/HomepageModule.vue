@@ -43,6 +43,10 @@
   import LikeDislikeButton from '@/components/UI/buttons/LikeDislikeButton.vue';
   import CommentButton from '@/components/UI/buttons/CommentButton.vue';
   import LinkButton from '@/components/UI/buttons/LinkButton.vue';
+  import { useAuthStore } from '@/stores/authStore';
+
+  const authStore = useAuthStore();
+  const isAuth = authStore.isUserLogin;
 
   // Временно
   // const userName = 'hinode'
@@ -78,7 +82,13 @@
   };
 
   const openProfile = () => {
-    router.push(`/profile/${props.userName}`);
+    if (!isAuth) {
+      alert('Пока что поддержка анонимных пользователей недоступна');
+    }
+    else{
+      router.push(`/profile/${props.userName}`);
+    }
+    
   };
 
   const setTagToSearch = (tag) => {
@@ -86,8 +96,14 @@
   };
 
   const openModule = () => {
-    router.push(`/module/${props.moduleId}`);
+    if (!isAuth) {
+      alert('Пока что поддержка анонимных пользователей недоступна');
+    }
+    else{
+      router.push(`/module/${props.moduleId}`);
+    }
   };
+
 
   // onMounted(() => {
   //   replaceBody();
