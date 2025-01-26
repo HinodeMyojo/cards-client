@@ -170,7 +170,7 @@ const storedUserName = ref('');
 const items = computed(() => [
   {
     title: `Привет, ${storedUserName.value}!`,
-    action: `${storedUserName.value}`,
+    action: `profile`,
   },
   { title: 'Достижения', action: 'achievements' },
   { title: 'Настройки', action: 'settings' },
@@ -187,8 +187,8 @@ const addButtonItems = [
 
 const handleClick = (item) => {
   switch (item.action) {
-    case storedUserName.value:
-      router.push(`/${storedUserName.value}`);
+    case 'profile': // Явное указание действия для перехода в профиль
+      router.push(`/profile/${storedUserName.value}`);
       break;
     case 'createModule':
       router.push('/module/create');
