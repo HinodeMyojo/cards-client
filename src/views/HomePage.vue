@@ -204,7 +204,9 @@ const expandModules = () => {
 };
 
 onMounted(async () => {
-  await getListModules();
+  if (isAuth) {
+    await getListModules();
+  }
 });
 
 </script>
