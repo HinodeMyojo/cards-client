@@ -47,8 +47,8 @@
             </div>
             <div class="homepage-modules">
                 <div class="drop-down">
-                    <DropDown :data="listOfvalueForDrowDown" />
-                    <DropDown :data="listOfvalueForDrowDownExtension" />
+                    <DropDown :data="dropDownOption" @dropDownAction="dropDownOptionAction" />
+                    <DropDown :data= "dropDownSortTime" @dropDownAction="dropDownSortTimeAction"/>
                 </div>
                 <div class="modules">
                     <div v-for="item in listOfVisibleModules" :key="item.id">
@@ -103,7 +103,6 @@ import { moduleService } from '@/services/moduleService';
 
 const authStore = useAuthStore();
 const isAuth = authStore.isUserLogin;
-console.log(isAuth);
 
 // Для данных статистики (временно заполним)
 const currentStatisticContainer = ref([
@@ -161,19 +160,45 @@ const series = ref([4, 1, 6, 2])
 // }]
 
 // Для дропдауна TODO фильтры сортировки
-const listOfvalueForDrowDown = ref([
+const dropDownOption = ref([
     { title: "Популярные", action: "zavtra" },
-    { title: "Новые", action: "segoda" },
 ])
 
-const listOfvalueForDrowDownExtension = ref([
+const dropDownSortTime = ref([
     { title: "За день", action: "zavtra" },
-    { title: "За неделю", action: "segoda" },
-    { title: "За месяц", action: "segoda" },
-    { title: "За год", action: "segoda" },
-    { title: "За все время", action: "segoda" },
 ])
 
+const sortOpt = ref(0);
+const sortTime = ref(5);
+
+const dropDownOptionAction = (item) => {
+    sortOpt.value = item.action;
+    HandleSort()
+};
+
+const dropDownSortTimeAction = (item) => {
+    sortTime.value = item.action;
+    HandleSort()
+};
+
+const HandleSort = async () => {
+    await getListModules(sortOpt.value, sortTime.value);
+}
+
+
+const getDropDownSort = async () =>{
+    var response = await moduleService.getSortDropDown();
+    dropDownOption.value = dictionaryToArrayOfObjects(response.data.sortOption);
+    dropDownSortTime.value = dictionaryToArrayOfObjects(response.data.sortTime);
+}
+
+const dictionaryToArrayOfObjects = (dictionary) => {
+    return Object.entries(dictionary).
+        map(([action, title]) => ({ 
+            action:action, 
+            title:title
+        }));
+};
 
 // Для модулей
 //#region 
@@ -190,9 +215,9 @@ const listOfShowMoreModules = computed(() => {
   return listOfModules.value.slice(4);
 });
 
-const getListModules = async () => {
+const getListModules = async (sortOption, sortTime) => {  
   try {
-    const response = await moduleService.getModules(true, true, 5);
+    const response = await moduleService.getModules(true, true, sortTime, sortOption);
     listOfModules.value = response.data;
   } catch (error) {
     console.error('Ошибка при загрузке модулей:', error);
@@ -205,7 +230,8 @@ const expandModules = () => {
 
 
 onMounted(async () => {
-    await getListModules();
+    await HandleSort();
+    await getDropDownSort();
 });
 
 </script>

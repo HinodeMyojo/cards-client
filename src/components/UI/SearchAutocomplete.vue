@@ -17,15 +17,11 @@ let debounceTimeout = null;
 
 const inputItems = async (event) => {
     const currentValue = event.target.value;
-
-    console.log("Введённый текст:", currentValue);
-
     if (debounceTimeout) {
         clearTimeout(debounceTimeout);
     }
 
     debounceTimeout = setTimeout(() => {
-        console.log("Отправлено значение:", currentValue);
         emit('input', currentValue); // Отправляем значение через emit
     }, 500); // 500 мс ожидания
 };

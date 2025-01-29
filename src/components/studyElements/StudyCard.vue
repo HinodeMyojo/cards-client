@@ -87,9 +87,6 @@
 
   const addAnswer = (answer) => {
     const elementId = props.wordsArray[currentIndex.value].id;
-
-    console.log('Ответ:', answer);
-    console.log('ID элемента:', elementId);
     elementAnswerData.value.push({
       elementId,
       answer,

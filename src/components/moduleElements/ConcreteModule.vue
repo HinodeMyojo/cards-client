@@ -119,14 +119,12 @@ const openDeleteModal = (item) => {
 const modalType = ref('default');
 
 const removeFromLibrary = async () => {
-  console.log('DeleteFromLibrary' + moduleId);
   modalText.value =
     'Вы уверены, что хотите удалить объект из своей библиотеки?';
   modalType.value = 'removeFromLibrary';
   isDialogOpen.value = true;
 };
 const deleteModule = async () => {
-  console.log('Delete module' + moduleId);
   modalText.value = 'Вы уверены, что хотите удалить объект?';
   modalType.value = 'deleteModule';
   isDialogOpen.value = true;
@@ -136,7 +134,6 @@ const deleteModule = async () => {
 
 const handleAnswer = async (answer, type) => {
   if (!answer) {
-    console.log('Действие отменено');
     isDialogOpen.value = false;
     return;
   }
@@ -145,12 +142,10 @@ const handleAnswer = async (answer, type) => {
     switch (type) {
       case 'removeFromLibrary':
         await moduleService.deleteModuleFromLibrary(moduleId);
-        console.log('Модуль успешно удалён из библиотеки');
         break;
 
       case 'deleteModule':
         await moduleService.deleteModule(moduleId);
-        console.log('Модуль успешно удалён');
         router.push(`$/{userName}`);
         break;
 
@@ -209,7 +204,6 @@ const editElement = async (data) => {
 
 const deleteElement = async (id) => {
   await deleteElementById(id);
-  console.log('Element was deleted');
   await refreshTableData(moduleId);
 };
 
@@ -223,8 +217,6 @@ const refreshTableData = async (moduleId) => {
 onMounted(async () => {
   await refreshTableData(moduleId);
   headersData.value = await (await moduleService.getHeaders()).data;
-  console.log('Headers Data:', headersData.value);
-  console.log('Elements:', elements.value);
 
   deleteVariants.value = [
     { title: 'Убрать модуль из библиотеки', action: 'removeFromLibrary' },

@@ -47,7 +47,6 @@ export const useAuthStore = defineStore({
         return response.data.access;
       } catch (error) {
         this.cleanData();
-        console.log(this.isUserLogin);
         this.isUserLogin = false;
         throw error;
       }

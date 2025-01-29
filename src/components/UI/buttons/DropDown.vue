@@ -24,6 +24,7 @@ import { reactive, computed, ref, onMounted } from 'vue';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiChevronDown } from '@mdi/js';
 
+const emit = defineEmits(['dropDownAction']);
 // SVG Icon Path
 const path = ref(mdiChevronDown);
 
@@ -36,7 +37,6 @@ const props = defineProps({
         type: Array,
         default: () => [
             { title: 'Default Action 1', action: () => alert('Default Action 1 executed') },
-            { title: 'Default Action 2', action: () => alert('Default Action 2 executed') },
         ],
     },
     buttonColor: {
@@ -63,13 +63,13 @@ const props = defineProps({
 
 const nowTitle = ref(props.data[0].title);
 const dropDownAction = (item) => {
-    nowTitle.value = item.title;
-    item.action;
+    nowTitle.value = item.title,
+    emit('dropDownAction', item.action);
 }
 
-const state = reactive({
-    location: 'bottom',
-});
+// const state = reactive({
+//     location: 'bottom',    
+// });
 
 // Items computed from props
 const items = computed(() => props.data);

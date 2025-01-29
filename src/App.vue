@@ -28,7 +28,6 @@ const route = useRoute()
 
 const isAuthRoute = computed(() => {
   const normalizedPath = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path
-  console.log(normalizedPath)
   return authRoutes.some((e) => normalizedPath === e.path)
 })
 

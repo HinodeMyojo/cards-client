@@ -127,7 +127,6 @@
             errorState.value = 2;
             break;
           default:
-            console.log(error.response.data.errors);
             helperText.value = error.response.data.errors.Password[0];
             helperColor.value = 'red';
             helperVisible.value = true;

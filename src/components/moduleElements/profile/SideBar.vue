@@ -102,7 +102,6 @@
   };
 
   const LoadUserModules = async (searchText) => {
-    console.log(searchText);
     items.value = [];
     try {
       const queryText = searchText?.trim() || null;
@@ -111,9 +110,7 @@
           textSearch: queryText,
         },
       });
-      console.log(response);
       if (response.status == HttpStatusCode.Ok) {
-        console.log(response.data);
         items.value.push(...response.data);
       }
     } catch (error) {
@@ -136,7 +133,6 @@
   });
 
   onMounted(() => {
-    console.log(props.isAuth);
     if (props.isAuth) {
       LoadUserData();
       LoadUserModules();

@@ -122,7 +122,6 @@
   const DesciptionValid = ref(true);
 
   const deleteElement = (abc) => {
-    console.log(itemsData);
     itemsData.value.splice(abc - 1, 1);
     slider.value = slider.value - 1;
     //
@@ -166,9 +165,6 @@
   const onSubmit = () => {
     isNameValid(inputName.value);
     isDescriptionValid(inputDescription.value);
-
-    console.log(NameValid.value, DesciptionValid.value);
-
     if (!NameValid.value || !DesciptionValid.value) {
       return;
     }

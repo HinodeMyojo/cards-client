@@ -58,12 +58,9 @@
   const handleAnswer = (answer) => {
     if (answer) {
       // Удаляем элемент
-      console.log('Типа удалили компонент');
-      console.log(elementId.value);
       emit('delete-item', elementId.value);
     }
     isDialogOpen.value = false;
-    console.log('Типа нет');
   };
   // секция
 

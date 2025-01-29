@@ -156,7 +156,6 @@
       } else {
         responseErrorMessage.value = response.data;
       }
-      console.log(response.data);
       recoveryStep.value = 2;
     } catch (error) {
       console.error(error);

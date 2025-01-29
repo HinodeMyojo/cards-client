@@ -71,8 +71,6 @@
     if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
       const response = await getProfileAccess(usernameFromRequest);
 
-      console.log(response);
-
       // Выставляем флаги
       isUserProfile.value = response.isUserProfile;
       canBlockUser.value = response.canBlockUser;

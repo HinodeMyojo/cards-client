@@ -41,12 +41,20 @@ export const moduleService = {
             throw error;
         }
     },
-    async getModules(addAvatar, addUserName, sortTime) {
+    async getModules(addAvatar, addUserName, sortTime, sortOption) {
         try {
-            return await api.get(`/modules?AddCreatorAvatar=${addAvatar}&AddCreatorUserName=${addUserName}&SortTime=${sortTime}`);
+            return await api.get(`/modules?AddCreatorAvatar=${addAvatar}&AddCreatorUserName=${addUserName}&SortTime=${sortTime}&SortOption=${sortOption}`);
         } catch (error) {
             console.error("Ошибка получения модулей:", error);
             throw error;
         }
     },
+    async getSortDropDown(){
+        try{
+            return await api.get('/modules/sortOptions');
+        } catch (error) {
+            console.error("Ошибка получения списка модулей:", error);
+            throw error;
+        }
+    }
 };

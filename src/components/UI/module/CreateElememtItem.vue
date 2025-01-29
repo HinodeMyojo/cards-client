@@ -69,7 +69,6 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'delete-element'])
 
 const deleteElement = () => {
-  console.log(model.value)
   emit('delete-element', props.Id)
 }
 </script>

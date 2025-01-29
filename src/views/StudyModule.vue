@@ -55,8 +55,6 @@
   const getStatistic = async (id) => {
     var response = await getStatisticById(id);
     percentSuccess.value = response.data.percentSuccess;
-    console.log(response);
-    console.log(response.data);
   };
 
   const responseId = ref(0);

@@ -30,17 +30,14 @@ const props = defineProps({
     default: false
   }
 })
-console.log(props)
 const isMdi = computed(() => {
   const MDI_FIRST_SIGN = 'M'
-  console.log(props.icon)
   return props.icon.slice(0, 1) === MDI_FIRST_SIGN
 })
 
 const isSvg = computed(() => {
   const SVG_EXTENSION = '.svg'
   const CHARS_LENGTH = SVG_EXTENSION.length
-  console.log(props.icon)
   return props.icon.substr(props.icon.length - CHARS_LENGTH) === SVG_EXTENSION
 })
 
