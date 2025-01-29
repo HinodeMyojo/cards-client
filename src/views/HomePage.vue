@@ -172,12 +172,12 @@ const sortOpt = ref(0);
 const sortTime = ref(5);
 
 const dropDownOptionAction = (item) => {
-    sortOpt.value = item.action;
+    sortOpt.value = item;
     HandleSort()
 };
 
 const dropDownSortTimeAction = (item) => {
-    sortTime.value = item.action;
+    sortTime.value = item;
     HandleSort()
 };
 
