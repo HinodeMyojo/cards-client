@@ -262,6 +262,23 @@
     flex-direction: column;
   }
 
+  @media screen and (max-width: 768px) {
+    .login-container{
+      flex-direction: column;
+    }
+
+    .login-left{
+      flex: none;
+    }
+    
+    .login-right{
+      flex: none;
+      width: 100%;
+      height: 100%;
+      box-shadow: none;
+    }
+  }
+
   .login-helper {
     position: absolute;
     top: 20px;
