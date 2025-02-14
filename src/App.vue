@@ -81,6 +81,12 @@ a {
 
 .main-content {
   margin-top: 25px;
-
 }
+
+@media screen and (max-width: 768px) {
+  .app-login {
+    max-width: 100%;
+}
+}
+
 </style>
