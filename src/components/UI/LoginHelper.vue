@@ -32,6 +32,18 @@ const props =
     overflow: hidden;
 }
 
+@media screen and (max-width: 768px) {
+    .main{
+        width: 100%;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+  }
+
+
 .color-line {
     width: 1.5%;
     height: 100%;

@@ -241,7 +241,7 @@
     display: flex;
     flex-direction: row;
     height: 100vh;
-  }
+  } 
 
   .login-left,
   .login-right {
@@ -258,26 +258,9 @@
   .login-right {
     background-color: #242429;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-    /* Небольшая тень для визуального отделения */
     flex-direction: column;
   }
 
-  @media screen and (max-width: 768px) {
-    .login-container{
-      flex-direction: column;
-    }
-
-    .login-left{
-      flex: none;
-    }
-    
-    .login-right{
-      flex: none;
-      width: 100%;
-      height: 100%;
-      box-shadow: none;
-    }
-  }
 
   .login-helper {
     position: absolute;
@@ -299,7 +282,7 @@
     padding-left: 20px;
     padding-right: 20px;
     margin-bottom: 10px;
-  }
+  } 
 
   .close-menu-icon {
     background-color: transparent;
@@ -439,4 +422,30 @@
   .unsuccessfulMessage {
     border-color: #df0000;
   }
+  @media screen and (max-width: 768px) {
+    .login-container{
+      flex-direction: column;
+    }
+
+    .login-left{
+      flex: none;
+    }
+    
+    .login-right{
+      flex: none;
+      width: 100%;
+      height: 100%;
+      box-shadow: none;
+    }
+
+    .close-menu {
+      background-color: transparent;
+      
+    }
+
+    .close-menu-icon svg{
+      
+    }
+  }
+
 </style>
