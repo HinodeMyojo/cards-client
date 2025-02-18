@@ -434,7 +434,7 @@
     .login-right{
       flex: none;
       width: 100%;
-      height: 100%;
+      height: 100vh;
       box-shadow: none;
     }
 
@@ -443,8 +443,13 @@
       
     }
 
-    .close-menu-icon svg{
-      
+    :deep(h3) {
+    background-color: transparent;
+    font-size: 45px;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;
+    margin-bottom: 10px;
     }
   }
 
