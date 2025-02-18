@@ -389,4 +389,16 @@ a:hover {
 .logo-text {
   font-weight: 700;
 }
+
+@media screen and (max-width: 768px) {
+  .main-header {
+  text-decoration: none;
+  width: 100%;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+}
+
 </style>
