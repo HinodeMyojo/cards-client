@@ -274,16 +274,7 @@
     opacity: 1;
   }
 
-  .close-menu {
-    background-color: transparent;
-    padding: 20px;
-    width: 90%;
-    max-width: 680px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-bottom: 10px;
-  } 
-
+  
   .close-menu-icon {
     background-color: transparent;
     display: flex;
@@ -310,13 +301,6 @@
     text-align: center;
     flex: 1;
     margin-bottom: 30px;
-  }
-
-  :deep(.login-form, .buttons) {
-    background-color: transparent;
-    display: flex;
-    gap: 15px;
-    flex-direction: column;
   }
 
   :deep(.login-form input) {
@@ -422,35 +406,81 @@
   .unsuccessfulMessage {
     border-color: #df0000;
   }
-  @media screen and (max-width: 768px) {
-    .login-container{
-      flex-direction: column;
-    }
+  .close-menu {
+  background-color: transparent;
+  padding: 20px;
+  width: 90%;
+  max-width: 680px;
+  }
 
-    .login-left{
-      flex: none;
-    }
-    
-    .login-right{
-      flex: none;
-      width: 100%;
-      height: 100vh;
-      box-shadow: none;
-    }
+  :deep(.login-form, .buttons) {
+    background-color: transparent;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+  }
 
+  @media screen and (min-width: 768px) {
     .close-menu {
-      background-color: transparent;
-      
+    margin-bottom: 10px;
+    gap: 15px;
     }
+  }
+  @media screen and (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
 
-    :deep(h3) {
+  .close-menu {
+    padding-bottom: 0px;
+  }
+
+  .login-left,
+  .login-right {
+    flex: none;
+  }
+
+  .login-right {
+    width: 100%;
+    min-height: 100vh;
+    box-shadow: none;
+    background-color: #242429;
+  }
+
+  ::v-deep(.transparent) {
+    background-color: transparent;
+    border: 1px solid #7c7c7c;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      border: 1px solid #d459ff;
+    }
+  }
+
+  .login-form-container {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+  }
+
+  ::v-deep(.buttons) {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+    gap: 15px;
+  }
+
+  ::v-deep(h3) {
     background-color: transparent;
     font-size: 45px;
     font-weight: 500;
     text-align: center;
-    flex: 1;
     margin-bottom: 10px;
-    }
   }
+}
 
 </style>
