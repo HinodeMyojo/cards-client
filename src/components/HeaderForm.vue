@@ -234,6 +234,9 @@ const cleanLocalStorage = () => {
 </script>
 
 <style scoped>
+
+
+
 .add-button {
   cursor: pointer;
 }
@@ -390,6 +393,7 @@ a:hover {
   font-weight: 700;
 }
 
+
 @media screen and (max-width: 768px) {
   .main-header {
   text-decoration: none;
@@ -398,7 +402,16 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-}
+  }
+
+  .main,
+  .right {
+    display: none;
+  }
+
+  .burger-menu {
+    display: block; /* Показываем бургер на малых экранах */
+  }
 }
 
 </style>
