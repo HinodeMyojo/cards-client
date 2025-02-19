@@ -89,7 +89,7 @@ a {
   .app {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 90%;
     min-height: 100vh;
     display: flex;
     margin-bottom: 20px;

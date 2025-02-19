@@ -389,4 +389,10 @@ p {
     padding: 10px;
     font-size: 18px;
 }
+
+@media screen and (max-width: 768px) {
+    .main-homepage{
+        display: none;
+    }
+}
 </style>

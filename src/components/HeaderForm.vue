@@ -2,6 +2,9 @@
   <div class="main-header">
     <div class="wrapper">
       <div class="container">
+        <div class="burger-menu">
+          <button class="menu"><svg-icon type="mdi" :path="menu" size="30"></svg-icon></button>
+        </div>
         <div class="logotype">
           <a class="logo" @click="Home">
             <UIIcon :icon="logoIcon" width="35px" height="35px" :color="white" />
@@ -83,7 +86,7 @@
 import UIIcon from './UI/UIIcon.vue';
 import router from '@/router/router';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiPlusCircleOutline } from '@mdi/js';
+import { mdiPlusCircleOutline, mdiMenu } from '@mdi/js';
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import api from '@/plugins/axios';
@@ -97,6 +100,7 @@ const isUserLogin = computed(() => authStore.isUserLogin);
 
 // Для иконок
 const path = ref(mdiPlusCircleOutline);
+const menu = ref(mdiMenu);
 
 onMounted(() => {
   if (isUserLogin.value) {
@@ -307,22 +311,16 @@ const cleanLocalStorage = () => {
 }
 
 a,
-button {
+.register {
   font-size: 16px;
   font-weight: 500;
 }
 
-button {
-  background-color: #272a2f;
-  border: 1px solid #3b4047;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.4s ease;
-  box-sizing: border-box;
+.register {
+   
 }
 
-button:hover {
+.register:hover {
   border: 1px solid #d459ff;
 }
 
@@ -403,14 +401,52 @@ a:hover {
   align-items: center;
   justify-content: center;
   }
+  .menu{
+    display: flex;
+    min-width: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+  .menu:active{
+    
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transform: scale(0.95);
+    transition: 0.1s;
+  }
 
-  .main,
-  .right {
+  .menu:hover{
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transition: 0.3s ease;
+  }
+
+  .content-body{
+    justify-content: end;
+  }
+  .login{
+    background-color: #272a2f;
+    border: 1px solid #3b4047;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.4s ease;
+    box-sizing: border-box;
+  }
+
+  .container{
+    gap: 15px;
+  }
+  .logo-text, .main, .language, .register{
     display: none;
   }
 
   .burger-menu {
-    display: block; /* Показываем бургер на малых экранах */
+    display: flex;
+    align-items: center;
   }
 }
 
