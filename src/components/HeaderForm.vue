@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="container">
         <div class="burger-menu">
-          <button class="menu"><svg-icon type="mdi" :path="menu" size="30"></svg-icon></button>
+          <button class="menu" @click="drawer = !drawer"><svg-icon type="mdi" :path="menu" size="30"></svg-icon></button>
         </div>
         <div class="logotype">
           <a class="logo" @click="Home">
@@ -13,6 +13,8 @@
         </div>
         <div class="content">
           <div class="content-body">
+            <div class="main-mobile">
+            </div>
             <div class="main">
               <a href="#">Главная</a>
               <a href="#">Модули</a>
@@ -101,6 +103,13 @@ const isUserLogin = computed(() => authStore.isUserLogin);
 // Для иконок
 const path = ref(mdiPlusCircleOutline);
 const menu = ref(mdiMenu);
+
+// Для мобильного меню
+const drawer = ref(false);
+
+const menues = ref([
+  { title: 'Профиль', value: 'profile' },
+  { title: 'Достижения', value: 'achievements' },]);
 
 onMounted(() => {
   if (isUserLogin.value) {
@@ -238,9 +247,6 @@ const cleanLocalStorage = () => {
 </script>
 
 <style scoped>
-
-
-
 .add-button {
   cursor: pointer;
 }
@@ -316,9 +322,7 @@ a,
   font-weight: 500;
 }
 
-.register {
-   
-}
+.register {}
 
 .register:hover {
   border: 1px solid #d459ff;
@@ -394,22 +398,24 @@ a:hover {
 
 @media screen and (max-width: 768px) {
   .main-header {
-  text-decoration: none;
-  width: 100%;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    text-decoration: none;
+    width: 100%;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .menu{
+
+  .menu {
     display: flex;
     min-width: 40px;
     min-height: 40px;
     align-items: center;
     justify-content: center;
   }
-  .menu:active{
-    
+
+  .menu:active {
+
     border-radius: 50px;
     border: 0px;
     background-color: #3b4047;
@@ -417,17 +423,18 @@ a:hover {
     transition: 0.1s;
   }
 
-  .menu:hover{
+  .menu:hover {
     border-radius: 50px;
     border: 0px;
     background-color: #3b4047;
     transition: 0.3s ease;
   }
 
-  .content-body{
+  .content-body {
     justify-content: end;
   }
-  .login{
+
+  .login {
     background-color: #272a2f;
     border: 1px solid #3b4047;
     padding: 8px 15px;
@@ -437,10 +444,14 @@ a:hover {
     box-sizing: border-box;
   }
 
-  .container{
+  .container {
     gap: 15px;
   }
-  .logo-text, .main, .language, .register{
+
+  .logo-text,
+  .main,
+  .language,
+  .register {
     display: none;
   }
 
@@ -449,5 +460,4 @@ a:hover {
     align-items: center;
   }
 }
-
 </style>
