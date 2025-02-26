@@ -96,12 +96,13 @@
   };
 
   const openModule = () => {
-    if (!isAuth) {
-      alert('Пока что поддержка анонимных пользователей недоступна');
-    }
-    else{
-      router.push(`/module/${props.moduleId}`);
-    }
+    // if (!isAuth) {
+    //   alert('Пока что поддержка анонимных пользователей недоступна');
+    // }
+    // else{
+    //   router.push(`/module/${props.moduleId}`);
+    // }
+    router.push(`/module/${props.moduleId}`);
   };
 
 

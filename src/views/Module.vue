@@ -39,6 +39,7 @@
   import Profile from '@/components/moduleElements/profile/Profile.vue';
   import { useRoute } from 'vue-router';
   import { getProfileAccess } from '@/services/profileService.js';
+  import { useAuthStore } from '@/stores/authStore';
 
   const props = defineProps({
     typeOfModuleState: {
@@ -83,10 +84,26 @@
       userAvatar.value = `data:image/png;base64,${response.avatar}`;
     }
     if (
-      props.typeOfModuleState == 'createModule' ||
       props.typeOfModuleState == 'concreteModule'
     ) {
-      isUserProfile.value = true;
+      if (useAuthStore.isAuth()) {
+        isUserProfile.value = true;
+      }
+      else{
+        isUserProfile.value = false;
+      }
+      // TODO добавить получени userName и image пользователя из данных по модулю
+      // userId.value = response.id;
+      // isEmailConfirmed.value = response.isEmailConfirmed;
+      // userAvatar.value = `data:image/png;base64,${response.avatar}`;
+    }
+    if (props.typeOfModuleState == 'createModule') {
+      if (useAuthStore.isAuth()) {
+        isUserProfile.value = true;
+      }
+      else{
+        isUserProfile.value = false;
+      }
     }
   };
 
@@ -128,3 +145,4 @@
     border: none;
   }
 </style>
+e
