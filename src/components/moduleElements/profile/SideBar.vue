@@ -67,6 +67,20 @@
   import { HttpStatusCode } from 'axios';
   import BaseButton from '@/components/UI/buttons/BaseButton.vue';
 
+  const props = defineProps({
+    // Принадлежит ли профиль пользователю
+    isAuth: {
+      type: Boolean,
+      default: false,
+    },
+    userName: { 
+      type: String,
+    },
+    userAvatar: {
+      type: String,
+    },
+  });
+
   const storedUserName = ref('Пользователь');
   const avatarSrc = ref('');
 
@@ -118,22 +132,8 @@
     }
   };
 
-  // Upd 01.06.2025
-  const props = defineProps({
-    isAuth: {
-      type: Boolean,
-      default: false,
-    },
-    userName: {
-      type: String,
-    },
-    userAvatar: {
-      type: String,
-    },
-  });
-
   onMounted(() => {
-    if (props.isAuth) {
+    if (props.isUserProfile) {
       LoadUserData();
       LoadUserModules();
     } else {

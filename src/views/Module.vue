@@ -15,7 +15,7 @@
       />
     </div>
     <div class="module-main" v-if="typeOfModuleState === 'concreteModule'">
-      <ConcreteModule />
+      <ConcreteModule v-if="moduleInfo" :module="moduleInfo"/>
     </div>
     <div class="module-main" v-else-if="typeOfModuleState === 'createModule'">
       <CreateModule @refreshData="refreshData" />
@@ -39,7 +39,8 @@
   import Profile from '@/components/moduleElements/profile/Profile.vue';
   import { useRoute } from 'vue-router';
   import { getProfileAccess } from '@/services/profileService.js';
-  import { useAuthStore } from '@/stores/authStore';
+  import { getUserById } from '@/services/profileService.js';
+  import { moduleService } from '@/services/moduleService.js';
 
   const props = defineProps({
     typeOfModuleState: {
@@ -61,14 +62,19 @@
   const canDeleteUser = ref(null);
   const canEditUser = ref(null);
 
+  // Для конкретного модуля
+  const moduleInfo = ref(null);
+  //
+
   const route = useRoute();
-  const userNameFromUrlRoute = route.params.username;
+  const userNameFromUrlRoute = ref(route.params.username);
   const userId = ref(0);
   const isEmailConfirmed = ref(false);
   const userAvatar = ref('');
 
   // Проверка что это вообще за пользак
-  const checkUserProfileAccess = async (usernameFromRequest) => {
+  const checkUserProfileAccess = async () => {
+    const usernameFromRequest = route.params.username;
     if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
       const response = await getProfileAccess(usernameFromRequest);
 
@@ -83,39 +89,31 @@
       isEmailConfirmed.value = response.isEmailConfirmed;
       userAvatar.value = `data:image/png;base64,${response.avatar}`;
     }
-    if (
-      props.typeOfModuleState == 'concreteModule'
-    ) {
-      if (useAuthStore.isAuth()) {
-        isUserProfile.value = true;
-      }
-      else{
-        isUserProfile.value = false;
-      }
-      // TODO добавить получени userName и image пользователя из данных по модулю
-      // userId.value = response.id;
-      // isEmailConfirmed.value = response.isEmailConfirmed;
-      // userAvatar.value = `data:image/png;base64,${response.avatar}`;
-    }
-    if (props.typeOfModuleState == 'createModule') {
-      if (useAuthStore.isAuth()) {
-        isUserProfile.value = true;
-      }
-      else{
-        isUserProfile.value = false;
-      }
+    if (props.typeOfModuleState === 'concreteModule') {
+      const moduleId = route.params.id;
+      moduleInfo.value = (await moduleService.getModuleById(moduleId)).data;
+      userId.value = moduleInfo.value.creatorId;
+      const user = await getUserById(moduleInfo.value.creatorId);
+      userAvatar.value = `data:image/png;base64,${user.avatar}`;
+      console.log(user);
+      userNameFromUrlRoute.value = user.userName;
+      
+    } else {
+      console.log('Боба');
+      console.log(props.typeOfModuleState);
     }
   };
 
   onMounted(() => {
-    checkUserProfileAccess(userNameFromUrlRoute);
+    console.log('Компонент смонтирован'); 
+    checkUserProfileAccess();
   });
 
   // Отслеживаем изменение роута (чтобы при изменении ника - обновлялась страница)
   watch(
     () => route.params.username,
-    (newUsername) => {
-      checkUserProfileAccess(newUsername);
+    () => { 
+      checkUserProfileAccess();
     }
   );
 </script>

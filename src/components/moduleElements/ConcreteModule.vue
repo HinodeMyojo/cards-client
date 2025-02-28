@@ -89,6 +89,18 @@ import router from '@/router/router';
 import Modal from '../UI/Modal.vue';
 import BaseButton from '../UI/buttons/BaseButton.vue';
 
+
+const moduleInfo = ref('');
+
+const props = defineProps({
+  module: {
+    type: Object,
+    required: true,
+  },
+});
+
+moduleInfo.value = props.module;
+
 // Переменные для иконок
 const pathMdiCards = ref(mdiCards);
 const pathMdiFountainPenTip = ref(mdiFountainPenTip);
@@ -186,7 +198,6 @@ const route = useRoute();
 let moduleId = route.params.id;
 const { deleteElementById, addElementToModule, editElementById } =
   useElementService();
-const moduleInfo = ref('');
 const elements = ref([]);
 const headersData = ref(null);
 
