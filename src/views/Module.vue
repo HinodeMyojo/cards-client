@@ -92,7 +92,6 @@ const checkUserProfileAccess = async () => {
 };
 
 onMounted(() => {
-  console.log('Компонент смонтирован');
   checkUserProfileAccess();
 });
 

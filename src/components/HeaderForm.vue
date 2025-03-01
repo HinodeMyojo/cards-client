@@ -125,8 +125,8 @@ const logout = async () => {
 
 const LoadUser = async () => {
   try {
-    const storedAvatar = localStorage.getItem('userAvatar');
-    const storedUserName = localStorage.getItem('userName');
+    const storedAvatar = authStore.userAvatar;
+    const storedUserName = authStore.userName;
 
     if (storedAvatar && storedUserName) {
       SetAvatarToPage(storedAvatar);

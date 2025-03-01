@@ -3,12 +3,12 @@
     <div class="module-title">
       <h2>{{ moduleInfo.title }}</h2>
       <div class="module-button">
-        <BaseButton label="Редактировать" color="#272A2F" size="medium" />
+        <BaseButton v-if = isAuth label="Редактировать" color="#272A2F" size="medium" />
         <div class="delete-module">
           <Modal :text="modalText" :type="modalType" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
           <v-menu :location="location">
             <template v-slot:activator="{ props }">
-              <h3 v-bind="props">Удалить</h3>
+              <h3 v-if = isAuth v-bind="props">Удалить</h3>
             </template>
             <v-list class="custom-list">
               <v-list-item v-for="(item, index) in deleteVariants" :key="index" @click="openDeleteModal(item)"
@@ -88,7 +88,9 @@ import ElementModal from '@/components/UI/module/ElementModal.vue';
 import router from '@/router/router';
 import Modal from '../UI/Modal.vue';
 import BaseButton from '../UI/buttons/BaseButton.vue';
+import { useAuthStore } from '@/stores/authStore';;
 
+const isAuth = useAuthStore().checkUserLogin();
 
 const moduleInfo = ref('');
 

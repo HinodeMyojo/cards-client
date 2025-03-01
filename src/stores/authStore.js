@@ -11,11 +11,15 @@ export const useAuthStore = defineStore({
     accessToken: localStorage.getItem('accessToken'),
     refreshToken: localStorage.getItem('refreshToken'),
     isUserLogin: !!localStorage.getItem('accessToken'),
+    userId:  localStorage.getItem("userId"),
+    userAvatar: localStorage.getItem("userAvatar"),
+    userName: localStorage.getItem("userName"),
   }),
   actions: {
     checkUserLogin() {
       this.isUserLogin = !!localStorage.getItem('accessToken');
     },
+    
     setTokens({ access, refresh }) {
       this.accessToken = access;
       this.refreshToken = refresh;
@@ -26,10 +30,7 @@ export const useAuthStore = defineStore({
     cleanData() {
       this.accessToken = null;
       this.refreshToken = null;
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userAvatar');
-      localStorage.removeItem('userId');
+      localStorage.clear();
       this.checkUserLogin();
       location.reload();
     },
