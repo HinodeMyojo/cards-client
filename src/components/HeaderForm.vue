@@ -125,38 +125,29 @@ const logout = async () => {
 
 const LoadUser = async () => {
   try {
-    const storedAvatar = authStore.userAvatar;
-    const storedUserName = authStore.userName;
+    if (authStore.userAvatar && authStore.userName) {
+      updatePageWithUserData(authStore.userAvatar, authStore.userName);
+      return;
+    } 
+    await authStore.whoami();
 
-    if (storedAvatar && storedUserName) {
-      SetAvatarToPage(storedAvatar);
-      SetUserNameToPage(storedUserName);
+    if (authStore.userAvatar && authStore.userName) {
+      updatePageWithUserData(authStore.userAvatar, authStore.userName);
     } else {
-      const response = await api.get(`/user/whoami`);
-      if (response?.data) {
-        await ProcessUserData(response.data);
-      } else {
-        console.error('Invalid response from server');
-      }
+      console.log('User data is still unavailable after whoami call.');
     }
+
   } catch (error) {
     console.error('Error loading user:', error);
   }
 };
 
-const ProcessUserData = async (data) => {
-  try {
-    const base64Avatar = `data:image/png;base64,${data.avatar}`;
-    localStorage.setItem('userAvatar', base64Avatar);
-    localStorage.setItem('userName', data.userName);
-    localStorage.setItem('userId', data.id);
-
-    SetAvatarToPage(base64Avatar);
-    SetUserNameToPage(data.userName);
-  } catch (error) {
-    console.error('Error processing user data:', error);
-  }
+const updatePageWithUserData = (avatar, userName) => {
+  SetAvatarToPage(avatar);
+  SetUserNameToPage(userName);
 };
+
+
 
 const SetUserNameToPage = (userName) => {
   storedUserName.value = userName;
