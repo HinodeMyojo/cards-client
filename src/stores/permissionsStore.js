@@ -12,7 +12,7 @@ export const usePermissionsStore = defineStore({
             var response = await api("permission/get")
             this.userPermissions = response.dat
         },
-        checkPermission(permission){
+        checkPermissions(permission){
             return this.userPermissions.includes(permission)
         }
     }

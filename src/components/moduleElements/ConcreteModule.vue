@@ -3,7 +3,7 @@
     <div class="module-title">
       <h2>{{ moduleInfo.title }}</h2>
       <div class="module-button">
-        <BaseButton v-if="isAuth && CheckUserCanEditModule() " label=" Редактировать" color="#272A2F" size="medium" />
+        <BaseButton v-if="isAuth && CheckUserCanEditModule()" label=" Редактировать" color="#272A2F" size="medium" />
         <div v-if=isAuth class="delete-module">
           <Modal :text="modalText" :type="modalType" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
           <v-menu :location="location">
@@ -24,7 +24,6 @@
     </div>
     <hr />
     <div v-if="elements.length > 0" class="module-card">
-      <!-- <Card :wordsArray="elements" /> -->
       <InfoCard :wordsArray="elements" :height="'300px'" :width="'600px'" />
     </div>
     <div v-else-if="moduleInfo.userId === userId" class="module-nope">
@@ -95,7 +94,7 @@ const authStore = useAuthStore();
 const permStore = usePermissionsStore();
 
 const isAuth = authStore.isUserLogin;
-permStore.getUserPermissions();
+
 
 const moduleInfo = ref('');
 
@@ -137,11 +136,12 @@ const openDeleteModal = (item) => {
 // Функции удаления модулей
 const modalType = ref('default');
 
-const CheckUserCanEditModule = () =>{
-  if (permStore.checkPermission("CanEditOwnModule") && userId === moduleInfo.value.userId) {
+const CheckUserCanEditModule = async () => {
+  await permStore.getUserPermissions();
+  if (userId == moduleInfo.value.userId) {
     return true;
   }
-  if (permStore.checkPermission("CanEditAnyModule")) {
+  if (permStore.checkPermissions("CanEditAnyModule")) {
     return true;
   }
   return false;
@@ -218,7 +218,6 @@ const { deleteElementById, addElementToModule, editElementById } =
 const elements = ref([]);
 const headersData = ref(null);
 
-// Функции для работы с элементами
 const editElement = async (data) => {
   const model = {
     key: data.key,
@@ -241,11 +240,11 @@ const refreshTableData = async (moduleId) => {
   elements.value = moduleInfo.value.elements || [];
 };
 
-// Хук mounted для загрузки данных
-onMounted(async () => {
-  await refreshTableData(moduleId);
+const firstLoadModule = async () => 
+{
   headersData.value = await (await moduleService.getHeaders()).data;
-
+  moduleInfo.value = props.module;
+  elements.value = moduleInfo.value.elements || [];
   deleteVariants.value = [
     { title: 'Убрать модуль из библиотеки', action: 'removeFromLibrary' },
   ];
@@ -256,6 +255,12 @@ onMounted(async () => {
       action: 'deleteModule',
     });
   }
+}
+
+// Хук mounted для загрузки данных
+onMounted(async () => {
+  // await refreshTableData(moduleId);
+  await firstLoadModule();
 });
 
 watch(

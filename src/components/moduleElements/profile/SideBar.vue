@@ -16,7 +16,7 @@
           <div id="userName" class="userName">{{ storedUserName }}</div>
         </div>
       </div>
-      <div v-if="isAuth" class="extra-buttons">
+      <div v-if="isUserProfile" class="extra-buttons">
         <BaseButton
           :label="`Редактировать`"
           :width="`100%`"
@@ -33,11 +33,11 @@
         />
       </div>
       <hr />
-      <div v-if="isAuth" class="search">
+      <div v-if="isUserProfile" class="search">
         <SearchAutocomplete @input="LoadUserModules" />
       </div>
-      <hr v-if="isAuth" />
-      <div class="tree" v-if="isAuth">
+      <hr v-if="isUserProfile" />
+      <div class="tree" v-if="isUserProfile">
         <div v-if="items.length > 0" class="moduleItems">
           <ModuleItem
             v-for="item in items"
@@ -69,7 +69,7 @@
 
   const props = defineProps({
     // Принадлежит ли профиль пользователю
-    isAuth: {
+    isUserProfile: {
       type: Boolean,
       default: false,
     },

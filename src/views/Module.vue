@@ -1,10 +1,10 @@
 <template>
   <div class="module-container">
     <div class="module-sidebar" v-if="isUserProfile">
-      <ProfileSideBar :isAuth="isUserProfile" :userName="userNameFromUrlRoute" :userAvatar="userAvatar" />
+      <ProfileSideBar :isUserProfile="isUserProfile" :userName="userNameFromUrlRoute" :userAvatar="userAvatar" />
     </div>
     <div class="module-sidebar" v-else>
-      <ProfileSideBar :isAuth="isUserProfile" :userName="userNameFromUrlRoute" :userAvatar="userAvatar" />
+      <ProfileSideBar :isUserProfile="isUserProfile" :userName="userNameFromUrlRoute" :userAvatar="userAvatar" />
     </div>
     <div class="module-main" v-if="typeOfModuleState === 'concreteModule'">
       <ConcreteModule v-if="moduleInfo" :module="moduleInfo" />
@@ -29,6 +29,9 @@ import { useRoute } from 'vue-router';
 import { getProfileAccess } from '@/services/profileService.js';
 import { getUserById } from '@/services/profileService.js';
 import { moduleService } from '@/services/moduleService.js';
+import { useAuthStore } from '@/stores/authStore';
+
+const authStore = useAuthStore();
 
 const props = defineProps({
   typeOfModuleState: {
@@ -62,10 +65,9 @@ const userAvatar = ref('');
 // Проверка что это вообще за пользак
 const checkUserProfileAccess = async () => {
   const usernameFromRequest = route.params.username;
+  
   if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
     const response = await getProfileAccess(usernameFromRequest);
-
-    // Выставляем флаги
     isUserProfile.value = response.isUserProfile;
     canBlockUser.value = response.canBlockUser;
     canViewProfile.value = response.canViewProfile;
@@ -81,6 +83,7 @@ const checkUserProfileAccess = async () => {
     moduleInfo.value = (await moduleService.getModuleById(moduleId)).data;
     userId.value = moduleInfo.value.creatorId;
     const user = await getUserById(moduleInfo.value.creatorId);
+    isUserProfile.value = user.id == authStore.userId;
     userAvatar.value = `data:image/png;base64,${user.avatar}`;
     console.log(user);
     userNameFromUrlRoute.value = user.userName;
