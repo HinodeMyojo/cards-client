@@ -70,6 +70,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import BaseButton from '@/components/UI/buttons/BaseButton.vue';
 import SearchAutocomplete from '@/components/UI/SearchAutocomplete.vue';
+import ModuleItem from '@/components/UI/ModuleItem.vue';
 
 const router = useRouter();
 
