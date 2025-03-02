@@ -21,7 +21,7 @@
     <div class="buttons">
       <button class="fill" type="submit">Войти</button>
       <button class="transparent" type="button" @click="registerUser">
-        Отсутствует учетная запись? Зарегистрироваться
+        Зарегистрироваться
       </button>
       <SocialButtons />
     </div>

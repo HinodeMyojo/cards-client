@@ -1,130 +1,176 @@
 <template>
   <div class="module-container">
-    <div class="module-sidebar" v-if="isUserProfile">
-      <ProfileSideBar
-        :isAuth="isUserProfile"
-        :userName="userNameFromUrlRoute"
-        :userAvatar="userAvatar"
+    <ProfileSideBar class="module-sidebar"
+      v-if="isSidebarVisible"
+      :isUserProfile="isUserProfile"
+      :userName="userNameFromUrlRoute"
+      :avatarSrc="userAvatar"
+      :modules="modules"
+    />
+    
+    <div class="module-main">
+      <ConcreteModule 
+        v-if="typeOfModuleState === 'concreteModule' && moduleInfo" 
+        :module="moduleInfo" 
       />
-    </div>
-    <div class="module-sidebar" v-else>
-      <ProfileSideBar
-        :isAuth="isUserProfile"
-        :userName="userNameFromUrlRoute"
-        :userAvatar="userAvatar"
+      <CreateModule 
+        v-else-if="typeOfModuleState === 'createModule'" 
+        @refreshSideBarModules="refreshSideBarModules" 
       />
-    </div>
-    <div class="module-main" v-if="typeOfModuleState === 'concreteModule'">
-      <ConcreteModule />
-    </div>
-    <div class="module-main" v-else-if="typeOfModuleState === 'createModule'">
-      <CreateModule @refreshData="refreshData" />
-    </div>
-    <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
-      <Profile
-        :is-user-profile="isUserProfile"
-        :can-view-profile="canViewProfile"
-        :userId="userId"
-        :isEmailConfirmed="isEmailConfirmed"
+      <Profile 
+        v-else-if="typeOfModuleState === 'profile'" 
+        :is-user-profile="isUserProfile" 
+        :can-view-profile="canViewProfile" 
+        :user-id="userId"
+        :is-email-confirmed="isEmailConfirmed"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-  import { onMounted, ref, watch } from 'vue';
-  import ProfileSideBar from '@/components/moduleElements/profile/SideBar.vue';
-  import ConcreteModule from '@/components/moduleElements/ConcreteModule.vue';
-  import CreateModule from '@/components/moduleElements/CreateModule.vue';
-  import Profile from '@/components/moduleElements/profile/Profile.vue';
-  import { useRoute } from 'vue-router';
-  import { getProfileAccess } from '@/services/profileService.js';
+import { ref, watch, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
+import ProfileSideBar from '@/components/moduleElements/profile/SideBar.vue';
+import ConcreteModule from '@/components/moduleElements/ConcreteModule.vue';
+import CreateModule from '@/components/moduleElements/CreateModule.vue';
+import Profile from '@/components/moduleElements/profile/Profile.vue';
+import { 
+  getProfileAccess,
+  getUserById 
+} from '@/services/profileService';
+import { moduleService } from '@/services/moduleService';
 
-  const props = defineProps({
-    typeOfModuleState: {
-      type: String,
-      default: '',
-    },
-  });
+const authStore = useAuthStore();
+const route = useRoute();
 
-  // TODO сделать логику обновления сайд-бара
-  const refreshStatus = ref(null);
-  const refreshData = () => {
-    refreshStatus.value = true;
-  };
+const props = defineProps({
+  typeOfModuleState: {
+    type: String,
+    required: true,
+    validator: value => ['concreteModule', 'createModule', 'profile'].includes(value)
+  },
+});
 
-  // Флаги доступа
-  const isUserProfile = ref(null);
-  const canBlockUser = ref(null);
-  const canViewProfile = ref(null);
-  const canDeleteUser = ref(null);
-  const canEditUser = ref(null);
+// Состояние компонента
+const isUserProfile = ref(false);
+const canViewProfile = ref(false);
+const userId = ref(null);
+const isEmailConfirmed = ref(false);
+const userAvatar = ref('');
+const moduleInfo = ref(null);
+const userNameFromUrlRoute = ref(route.params.username);
+const modules = ref([]);
 
-  const route = useRoute();
-  const userNameFromUrlRoute = route.params.username;
-  const userId = ref(0);
-  const isEmailConfirmed = ref(false);
-  const userAvatar = ref('');
+// Вычисляемое свойство для видимости сайдбара
+const isSidebarVisible = computed(() => {
+  return ['concreteModule', 'profile', 'createModule'].includes(props.typeOfModuleState);
+});
 
-  // Проверка что это вообще за пользак
-  const checkUserProfileAccess = async (usernameFromRequest) => {
-    if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
-      const response = await getProfileAccess(usernameFromRequest);
-
-      // Выставляем флаги
-      isUserProfile.value = response.isUserProfile;
-      canBlockUser.value = response.canBlockUser;
-      canViewProfile.value = response.canViewProfile;
-      canDeleteUser.value = response.canDeleteUser;
-      canEditUser.value = response.canEditUser;
-
-      userId.value = response.id;
-      isEmailConfirmed.value = response.isEmailConfirmed;
-      userAvatar.value = `data:image/png;base64,${response.avatar}`;
+// Основная логика проверки доступа
+const checkAccess = async () => {
+  try {
+    switch(props.typeOfModuleState) {
+      case 'profile': 
+        await handleProfileAccess();
+        break;
+      case 'concreteModule':
+        await handleConcreteModuleAccess();
+        break;
+      case 'createModule':
+        await handleCreateModuleAccess();
+        break;
     }
-    if (
-      props.typeOfModuleState == 'createModule' ||
-      props.typeOfModuleState == 'concreteModule'
-    ) {
-      isUserProfile.value = true;
-    }
-  };
+  } catch (error) {
+    console.error('Ошибка проверки доступа:', error);
+  }
+};
 
-  onMounted(() => {
-    checkUserProfileAccess(userNameFromUrlRoute);
-  });
+// Обработчики для каждого состояния
+const handleProfileAccess = async () => {
+  const response = await getProfileAccess(route.params.username);
+  const { 
+    isUserProfile: userAccess,
+    canViewProfile: viewAccess,
+    id,
+    avatar,
+    isEmailConfirmed: emailConfirmed
+  } = response;
+  
+  Object.assign([isUserProfile, canViewProfile, userId, userAvatar, isEmailConfirmed], 
+               [userAccess, viewAccess, id, `data:image/png;base64,${avatar}`, emailConfirmed]);
+};
 
-  // Отслеживаем изменение роута (чтобы при изменении ника - обновлялась страница)
-  watch(
-    () => route.params.username,
-    (newUsername) => {
-      checkUserProfileAccess(newUsername);
-    }
-  );
+const handleConcreteModuleAccess = async () => {
+  const moduleId = route.params.id;
+  moduleInfo.value = (await moduleService.getModuleById(moduleId)).data;
+  const user = await getUserById(moduleInfo.value.creatorId);
+  setupUserProfile(user);
+};
+
+const handleCreateModuleAccess = async () => {
+  const user = await getUserById(authStore.userId);
+  setupUserProfile(user);
+};
+
+// Вспомогательная функция для настройки профиля пользователя
+const setupUserProfile = (user) => {
+  isUserProfile.value = user.id == authStore.userId;
+  userAvatar.value = `data:image/png;base64,${user.avatar}`;
+  userNameFromUrlRoute.value = user.userName;
+  userId.value = user.id;
+  if (isUserProfile.value) {
+    fetchUserModules()
+  }
+};
+
+const refreshSideBarModules = () => {
+  fetchUserModules();
+}
+
+// Обновление данных
+const fetchUserModules = async (searchQuery = '') => {
+  try {
+    var response = await moduleService.getUsedModules(searchQuery.trim() || "");
+    modules.value = response.data;
+  } catch (error) {
+    console.error('Ошибка загрузки модулей:', error);
+  }
+};
+// Отслеживание изменений роута
+watch(
+  () => [route.params.username, route.params.id, props.typeOfModuleState],
+  () => checkAccess(),
+  { deep: true }
+);
+
+onMounted(checkAccess);
 </script>
 
 <style scoped>
-  .module-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 30px;
-  }
+.module-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 30px;
+}
 
-  .module-sidebar {
-    flex: 0.45;
-  }
+.module-sidebar {
+  flex: 0.45;
+}
 
-  .module-main {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    gap: 30px;
-  }
+.module-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 30px;
+}
 
-  :deep(hr) {
-    height: 2px;
-    background-color: #3f3f3f;
-    border: none;
-  }
+:deep(hr) {
+  height: 2px;
+  background-color: #3f3f3f;
+  border: none;
+}
 </style>
+e

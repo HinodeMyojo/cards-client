@@ -2,6 +2,9 @@
   <div class="main-header">
     <div class="wrapper">
       <div class="container">
+        <div class="burger-menu">
+          <button class="menu" @click="drawer = !drawer"><svg-icon type="mdi" :path="menu" size="30"></svg-icon></button>
+        </div>
         <div class="logotype">
           <a class="logo" @click="Home">
             <UIIcon :icon="logoIcon" width="35px" height="35px" :color="white" />
@@ -10,6 +13,8 @@
         </div>
         <div class="content">
           <div class="content-body">
+            <div class="main-mobile">
+            </div>
             <div class="main">
               <a href="#">Главная</a>
               <a href="#">Модули</a>
@@ -83,7 +88,7 @@
 import UIIcon from './UI/UIIcon.vue';
 import router from '@/router/router';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiPlusCircleOutline } from '@mdi/js';
+import { mdiPlusCircleOutline, mdiMenu } from '@mdi/js';
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import api from '@/plugins/axios';
@@ -97,6 +102,14 @@ const isUserLogin = computed(() => authStore.isUserLogin);
 
 // Для иконок
 const path = ref(mdiPlusCircleOutline);
+const menu = ref(mdiMenu);
+
+// Для мобильного меню
+const drawer = ref(false);
+
+const menues = ref([
+  { title: 'Профиль', value: 'profile' },
+  { title: 'Достижения', value: 'achievements' },]);
 
 onMounted(() => {
   if (isUserLogin.value) {
@@ -112,38 +125,29 @@ const logout = async () => {
 
 const LoadUser = async () => {
   try {
-    const storedAvatar = localStorage.getItem('userAvatar');
-    const storedUserName = localStorage.getItem('userName');
+    if (authStore.userAvatar && authStore.userName) {
+      updatePageWithUserData(authStore.userAvatar, authStore.userName);
+      return;
+    } 
+    await authStore.whoami();
 
-    if (storedAvatar && storedUserName) {
-      SetAvatarToPage(storedAvatar);
-      SetUserNameToPage(storedUserName);
+    if (authStore.userAvatar && authStore.userName) {
+      updatePageWithUserData(authStore.userAvatar, authStore.userName);
     } else {
-      const response = await api.get(`/user/whoami`);
-      if (response?.data) {
-        await ProcessUserData(response.data);
-      } else {
-        console.error('Invalid response from server');
-      }
+      console.log('User data is still unavailable after whoami call.');
     }
+
   } catch (error) {
     console.error('Error loading user:', error);
   }
 };
 
-const ProcessUserData = async (data) => {
-  try {
-    const base64Avatar = `data:image/png;base64,${data.avatar}`;
-    localStorage.setItem('userAvatar', base64Avatar);
-    localStorage.setItem('userName', data.userName);
-    localStorage.setItem('userId', data.id);
-
-    SetAvatarToPage(base64Avatar);
-    SetUserNameToPage(data.userName);
-  } catch (error) {
-    console.error('Error processing user data:', error);
-  }
+const updatePageWithUserData = (avatar, userName) => {
+  SetAvatarToPage(avatar);
+  SetUserNameToPage(userName);
 };
+
+
 
 const SetUserNameToPage = (userName) => {
   storedUserName.value = userName;
@@ -304,22 +308,14 @@ const cleanLocalStorage = () => {
 }
 
 a,
-button {
+.register {
   font-size: 16px;
   font-weight: 500;
 }
 
-button {
-  background-color: #272a2f;
-  border: 1px solid #3b4047;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.4s ease;
-  box-sizing: border-box;
-}
+.register {}
 
-button:hover {
+.register:hover {
   border: 1px solid #d459ff;
 }
 
@@ -388,5 +384,71 @@ a:hover {
 
 .logo-text {
   font-weight: 700;
+}
+
+
+@media screen and (max-width: 768px) {
+  .main-header {
+    text-decoration: none;
+    width: 100%;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu {
+    display: flex;
+    min-width: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu:active {
+
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transform: scale(0.95);
+    transition: 0.1s;
+  }
+
+  .menu:hover {
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transition: 0.3s ease;
+  }
+
+  .content-body {
+    justify-content: end;
+  }
+
+  .login {
+    background-color: #272a2f;
+    border: 1px solid #3b4047;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.4s ease;
+    box-sizing: border-box;
+  }
+
+  .container {
+    gap: 15px;
+  }
+
+  .logo-text,
+  .main,
+  .language,
+  .register {
+    display: none;
+  }
+
+  .burger-menu {
+    display: flex;
+    align-items: center;
+  }
 }
 </style>

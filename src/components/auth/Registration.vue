@@ -1,5 +1,5 @@
 <template>
-  <h3>Регистрация</h3>
+  <h3 class="main-title">Регистрация</h3>
   <LoginHelper
     class="login-helper"
     :class="{ visible: helperVisible }"
@@ -49,7 +49,8 @@
         required
       />
     </div>
-    <label for="Password">Password</label>
+    <div v-if="errorState != 1" class="email-true-label">
+      <label for="Password">Password</label>
     <input
       v-model="data.password"
       type="password"
@@ -57,10 +58,11 @@
       placeholder="•••••••••••••••••"
       required
     />
+    </div>
     <div class="buttons">
       <button class="fill" type="submit">Зарегистрироваться</button>
       <button class="transparent" type="button" @click="loginUser">
-        Уже есть учетная запись? Войти
+        Войти
       </button>
       <SocialButtons />
     </div>
@@ -144,6 +146,7 @@
   };
 </script>
 <style scoped>
+  
   .login-helper {
     position: absolute;
     top: 20px;
@@ -151,8 +154,31 @@
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
   }
+  
+  @media screen and (max-width: 768px) {
+    .main-title{
+      position: relative;
+      width: 100%;
+    }
+
+    .login-helper {
+      position: absolute;
+      display: flex;
+      top: 6%;
+      right: 0px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+  }
+
 
   .login-helper.visible {
     opacity: 1;
+  }
+
+  .email-true-label, .error-form{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 </style>

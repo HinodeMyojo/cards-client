@@ -72,7 +72,6 @@ a {
   min-height: 100vh;
   display: flex;
   margin-bottom: 20px;
-
 }
 
 .app-login {
@@ -81,6 +80,20 @@ a {
 
 .main-content {
   margin-top: 25px;
-
 }
+
+@media screen and (max-width: 768px) {
+  .app-login {
+    max-width: 100%;
+  }
+  .app {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    min-height: 100vh;
+    display: flex;
+    margin-bottom: 20px;
+  }
+}
+
 </style>

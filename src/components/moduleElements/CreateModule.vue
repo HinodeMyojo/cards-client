@@ -160,7 +160,7 @@
     DesciptionValid.value = value.length > 0;
   };
 
-  const emit = defineEmits(['refreshData']);
+  const emit = defineEmits(['refreshSideBarModules']);
 
   const onSubmit = () => {
     isNameValid(inputName.value);
@@ -178,7 +178,7 @@
       createAt: new Date().toISOString(),
     };
     createModule(data);
-    emit('refreshData');
+    emit('refreshSideBarModules');
   };
 </script>
 

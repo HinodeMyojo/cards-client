@@ -13,6 +13,7 @@ export default defineConfig({
     vuetify({ autoImport: true }),
   ],
   server: {
+    host: '0.0.0.0',
     port: 9080 
   },
   resolve: {

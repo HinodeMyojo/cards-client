@@ -3,8 +3,8 @@
     <div class="module-title">
       <h2>{{ moduleInfo.title }}</h2>
       <div class="module-button">
-        <BaseButton label="Редактировать" color="#272A2F" size="medium" />
-        <div class="delete-module">
+        <BaseButton v-if="isAuth && CheckUserCanEditModule()" label=" Редактировать" color="#272A2F" size="medium" />
+        <div v-if=isAuth class="delete-module">
           <Modal :text="modalText" :type="modalType" v-model:dialog="isDialogOpen" @answer="handleAnswer" />
           <v-menu :location="location">
             <template v-slot:activator="{ props }">
@@ -24,7 +24,6 @@
     </div>
     <hr />
     <div v-if="elements.length > 0" class="module-card">
-      <!-- <Card :wordsArray="elements" /> -->
       <InfoCard :wordsArray="elements" :height="'300px'" :width="'600px'" />
     </div>
     <div v-else-if="moduleInfo.userId === userId" class="module-nope">
@@ -88,6 +87,25 @@ import ElementModal from '@/components/UI/module/ElementModal.vue';
 import router from '@/router/router';
 import Modal from '../UI/Modal.vue';
 import BaseButton from '../UI/buttons/BaseButton.vue';
+import { useAuthStore } from '@/stores/authStore';
+import { usePermissionsStore } from '@/stores/permissionsStore';
+
+const authStore = useAuthStore();
+const permStore = usePermissionsStore();
+
+const isAuth = authStore.isUserLogin;
+
+
+const moduleInfo = ref('');
+
+const props = defineProps({
+  module: {
+    type: Object,
+    required: true,
+  },
+});
+
+moduleInfo.value = props.module;
 
 // Переменные для иконок
 const pathMdiCards = ref(mdiCards);
@@ -117,6 +135,17 @@ const openDeleteModal = (item) => {
 };
 // Функции удаления модулей
 const modalType = ref('default');
+
+const CheckUserCanEditModule = async () => {
+  await permStore.getUserPermissions();
+  if (userId == moduleInfo.value.userId) {
+    return true;
+  }
+  if (permStore.checkPermissions("CanEditAnyModule")) {
+    return true;
+  }
+  return false;
+}
 
 const removeFromLibrary = async () => {
   modalText.value =
@@ -184,13 +213,11 @@ const goToCardStudy = () => {
 // Данные модуля и элементы для таблицы
 const route = useRoute();
 let moduleId = route.params.id;
-const { deleteElementById, addElementToModule, editElementById } =
+const { deleteElementById, addElementToModule, editElementById, getByModuleId } =
   useElementService();
-const moduleInfo = ref('');
 const elements = ref([]);
 const headersData = ref(null);
 
-// Функции для работы с элементами
 const editElement = async (data) => {
   const model = {
     key: data.key,
@@ -209,15 +236,15 @@ const deleteElement = async (id) => {
 
 // Обновление данных таблицы
 const refreshTableData = async (moduleId) => {
-  moduleInfo.value = await (await moduleService.getModuleById(moduleId)).data;
-  elements.value = moduleInfo.value.elements || [];
+  elements.value = await (await getByModuleId(moduleId)).data;
 };
 
-// Хук mounted для загрузки данных
-onMounted(async () => {
-  await refreshTableData(moduleId);
+// Для первой загрузки модуля
+const firstLoadModule = async () => 
+{
   headersData.value = await (await moduleService.getHeaders()).data;
-
+  moduleInfo.value = props.module;
+  elements.value = moduleInfo.value.elements || [];
   deleteVariants.value = [
     { title: 'Убрать модуль из библиотеки', action: 'removeFromLibrary' },
   ];
@@ -228,6 +255,10 @@ onMounted(async () => {
       action: 'deleteModule',
     });
   }
+}
+
+onMounted(async () => {
+  await firstLoadModule();
 });
 
 watch(
@@ -439,7 +470,7 @@ h2 {
 .module-choice-button {
   display: flex;
   flex-direction: row;
-  align-items:center;
+  align-items: center;
   justify-content: space-between;
   gap: 20px;
   width: 90%;

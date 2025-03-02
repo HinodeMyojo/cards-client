@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_APP_BACKEND_URL,
-});
+import api from '@/plugins/axios';
 
 export const useAuthStore = defineStore({
   id: 'authStore',
@@ -11,11 +8,15 @@ export const useAuthStore = defineStore({
     accessToken: localStorage.getItem('accessToken'),
     refreshToken: localStorage.getItem('refreshToken'),
     isUserLogin: !!localStorage.getItem('accessToken'),
+    userId:  localStorage.getItem("userId"),
+    userAvatar: localStorage.getItem("userAvatar"),
+    userName: localStorage.getItem("userName"),
   }),
   actions: {
     checkUserLogin() {
-      this.isUserLogin = !!localStorage.getItem('accessToken');
+      this.isUserLogin = !!this.accessToken;
     },
+    
     setTokens({ access, refresh }) {
       this.accessToken = access;
       this.refreshToken = refresh;
@@ -26,12 +27,47 @@ export const useAuthStore = defineStore({
     cleanData() {
       this.accessToken = null;
       this.refreshToken = null;
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userAvatar');
-      localStorage.removeItem('userId');
+      this.userId = null;
+      this.userAvatar = null;
+      this.userName = null;
+      localStorage.clear();
       this.checkUserLogin();
       location.reload();
+    },
+    async whoami() {
+      try {
+        const response = await api.get('/user/whoami');
+        this.ProcessUserData(response.data);
+      } catch (error) {
+        console.error('Error in whoami:', error.message || error);
+        this.cleanData();
+        throw new Error('Failed to load user data');
+      }
+    },
+    ProcessUserData (data) {
+      try {
+        const base64Avatar = `data:image/png;base64,${data.avatar}`;
+        this.saveUserDataToStorage({
+          userAvatar: base64Avatar,
+          userName: data.userName,
+          userId: data.id,
+        });
+        this.userAvatar = base64Avatar;
+        this.userName = data.userName;
+        this.userId = data.id;
+      } catch (error) {
+        console.error('Error processing user data:', error);
+      }
+    },
+    saveUserDataToStorage(userData) {
+      try {
+        Object.entries(userData).forEach(([key, value]) => {
+          localStorage.setItem(key, value);
+        });
+      } catch (error) {
+        console.error('Error saving user data to storage:', error.message || error);
+        throw new Error('Failed to save user data');
+      }
     },
     async refreshAccessToken() {
       try {

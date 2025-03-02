@@ -1,6 +1,14 @@
 import api from "@/plugins/axios";
 
 export const moduleService = {
+    async getUsedModules(textSearch) {
+        try{
+            return await api.get('/module/used-modules', {params: {textSearch}});
+        } catch (error) {
+            console.error("Ошибка получения модулей:", error);
+            throw error;
+        }
+    },
     async getModuleById(id) {
         try {
             return await api.get(`/module?id=${id}`);
