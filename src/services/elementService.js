@@ -13,6 +13,9 @@ export const elementService = {
     },
     editElementById(model) {
         return api.put(`/element`, model)
+    },
+    getByModuleId(moduleId){
+        return api.get(`/elements/${moduleId}`)
     }
 
 }

@@ -1,6 +1,13 @@
 import { elementService } from '@/services/elementService';
 
 export function useElementService() {
+  const getByModuleId = async (moduleId) => {
+    try {
+      return await elementService.getByModuleId(moduleId);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   const deleteElementById = async (id) => {
     try {
       await elementService.deleteElement(id);
@@ -25,5 +32,5 @@ export function useElementService() {
     }
   };
 
-  return { deleteElementById, addElementToModule, editElementById };
+  return { deleteElementById, addElementToModule, editElementById, getByModuleId };
 }

@@ -213,7 +213,7 @@ const goToCardStudy = () => {
 // Данные модуля и элементы для таблицы
 const route = useRoute();
 let moduleId = route.params.id;
-const { deleteElementById, addElementToModule, editElementById } =
+const { deleteElementById, addElementToModule, editElementById, getByModuleId } =
   useElementService();
 const elements = ref([]);
 const headersData = ref(null);
@@ -236,10 +236,10 @@ const deleteElement = async (id) => {
 
 // Обновление данных таблицы
 const refreshTableData = async (moduleId) => {
-  moduleInfo.value = await (await moduleService.getModuleById(moduleId)).data;
-  elements.value = moduleInfo.value.elements || [];
+  elements.value = await (await getByModuleId(moduleId)).data;
 };
 
+// Для первой загрузки модуля
 const firstLoadModule = async () => 
 {
   headersData.value = await (await moduleService.getHeaders()).data;
@@ -257,9 +257,7 @@ const firstLoadModule = async () =>
   }
 }
 
-// Хук mounted для загрузки данных
 onMounted(async () => {
-  // await refreshTableData(moduleId);
   await firstLoadModule();
 });
 
