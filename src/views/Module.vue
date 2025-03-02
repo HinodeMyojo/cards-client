@@ -1,110 +1,140 @@
 <template>
   <div class="module-container">
-    <div class="module-sidebar" v-if="isUserProfile">
-      <ProfileSideBar :isUserProfile="isUserProfile" :userName="userNameFromUrlRoute" :userAvatar="userAvatar" />
-    </div>
-    <div class="module-sidebar" v-else>
-      <ProfileSideBar :isUserProfile="isUserProfile" :userName="userNameFromUrlRoute" :userAvatar="userAvatar" />
-    </div>
-    <div class="module-main" v-if="typeOfModuleState === 'concreteModule'">
-      <ConcreteModule v-if="moduleInfo" :module="moduleInfo" />
-    </div>
-    <div class="module-main" v-else-if="typeOfModuleState === 'createModule'">
-      <CreateModule @refreshData="refreshData" />
-    </div>
-    <div class="module-main" v-else-if="typeOfModuleState === 'profile'">
-      <Profile :is-user-profile="isUserProfile" :can-view-profile="canViewProfile" :userId="userId"
-        :isEmailConfirmed="isEmailConfirmed" />
+    <ProfileSideBar class="module-sidebar"
+      v-if="isSidebarVisible"
+      :isUserProfile="isUserProfile"
+      :userName="userNameFromUrlRoute"
+      :userAvatar="userAvatar"
+    />
+    
+    <div class="module-main">
+      <ConcreteModule 
+        v-if="typeOfModuleState === 'concreteModule' && moduleInfo" 
+        :module="moduleInfo" 
+      />
+      <CreateModule 
+        v-else-if="typeOfModuleState === 'createModule'" 
+        @refreshData="refreshData" 
+      />
+      <Profile 
+        v-else-if="typeOfModuleState === 'profile'" 
+        :is-user-profile="isUserProfile" 
+        :can-view-profile="canViewProfile" 
+        :user-id="userId"
+        :is-email-confirmed="isEmailConfirmed"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
 import ProfileSideBar from '@/components/moduleElements/profile/SideBar.vue';
 import ConcreteModule from '@/components/moduleElements/ConcreteModule.vue';
 import CreateModule from '@/components/moduleElements/CreateModule.vue';
 import Profile from '@/components/moduleElements/profile/Profile.vue';
-import { useRoute } from 'vue-router';
-import { getProfileAccess } from '@/services/profileService.js';
-import { getUserById } from '@/services/profileService.js';
-import { moduleService } from '@/services/moduleService.js';
-import { useAuthStore } from '@/stores/authStore';
+import { 
+  getProfileAccess,
+  getUserById 
+} from '@/services/profileService';
+import { moduleService } from '@/services/moduleService';
 
 const authStore = useAuthStore();
+const route = useRoute();
 
 const props = defineProps({
   typeOfModuleState: {
     type: String,
-    default: '',
+    required: true,
+    validator: value => ['concreteModule', 'createModule', 'profile'].includes(value)
   },
 });
 
-// TODO сделать логику обновления сайд-бара
-const refreshStatus = ref(null);
-const refreshData = () => {
-  refreshStatus.value = true;
-};
-
-// Флаги доступа
-const isUserProfile = ref(null);
-const canBlockUser = ref(null);
-const canViewProfile = ref(null);
-const canDeleteUser = ref(null);
-const canEditUser = ref(null);
-
-// Для конкретного модуля
-const moduleInfo = ref(null);
-
-const route = useRoute();
-const userNameFromUrlRoute = ref(route.params.username);
-const userId = ref(0);
+// Состояние компонента
+const isUserProfile = ref(false);
+const canViewProfile = ref(false);
+const userId = ref(null);
 const isEmailConfirmed = ref(false);
 const userAvatar = ref('');
+const moduleInfo = ref(null);
+const userNameFromUrlRoute = ref(route.params.username);
+const refreshStatus = ref(false);
 
-// Проверка что это вообще за пользак
-const checkUserProfileAccess = async () => {
-  const usernameFromRequest = route.params.username;
-  
-  if (props.typeOfModuleState === 'profile' && usernameFromRequest) {
-    const response = await getProfileAccess(usernameFromRequest);
-    isUserProfile.value = response.isUserProfile;
-    canBlockUser.value = response.canBlockUser;
-    canViewProfile.value = response.canViewProfile;
-    canDeleteUser.value = response.canDeleteUser;
-    canEditUser.value = response.canEditUser;
+// Вычисляемое свойство для видимости сайдбара
+const isSidebarVisible = computed(() => {
+  return ['concreteModule', 'profile', 'createModule'].includes(props.typeOfModuleState);
+});
 
-    userId.value = response.id;
-    isEmailConfirmed.value = response.isEmailConfirmed;
-    userAvatar.value = `data:image/png;base64,${response.avatar}`;
-  }
-  if (props.typeOfModuleState === 'concreteModule') {
-    const moduleId = route.params.id;
-    moduleInfo.value = (await moduleService.getModuleById(moduleId)).data;
-    userId.value = moduleInfo.value.creatorId;
-    const user = await getUserById(moduleInfo.value.creatorId);
-    isUserProfile.value = user.id == authStore.userId;
-    userAvatar.value = `data:image/png;base64,${user.avatar}`;
-    console.log(user);
-    userNameFromUrlRoute.value = user.userName;
-
-  } else {
-    console.log('Боба');
-    console.log(props.typeOfModuleState);
+// Основная логика проверки доступа
+const checkAccess = async () => {
+  try {
+    switch(props.typeOfModuleState) {
+      case 'profile': 
+        await handleProfileAccess();
+        break;
+      case 'concreteModule':
+        await handleConcreteModuleAccess();
+        break;
+      case 'createModule':
+        await handleCreateModuleAccess();
+        break;
+    }
+  } catch (error) {
+    console.error('Ошибка проверки доступа:', error);
   }
 };
 
-onMounted(() => {
-  checkUserProfileAccess();
-});
+// Обработчики для каждого состояния
+const handleProfileAccess = async () => {
+  const response = await getProfileAccess(route.params.username);
+  const { 
+    isUserProfile: userAccess,
+    canViewProfile: viewAccess,
+    id,
+    avatar,
+    isEmailConfirmed: emailConfirmed
+  } = response;
+  
+  Object.assign([isUserProfile, canViewProfile, userId, userAvatar, isEmailConfirmed], 
+               [userAccess, viewAccess, id, `data:image/png;base64,${avatar}`, emailConfirmed]);
+};
 
-// Отслеживаем изменение роута (чтобы при изменении ника - обновлялась страница)
+const handleConcreteModuleAccess = async () => {
+  const moduleId = route.params.id;
+  moduleInfo.value = (await moduleService.getModuleById(moduleId)).data;
+  const user = await getUserById(moduleInfo.value.creatorId);
+  setupUserProfile(user);
+};
+
+const handleCreateModuleAccess = async () => {
+  // TODO
+};
+
+// Вспомогательная функция для настройки профиля пользователя
+const setupUserProfile = (user) => {
+  isUserProfile.value = user.id == authStore.userId;
+  userAvatar.value = `data:image/png;base64,${user.avatar}`;
+  userNameFromUrlRoute.value = user.userName;
+  userId.value = user.id;
+};
+
+// Обновление данных
+const refreshData = async () => {
+  refreshStatus.value = true;
+  await checkAccess();
+  refreshStatus.value = false;
+};
+
+// Отслеживание изменений роута
 watch(
-  () => route.params.username,
-  () => {
-    checkUserProfileAccess();
-  }
+  () => [route.params.username, route.params.id, props.typeOfModuleState],
+  () => checkAccess(),
+  { deep: true }
 );
+
+onMounted(checkAccess);
 </script>
 
 <style scoped>
