@@ -109,7 +109,8 @@ const handleConcreteModuleAccess = async () => {
 };
 
 const handleCreateModuleAccess = async () => {
-  // TODO
+  const user = await getUserById(authStore.userId);
+  setupUserProfile(user);
 };
 
 // Вспомогательная функция для настройки профиля пользователя
