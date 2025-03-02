@@ -4,7 +4,8 @@
       v-if="isSidebarVisible"
       :isUserProfile="isUserProfile"
       :userName="userNameFromUrlRoute"
-      :userAvatar="userAvatar"
+      :avatarSrc="userAvatar"
+      :modules="modules"
     />
     
     <div class="module-main">
@@ -14,7 +15,7 @@
       />
       <CreateModule 
         v-else-if="typeOfModuleState === 'createModule'" 
-        @refreshData="refreshData" 
+        @refreshSideBarModules="refreshSideBarModules" 
       />
       <Profile 
         v-else-if="typeOfModuleState === 'profile'" 
@@ -60,7 +61,7 @@ const isEmailConfirmed = ref(false);
 const userAvatar = ref('');
 const moduleInfo = ref(null);
 const userNameFromUrlRoute = ref(route.params.username);
-const refreshStatus = ref(false);
+const modules = ref([]);
 
 // Вычисляемое свойство для видимости сайдбара
 const isSidebarVisible = computed(() => {
@@ -119,15 +120,24 @@ const setupUserProfile = (user) => {
   userAvatar.value = `data:image/png;base64,${user.avatar}`;
   userNameFromUrlRoute.value = user.userName;
   userId.value = user.id;
+  if (isUserProfile.value) {
+    fetchUserModules()
+  }
 };
+
+const refreshSideBarModules = () => {
+  fetchUserModules();
+}
 
 // Обновление данных
-const refreshData = async () => {
-  refreshStatus.value = true;
-  await checkAccess();
-  refreshStatus.value = false;
+const fetchUserModules = async (searchQuery = '') => {
+  try {
+    var response = await moduleService.getUsedModules(searchQuery.trim() || "");
+    modules.value = response.data;
+  } catch (error) {
+    console.error('Ошибка загрузки модулей:', error);
+  }
 };
-
 // Отслеживание изменений роута
 watch(
   () => [route.params.username, route.params.id, props.typeOfModuleState],
