@@ -1,4 +1,11 @@
 <template>
+  <v-app>
+    <v-navigation-drawer>
+      <v-list
+        :items="menuItems"
+      ></v-list>
+    </v-navigation-drawer>
+  </v-app>
   <div class="main-header">
     <div class="wrapper">
       <div class="container">
@@ -125,11 +132,16 @@ const menu = ref(mdiMenu);
 const downPath = ref(mdiChevronDown);
 
 // Для мобильного меню
-const drawer = ref(false);
 
-const menues = ref([
-  { title: 'Профиль', value: 'profile' },
-  { title: 'Достижения', value: 'achievements' },]);
+const menuItems = ref([
+  { title: 'Главная', action: 'main' }, 
+  { title: 'Модули', action: '' }
+]);
+
+
+// const menues = ref([
+//   { title: 'Профиль', value: 'profile' },
+//   { title: 'Достижения', value: 'achievements' },]);
 
 onMounted(() => {
   if (isUserLogin.value) {
@@ -207,10 +219,9 @@ const addButtonItems = [
   { title: 'Создать папку', action: 'createFolder' },
 ];
 
-const menuItems = ref([
-  { title: 'Главная', action: 'main' }, 
-  { title: 'Модули', action: '' }
-]);
+
+const drawer = ref(false);
+
 
 
 const handleClick = (item) => {
