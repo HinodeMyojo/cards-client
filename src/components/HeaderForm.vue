@@ -8,17 +8,36 @@
         <div class="logotype">
           <a class="logo" @click="Home">
             <UIIcon :icon="logoIcon" width="35px" height="35px" :color="white" />
-            <span class="logo-text">pleiades</span>
+            <span class="logo-text">PLEIADIX</span>
           </a>
         </div>
         <div class="content">
           <div class="content-body">
-            <div class="main-mobile">
-            </div>
             <div class="main">
-              <a href="#">Главная</a>
-              <a href="#">Модули</a>
-              <a href="#">Книги</a>
+              <v-menu>
+                <template v-slot:activator="{ props }">
+                  <v-btn 
+                    variant="text"
+                    v-bind="props"
+                    class="logo-text"
+                  >
+                    Главная
+                    <svg-icon type="mdi" :path="downPath" size="30"></svg-icon>
+                  </v-btn>
+                </template>
+                <v-list style="background-color: transparent">
+                  <v-list-item
+                    v-for="(item, index) in menuItems"
+                    :key="index"
+                    :value="index"
+                    style="background-color: #272a2f;"
+                    @click="handleClick(item)">
+                    <v-list-item-title style="background-color: #272a2f; ">
+                      {{ item.title }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </div>
             <div class="right">
               <div class="language">
@@ -88,7 +107,7 @@
 import UIIcon from './UI/UIIcon.vue';
 import router from '@/router/router';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdiPlusCircleOutline, mdiMenu } from '@mdi/js';
+import { mdiPlusCircleOutline, mdiMenu, mdiChevronDown } from '@mdi/js';
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import api from '@/plugins/axios';
@@ -103,6 +122,7 @@ const isUserLogin = computed(() => authStore.isUserLogin);
 // Для иконок
 const path = ref(mdiPlusCircleOutline);
 const menu = ref(mdiMenu);
+const downPath = ref(mdiChevronDown);
 
 // Для мобильного меню
 const drawer = ref(false);
@@ -187,6 +207,10 @@ const addButtonItems = [
   { title: 'Создать папку', action: 'createFolder' },
 ];
 
+const menuItems = ref([
+  { title: 'Главная', action: 'main' }, 
+  { title: 'Модули', action: '' }
+]);
 
 
 const handleClick = (item) => {
@@ -208,6 +232,9 @@ const handleClick = (item) => {
       break;
     case 'logout':
       logout();
+      router.push('/');
+      break;
+    case 'main':
       router.push('/');
       break;
     case 'privacy':
@@ -384,6 +411,13 @@ a:hover {
 
 .logo-text {
   font-weight: 700;
+}
+
+@media screen and (min-width: 768px) 
+{
+ .burger-menu{
+  display: none;
+ } 
 }
 
 
