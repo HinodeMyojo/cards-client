@@ -95,12 +95,6 @@ const handleModuleClick = (moduleId) => {
 router.push(`/module/${moduleId}`);
 };
 
-// const initializeGuestProfile = () => {
-// storedUserName.value = props.userName;
-// avatarSrc.value = props.userAvatar;
-// };
-
-// defineEmits(['avatar-click', 'module-click', 'search']);
 </script>
 
 <style scoped>
