@@ -1,11 +1,4 @@
 <template>
-  <v-app>
-    <v-navigation-drawer>
-      <v-list
-        :items="menuItems"
-      ></v-list>
-    </v-navigation-drawer>
-  </v-app>
   <div class="main-header">
     <div class="wrapper">
       <div class="container">
@@ -72,7 +65,7 @@
                   </v-menu>
                 </div>
                 <!-- Меню -->
-                <div>
+                <div class="profile-menu">
                   <v-menu class="v-menu-header">
                     <template v-slot:activator="{ props }">
                       <div v-bind="props" class="userProfile">
@@ -107,6 +100,31 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="mobile-menu">
+    <v-app>
+    <v-navigation-drawer
+      v-model="drawer"
+      class="mobile-menu-navigator">
+      <template v-slot:prepend>
+          <v-list-item
+            lines="two"
+            prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
+            subtitle="Logged in"
+            title="Jane Smith"
+          ></v-list-item>
+      </template>
+      <v-divider></v-divider>
+      <v-list
+        :items="menuItems"
+      ></v-list>
+      <template v-slot:append>
+          <div class="pa-2">
+            <v-btn block>Выйти из аккаунта</v-btn>
+          </div>
+      </template>
+    </v-navigation-drawer>
+  </v-app>
   </div>
 </template>
 
@@ -276,12 +294,85 @@ const cleanLocalStorage = () => {
 </script>
 
 <style scoped>
+
+@media screen and (max-width: 768px) {
+  .profile-menu{
+    display: none;
+  }
+  .main-header {
+    text-decoration: none;
+    width: 100%;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu {
+    display: flex;
+    min-width: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu:active {
+
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transform: scale(0.95);
+    transition: 0.1s;
+  }
+
+  .menu:hover {
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transition: 0.3s ease;
+  }
+
+  .content-body {
+    justify-content: end;
+  }
+
+  .login {
+    background-color: #272a2f;
+    border: 1px solid #3b4047;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.4s ease;
+    box-sizing: border-box;
+  }
+
+  .container {
+    gap: 15px;
+  }
+
+  .logo-text,
+  .main,
+  .language,
+  .register {
+    display: none;
+  }
+
+  .burger-menu {
+    display: flex;
+    align-items: center;
+  }
+}
+
 .add-button {
   cursor: pointer;
 }
 
 .add-button svg-icon {
   fill: currentColor;
+}
+
+.mobile-menu-navigator{
+  background-color: #1B1B1F;
 }
 
 .userProfile {
@@ -362,17 +453,6 @@ a:hover {
   transition: 0.3s ease;
 }
 
-.container {
-  display: flex;
-  max-width: 100%;
-  height: 64px;
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-}
-
 .right {
   display: flex;
   flex-direction: row;
@@ -429,71 +509,22 @@ a:hover {
  .burger-menu{
   display: none;
  } 
-}
 
-
-@media screen and (max-width: 768px) {
-  .main-header {
-    text-decoration: none;
-    width: 100%;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .menu {
-    display: flex;
-    min-width: 40px;
-    min-height: 40px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .menu:active {
-
-    border-radius: 50px;
-    border: 0px;
-    background-color: #3b4047;
-    transform: scale(0.95);
-    transition: 0.1s;
-  }
-
-  .menu:hover {
-    border-radius: 50px;
-    border: 0px;
-    background-color: #3b4047;
-    transition: 0.3s ease;
-  }
-
-  .content-body {
-    justify-content: end;
-  }
-
-  .login {
-    background-color: #272a2f;
-    border: 1px solid #3b4047;
-    padding: 8px 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.4s ease;
-    box-sizing: border-box;
+ .mobile-menu{
+  display: none;
   }
 
   .container {
-    gap: 15px;
-  }
-
-  .logo-text,
-  .main,
-  .language,
-  .register {
-    display: none;
-  }
-
-  .burger-menu {
-    display: flex;
-    align-items: center;
+  display: flex;
+  max-width: 100%;
+  height: 64px;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
   }
 }
+
+
 </style>
