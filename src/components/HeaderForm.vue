@@ -1,10 +1,59 @@
 <template>
   <div class="main-header">
     <div class="wrapper">
-      <div class="container">
+      <div class="mobile-container">
         <div class="burger-menu">
           <button class="menu" @click="drawer = !drawer"><svg-icon type="mdi" :path="menu" size="30"></svg-icon></button>
+          <a class="logo" @click="Home">
+            <UIIcon :icon="logoIcon" width="35px" height="35px" :color="white" />
+            <span class="logo-text">PLEIADIX</span>
+          </a>
         </div>
+        <div v-if="isUserLogin" class="login-user" id="menu-activator">
+                <!-- Кнопка "Добавить" -->
+                <div class="add-button" style="color: red">
+                  <svg-icon type="mdi" :path="path" :size="33"></svg-icon>
+                </div>
+                <!-- Меню для кнопки добавить -->
+                <div>
+                  <v-menu activator="#menu-activator" class="v-menu-header">
+                    <v-list class="v-list-header" style="background-color: transparent; min-width: 180px">
+                      <v-list-item v-for="(item, index) in addButtonItems" :key="index" :value="index"
+                        class="v-item-header" @click="handleClick(item)">
+                        <v-list-item-title style="background-color: #272a2f; text-wrap: wrap">
+                          {{ item.title }}
+                        </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </div>
+                <!-- Меню -->
+                <div class="profile-menu">
+                  <v-menu class="v-menu-header">
+                    <template v-slot:activator="{ props }">
+                      <div v-bind="props" class="userProfile">
+                        <div id="userAvatar" class="userAvatar"></div>
+                        <UIIcon :icon="downArrowheadIcon" :color="white" :size="22" />
+                      </div>
+                    </template>
+                    <v-list class="v-list-header" style="
+                        border-radius: 10px;
+                        background: transparent;
+                        min-width: 200px;
+                      ">
+                      <v-list-item v-for="(item, index) in items" :key="index" :value="index" class="v-item-header"
+                        :class="{ 'border-style': index === 3 }" style="overflow: hidden" @click="handleClick(item)">
+                        <v-list-item-title :class="{ 'highlight-title': index === 3 }"
+                          style="background-color: #272a2f; text-wrap: wrap">
+                          {{ item.title }}
+                        </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </div>
+              </div>
+      </div>
+      <div class="container">  
         <div class="logotype">
           <a class="logo" @click="Home">
             <UIIcon :icon="logoIcon" width="35px" height="35px" :color="white" />
@@ -295,73 +344,6 @@ const cleanLocalStorage = () => {
 
 <style scoped>
 
-@media screen and (max-width: 768px) {
-  .profile-menu{
-    display: none;
-  }
-  .main-header {
-    text-decoration: none;
-    width: 100%;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .menu {
-    display: flex;
-    min-width: 40px;
-    min-height: 40px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .menu:active {
-
-    border-radius: 50px;
-    border: 0px;
-    background-color: #3b4047;
-    transform: scale(0.95);
-    transition: 0.1s;
-  }
-
-  .menu:hover {
-    border-radius: 50px;
-    border: 0px;
-    background-color: #3b4047;
-    transition: 0.3s ease;
-  }
-
-  .content-body {
-    justify-content: end;
-  }
-
-  .login {
-    background-color: #272a2f;
-    border: 1px solid #3b4047;
-    padding: 8px 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.4s ease;
-    box-sizing: border-box;
-  }
-
-  .container {
-    gap: 15px;
-  }
-
-  .logo-text,
-  .main,
-  .language,
-  .register {
-    display: none;
-  }
-
-  .burger-menu {
-    display: flex;
-    align-items: center;
-  }
-}
 
 .add-button {
   cursor: pointer;
@@ -503,6 +485,17 @@ a:hover {
 .logo-text {
   font-weight: 700;
 }
+.container, .mobile-container {
+  display: flex;
+  max-width: 100%;
+  height: 64px;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  }
+
 
 @media screen and (min-width: 768px) 
 {
@@ -514,15 +507,81 @@ a:hover {
   display: none;
   }
 
+  .mobile-container{
+    display: none;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .profile-menu{
+    display: none;
+  }
+  .main-header {
+    text-decoration: none;
+    width: 100%;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu {
+    display: flex;
+    min-width: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu:active {
+
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transform: scale(0.95);
+    transition: 0.1s;
+  }
+
+  .menu:hover {
+    border-radius: 50px;
+    border: 0px;
+    background-color: #3b4047;
+    transition: 0.3s ease;
+  }
+
+  .content-body {
+    justify-content: end;
+  }
+
+  .login {
+    background-color: #272a2f;
+    border: 1px solid #3b4047;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.4s ease;
+    box-sizing: border-box;
+  }
+
   .container {
-  display: flex;
-  max-width: 100%;
-  height: 64px;
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
+    display: none;
+  }
+
+  .mobile-container{
+
+  }
+
+  .logo-text,
+  .main,
+  .language,
+  .register {
+    display: none;
+  }
+
+  .burger-menu {
+    display: flex;
+    align-items: center;
   }
 }
 
