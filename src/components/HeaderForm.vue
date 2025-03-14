@@ -260,9 +260,14 @@ const SetAvatarToPage = (base64Avatar, width = 40, height = 40) => {
   avatarImage.style.borderRadius = '50%';
   const avatarContainer = document.getElementById('userAvatar');
 
+  console.log(avatarContainer);
+
   if (avatarContainer) {
+    console.log("Боба");
+    console.log(avatarImage);
     avatarContainer.innerHTML = '';
     avatarContainer.appendChild(avatarImage);
+    console.log(avatarContainer);
   } else {
     console.error("Element with id 'userAvatar' not found.");
   }
